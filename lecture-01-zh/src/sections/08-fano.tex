@@ -1,0 +1,111 @@
+% ===========================================================================
+\section{Fano 不等式}\label{sec:fano}
+\warmth{0}\quad\whisper{一次解码错误只会留下可控数量的不确定性。}
+
+\begin{strand}
+把 $Y$ 看作对 $X$ 的猜测。Fano 不等式把猜错的概率转化为一个上界：
+观察 $Y$ 后，关于 $X$ 还可能剩下多少不确定性。
+\end{strand}
+
+\begin{definition}[错误指示变量]
+设 $X,Y$ 都取值于同一个有限字母表 $\X$，且 $|\X|\ge2$。定义
+\[
+  Z=\mathbf 1_{\{X\ne Y\}},\qquad
+  P_{\mathrm e}=\PP(X\ne Y)=\PP(Z=1).
+\]
+二元熵函数定义为
+\[
+  h_2(t)=-t\log t-(1-t)\log(1-t).
+\]
+\end{definition}
+
+\begin{theorem}[Fano 不等式]\label{thm:fano}
+\[
+  \Ent(X\mid Y)
+  \le h_2(P_{\mathrm e})
+     +P_{\mathrm e}\log\bigl(|\X|-1\bigr).
+\]
+等价地，
+\[
+  \Ent(X\mid Y)
+  \le \Ent(Z)+\PP(X\ne Y)\log\bigl(|\X|-1\bigr).
+\]
+\end{theorem}
+
+\begin{proof}
+指示变量 $Z$ 由 $(X,Y)$ 完全决定，因此 $\Ent(Z\mid X,Y)=0$。
+按两种顺序使用链式法则：
+\begin{align*}
+  \Ent(X\mid Y)
+  &=\Ent(X,Z\mid Y)\\
+  &=\Ent(Z\mid Y)+\Ent(X\mid Y,Z)\\
+  &\le\Ent(Z)+\Ent(X\mid Y,Z).
+\end{align*}
+
+当 $Z=0$ 时猜测正确，即 $X=Y$，所以
+\[
+  \Ent(X\mid Y,Z=0)=0.
+\]
+当 $Z=1$ 且 $Y=y$ 时，$X=y$ 被排除，只剩至多 $|\X|-1$ 个可能值。
+由命题~\ref{prop:entropy-bounds}，
+\[
+  \Ent(X\mid Y=y,Z=1)\le\log(|\X|-1).
+\]
+对 $Y$ 与 $Z$ 的两个取值求平均，得到
+\[
+  \Ent(X\mid Y,Z)
+  \le P_{\mathrm e}\log(|\X|-1).
+\]
+最后，$Z$ 是参数为 $P_{\mathrm e}$ 的 Bernoulli 随机变量，因此
+$\Ent(Z)=h_2(P_{\mathrm e})$。
+\end{proof}
+
+\begin{yourturn}
+回忆证明中的两种情形：
+\[
+\begin{aligned}
+  Z=0&:\quad X=Y,\quad \Ent(X\mid Y,Z=0)=\answerin[1cm]{0},\\
+  Z=1&:\quad X\text{ 至多有 }\answerin[1.4cm]{|\X|-1}
+        \text{ 个可能值}.
+\end{aligned}
+\]
+\recall{猜对时没有不确定性；猜错时至多还剩 $|\X|-1$ 个候选。}
+\end{yourturn}
+
+\begin{corollary}[一比特形式]\label{cor:fano-one-bit}
+因为二元熵至多为一比特，
+\[
+  \Ent(X\mid Y)
+  \le 1+\PP(X\ne Y)\log\bigl(|\X|-1\bigr).
+\]
+交换 $X,Y$ 还得到配套的界
+\[
+  \Ent(Y\mid X)
+  \le 1+\PP(X\ne Y)\log\bigl(|\X|-1\bigr).
+\]
+\end{corollary}
+
+\begin{proof}
+在定理~\ref{thm:fano} 中使用 $h_2(P_{\mathrm e})\le1$。对第二个不等式，
+把同一定理应用于 $(Y,X)$；错误事件 $\{Y\ne X\}$ 及其概率都不变。
+\end{proof}
+
+\color{inkiron}
+\block{如何理解这个界}
+正向读法是
+\[
+  P_{\mathrm e}\text{ 很小}
+  \quad\Longrightarrow\quad
+  \Ent(X\mid Y)\text{ 很小}.
+\]
+更常用的是反向读法：把同一个不等式移项，解出 $P_{\mathrm e}$。
+当 $|\X|>2$ 时，推论~\ref{cor:fano-one-bit} 可以改写成
+\[
+  P_{\mathrm e}
+  \ge
+  \frac{\Ent(X\mid Y)-1}{\log(|\X|-1)}.
+\]
+因此，若观察 $Y$ 后仍有很大的不确定性，那么任何基于 $Y$ 的估计器都
+不可能具有很小的错误概率。这里都是不等式而不是等式：松弛可能来自
+$h_2(P_{\mathrm e})\le1$，也可能来自“猜错时至多有 $|\X|-1$ 个候选”
+这一上界。

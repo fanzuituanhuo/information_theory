@@ -1,0 +1,132 @@
+% ===========================================================================
+\section{信息只会在处理中损失}\label{sec:information-properties}
+\warmth{0}\quad\whisper{先条件化，再展开，最后丢掉一个非负项。}
+
+\begin{strand}
+互信息可以看作共享的证据。它非负且对称，可以按变量逐个展开；对观测结果
+做后处理，不可能凭空制造关于信源的新信息。
+\end{strand}
+
+\block{核心恒等式}
+\begin{proposition}[互信息的性质]\label{prop:mi-properties}
+对离散随机变量 $X,Y$，
+\[
+  \MI(X;Y)\ge0.
+\]
+等号成立当且仅当 $X$ 与 $Y$ 独立。此外，
+\begin{align*}
+  \MI(X;Y)&=\MI(Y;X),\\
+  \MI(X;Y)&=\Ent(X)-\Ent(X\mid Y)
+           =\Ent(Y)-\Ent(Y\mid X).
+\end{align*}
+\end{proposition}
+
+\begin{proof}
+由定义~\ref{def:mi}，
+\[
+  \MI(X;Y)=\KL(p_{XY}\Vert p_Xp_Y).
+\]
+信息不等式给出非负性；等号成立
+恰好对应 $p_{XY}=p_Xp_Y$，也就是独立性。交换 $X,Y$ 不改变定义中的
+对数比，因此互信息对称。最后两个熵恒等式来自命题~\ref{prop:chain}
+中的链式法则。
+\end{proof}
+
+\begin{definition}[条件互信息]\label{def:conditional-mi}
+已知 $Z$ 后，$X$ 与 $Y$ 的共享信息定义为
+\[
+  \MI(X;Y\mid Z)
+  :=\sum_zp_Z(z)\KL\!\left(
+    p_{XY\mid Z}(\,\cdot,\cdot\mid z)
+    \,\middle\Vert\,
+    p_{X\mid Z}(\,\cdot\mid z)p_{Y\mid Z}(\,\cdot\mid z)\right).
+\]
+因此 $\MI(X;Y\mid Z)\ge0$。
+\end{definition}
+
+\begin{proposition}[互信息的链式法则]\label{prop:mi-chain}
+\[
+  \MI(X_1,\ldots,X_n;Y)
+  =\sum_{i=1}^n
+    \MI(X_i;Y\mid X_1,\ldots,X_{i-1}).
+\]
+\end{proposition}
+
+\begin{proof}
+逐项使用条件互信息的熵表达式
+\[
+  \MI(U;Y\mid V)=\Ent(Y\mid V)-\Ent(Y\mid U,V),
+\]
+其中 $U=X_i$、$V=(X_1,\ldots,X_{i-1})$。于是求和中的相邻条件熵
+发生望远镜消去：
+\begin{align*}
+  \sum_{i=1}^n\MI(X_i;Y\mid X_1,\ldots,X_{i-1})
+  &=\sum_{i=1}^n\bigl[
+    \Ent(Y\mid X_1,\ldots,X_{i-1})
+    -\Ent(Y\mid X_1,\ldots,X_i)\bigr]\\
+  &=\Ent(Y)-\Ent(Y\mid X_1,\ldots,X_n).
+\end{align*}
+最后一个表达式正是 $\MI(X_1,\ldots,X_n;Y)$。
+\end{proof}
+
+\begin{yourturn}
+展开两个变量的情形：
+\[
+  \MI(X_1,X_2;Y)
+  =\MI(X_1;Y)+
+   \answerin[3.9cm]{\MI(X_2;Y\mid X_1)}.
+\]
+\recall{缺少的一项是 $\MI(X_2;Y\mid X_1)$。}
+\end{yourturn}
+
+\block{数据处理}
+
+\begin{definition}[Markov 链]
+若给定 $Y$ 后 $X$ 与 $Z$ 条件独立，就记作 $X\to Y\to Z$。等价地，
+\[
+  p_{Z\mid XY}(z\mid x,y)=p_{Z\mid Y}(z\mid y).
+\]
+\end{definition}
+
+\begin{theorem}[数据处理不等式]\label{thm:dpi}
+若 $X\to Y\to Z$ 构成 Markov 链，则
+\[
+  \MI(X;Z)\le\MI(X;Y).
+\]
+\end{theorem}
+
+\begin{proof}
+按两种顺序展开同一个互信息：
+\[
+  \MI(X;Y,Z)
+  =\MI(X;Y)+\MI(X;Z\mid Y)
+  =\MI(X;Z)+\MI(X;Y\mid Z).
+\]
+Markov 条件给出 $\MI(X;Z\mid Y)=0$，而条件互信息非负。因此
+\[
+  \MI(X;Y)
+  =\MI(X;Z)+\MI(X;Y\mid Z)
+  \ge\MI(X;Z).
+\]
+\end{proof}
+
+\begin{corollary}[确定性处理]
+对任意函数 $f$，
+\[
+  \MI(X;f(Y))\le\MI(X;Y).
+\]
+\end{corollary}
+
+\begin{proof}
+因为 $f(Y)$ 完全由 $Y$ 决定，所以 $X\to Y\to f(Y)$ 构成 Markov 链。
+应用定理~\ref{thm:dpi} 即得结论。
+\end{proof}
+
+\begin{yourturn}
+说出数据处理不等式证明中的两个关键动作：
+\workspace[1]
+\answerprose{（1）按两种顺序展开 $\MI(X;Y,Z)$；（2）用 Markov 条件
+$\MI(X;Z\mid Y)=0$，再用非负性 $\MI(X;Y\mid Z)\ge0$。}
+\recall{两个动作：（1）按两种顺序展开 $\MI(X;Y,Z)$；（2）使用
+$\MI(X;Z\mid Y)=0$ 与 $\MI(X;Y\mid Z)\ge0$。}
+\end{yourturn}

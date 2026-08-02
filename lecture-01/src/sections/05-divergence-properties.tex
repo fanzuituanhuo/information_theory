@@ -1,0 +1,147 @@
+% ===========================================================================
+\section{Divergence inequalities}\label{sec:divergence-properties}
+\warmth{0}\quad\whisper{The log-sum inequality turns local ratios into global comparisons.}
+
+\begin{strand}
+KL divergence is not merely a formula. Its most useful properties come from one
+move: group positive terms, apply convexity to their ratios, and keep track of
+the equality condition. This is the engine behind non-negativity, chain rules,
+coarse-graining, and convexity.
+\end{strand}
+
+\begin{lemma}[information inequality]\label{lem:information-inequality}
+For pmfs $p$ and $q$ on the same alphabet,
+\[
+  \KL(p\Vert q)\ge0,
+\]
+with equality if and only if $p=q$.
+\end{lemma}
+
+\begin{proof}
+If $q(x)=0$ for some $x$ with $p(x)>0$, then
+$\KL(p\Vert q)=+\infty$. Otherwise, let $X\sim p$ and
+$S=\{x:p(x)>0\}$. Jensen's inequality for the convex function $-\log$
+gives
+\begin{align*}
+  \KL(p\Vert q)
+  &=\E_p\!\left[-\log\frac{q(X)}{p(X)}\right]\\
+  &\ge-\log\E_p\!\left[\frac{q(X)}{p(X)}\right]
+   =-\log\sum_{x\in S}q(x)
+  \ge-\log1=0.
+\end{align*}
+Equality in Jensen requires $q(x)/p(x)$ to be constant on $S$, while equality
+in the second inequality requires $q$ to put no mass outside $S$.
+Normalization then forces that constant to be $1$, so $p=q$.
+\end{proof}
+
+\begin{theorem}[log-sum inequality]\label{thm:log-sum}
+For non-negative numbers $a_1,\ldots,a_n$ and $b_1,\ldots,b_n$, with
+$a=\sum_i a_i$ and $b=\sum_i b_i$,
+\[
+  \sum_{i=1}^n a_i\log\frac{a_i}{b_i}
+  \ge a\log\frac{a}{b}.
+\]
+If all relevant terms are positive, equality holds exactly when
+$a_i/b_i$ is constant in $i$.
+\end{theorem}
+
+\begin{proof}
+The boundary cases follow from the usual conventions for zero terms. In the
+non-trivial finite case $a,b>0$, put
+$\alpha_i=a_i/a$ and $\beta_i=b_i/b$. Then
+\begin{align*}
+  \sum_i a_i\log\frac{a_i}{b_i}
+  &=a\log\frac{a}{b}
+    +a\sum_i\alpha_i\log\frac{\alpha_i}{\beta_i}\\
+  &=a\log\frac{a}{b}+a\KL(\alpha\Vert\beta)\\
+  &\ge a\log\frac{a}{b},
+\end{align*}
+where the last step is Lemma~\ref{lem:information-inequality}.
+Equality holds precisely when $\alpha=\beta$, equivalently
+$a_i/b_i=a/b$ on the common support.
+\end{proof}
+
+\begin{yourturn}
+What condition makes log-sum an equality?
+\[
+  \frac{a_1}{b_1}=\cdots=\frac{a_n}{b_n}
+  =\answerin[1.5cm]{\frac{a}{b}}.
+\]
+\recall{Equality holds when every ratio is the common value $a/b$.}
+\end{yourturn}
+
+\block{A chain rule for model mismatch}
+
+For joint pmfs $p_{XY}=p_Xp_{Y\mid X}$ and
+$q_{XY}=q_Xq_{Y\mid X}$, define the conditional divergence
+\[
+  \KL(p_{Y\mid X}\Vert q_{Y\mid X}\mid p_X)
+  :=\sum_xp_X(x)\KL\!\left(
+    p_{Y\mid X}(\,\cdot\mid x)\Vert q_{Y\mid X}(\,\cdot\mid x)\right).
+\]
+
+\begin{proposition}[chain rule for divergence]\label{prop:kl-chain}
+\[
+  \KL(p_{XY}\Vert q_{XY})
+  =\KL(p_X\Vert q_X)
+   +\KL(p_{Y\mid X}\Vert q_{Y\mid X}\mid p_X).
+\]
+\end{proposition}
+
+\begin{proof}
+Factor both joint laws and split the logarithm:
+\begin{align*}
+  \KL(p_{XY}\Vert q_{XY})
+  &=\sum_{x,y}p_{XY}(x,y)
+    \log\frac{p_X(x)p_{Y\mid X}(y\mid x)}
+              {q_X(x)q_{Y\mid X}(y\mid x)}\\
+  &=\sum_xp_X(x)\log\frac{p_X(x)}{q_X(x)}
+    +\sum_xp_X(x)\sum_yp_{Y\mid X}(y\mid x)
+      \log\frac{p_{Y\mid X}(y\mid x)}
+                {q_{Y\mid X}(y\mid x)}.
+\end{align*}
+These are precisely the two terms in the claim.
+\end{proof}
+
+\begin{corollary}[marginalization cannot increase divergence]
+\[
+  \KL(p_{XY}\Vert q_{XY})\ge\KL(p_X\Vert q_X).
+\]
+\end{corollary}
+
+\begin{proof}
+The difference is the conditional divergence in
+Proposition~\ref{prop:kl-chain}, which is an average of non-negative
+divergences.
+\end{proof}
+
+\block{Mixing pairs of distributions}
+
+\begin{proposition}[joint convexity]\label{prop:kl-joint-convex}
+For pmfs $p_1,p_2,q_1,q_2$ and $0\le\lambda\le1$,
+\begin{align*}
+  &\KL\!\left(\lambda p_1+(1-\lambda)p_2
+    \,\middle\Vert\,\lambda q_1+(1-\lambda)q_2\right)\\
+  &\qquad\le
+    \lambda\KL(p_1\Vert q_1)
+    +(1-\lambda)\KL(p_2\Vert q_2).
+\end{align*}
+\end{proposition}
+
+\begin{proof}
+For each outcome $x$, apply log-sum to
+$a_1=\lambda p_1(x)$, $a_2=(1-\lambda)p_2(x)$ and the corresponding
+$b_1,b_2$ built from $q_1,q_2$. Summing the resulting inequality over $x$
+gives the claim.
+\end{proof}
+
+\Needspace{8\baselineskip}
+\begin{yourturn}
+In the divergence chain rule, what remains after subtracting the marginal
+term?
+\[
+  \KL(p_{XY}\Vert q_{XY})-\KL(p_X\Vert q_X)
+  =\answerin[5.1cm]{\KL(p_{Y\mid X}\Vert q_{Y\mid X}\mid p_X)}.
+\]
+\recall{The remainder is an average conditional divergence, so it is non-negative.}
+\end{yourturn}

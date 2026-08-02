@@ -1,0 +1,137 @@
+% ===========================================================================
+\section{Information can only be lost}\label{sec:information-properties}
+\warmth{0}\quad\whisper{Condition, expand, and discard a non-negative term.}
+
+\begin{strand}
+Mutual information behaves like shared evidence. It is non-negative and
+symmetric, it can be revealed one variable at a time, and processing an
+observation cannot manufacture information about its source.
+\end{strand}
+
+\block{The core identities}
+\begin{proposition}[information properties]\label{prop:mi-properties}
+For discrete random variables $X$ and $Y$,
+\[
+  \MI(X;Y)\ge0.
+\]
+Equality holds if and only if $X$ and $Y$ are independent. Moreover,
+\begin{align*}
+  \MI(X;Y)&=\MI(Y;X),\\
+  \MI(X;Y)&=\Ent(X)-\Ent(X\mid Y)
+           =\Ent(Y)-\Ent(Y\mid X).
+\end{align*}
+\end{proposition}
+
+\begin{proof}
+By Definition~\ref{def:mi},
+\[
+  \MI(X;Y)=\KL(p_{XY}\Vert p_Xp_Y).
+\]
+The information inequality gives
+non-negativity, with equality exactly when $p_{XY}=p_Xp_Y$, which is
+independence. Symmetry follows because the defining log-ratio is unchanged
+when $X$ and $Y$ are exchanged. The entropy identities were obtained from the
+chain rule in Proposition~\ref{prop:chain}.
+\end{proof}
+
+\begin{definition}[conditional mutual information]\label{def:conditional-mi}
+The information shared by $X$ and $Y$ after $Z$ is known is
+\[
+  \MI(X;Y\mid Z)
+  :=\sum_zp_Z(z)\KL\!\left(
+    p_{XY\mid Z}(\,\cdot,\cdot\mid z)
+    \,\middle\Vert\,
+    p_{X\mid Z}(\,\cdot\mid z)p_{Y\mid Z}(\,\cdot\mid z)\right).
+\]
+Hence $\MI(X;Y\mid Z)\ge0$.
+\end{definition}
+
+\begin{proposition}[chain rule for mutual information]\label{prop:mi-chain}
+\[
+  \MI(X_1,\ldots,X_n;Y)
+  =\sum_{i=1}^n
+    \MI(X_i;Y\mid X_1,\ldots,X_{i-1}).
+\]
+\end{proposition}
+
+\begin{proof}
+For each term, use the conditional entropy identity
+\[
+  \MI(U;Y\mid V)=\Ent(Y\mid V)-\Ent(Y\mid U,V),
+\]
+with $U=X_i$ and $V=(X_1,\ldots,X_{i-1})$. The adjacent conditional
+entropies telescope:
+\begin{align*}
+  \sum_{i=1}^n\MI(X_i;Y\mid X_1,\ldots,X_{i-1})
+  &=\sum_{i=1}^n\bigl[
+    \Ent(Y\mid X_1,\ldots,X_{i-1})
+    -\Ent(Y\mid X_1,\ldots,X_i)\bigr]\\
+  &=\Ent(Y)-\Ent(Y\mid X_1,\ldots,X_n).
+\end{align*}
+The final expression is $\MI(X_1,\ldots,X_n;Y)$.
+\end{proof}
+
+\begin{yourturn}
+Expand the two-variable case:
+\[
+  \MI(X_1,X_2;Y)
+  =\MI(X_1;Y)+
+   \answerin[3.9cm]{\MI(X_2;Y\mid X_1)}.
+\]
+\recall{The missing term is $\MI(X_2;Y\mid X_1)$.}
+\end{yourturn}
+
+\block{Data processing}
+
+\begin{definition}[Markov chain]
+We write $X\to Y\to Z$ when $X$ and $Z$ are conditionally independent given
+$Y$, equivalently
+\[
+  p_{Z\mid XY}(z\mid x,y)=p_{Z\mid Y}(z\mid y).
+\]
+\end{definition}
+
+\begin{theorem}[data processing inequality]\label{thm:dpi}
+If $X\to Y\to Z$ is a Markov chain, then
+\[
+  \MI(X;Z)\le\MI(X;Y).
+\]
+\end{theorem}
+
+\begin{proof}
+Expand the same mutual information in two orders:
+\[
+  \MI(X;Y,Z)
+  =\MI(X;Y)+\MI(X;Z\mid Y)
+  =\MI(X;Z)+\MI(X;Y\mid Z).
+\]
+The Markov condition gives $\MI(X;Z\mid Y)=0$, whereas conditional mutual
+information is non-negative. Therefore
+\[
+  \MI(X;Y)
+  =\MI(X;Z)+\MI(X;Y\mid Z)
+  \ge\MI(X;Z).
+\]
+\end{proof}
+
+\begin{corollary}[deterministic processing]
+For any function $f$,
+\[
+  \MI(X;f(Y))\le\MI(X;Y).
+\]
+\end{corollary}
+
+\begin{proof}
+Because $f(Y)$ is determined by $Y$, the variables form the Markov chain
+$X\to Y\to f(Y)$. Apply Theorem~\ref{thm:dpi}.
+\end{proof}
+
+\begin{yourturn}
+Name the two proof moves behind data processing:
+\workspace[1]
+\answerprose{(1) Expand $\MI(X;Y,Z)$ in two orders. (2) Use the Markov
+condition $\MI(X;Z\mid Y)=0$ and non-negativity
+$\MI(X;Y\mid Z)\ge0$.}
+\recall{Two moves: (1) expand $\MI(X;Y,Z)$ in two orders; (2) use
+$\MI(X;Z\mid Y)=0$ and $\MI(X;Y\mid Z)\ge0$.}
+\end{yourturn}

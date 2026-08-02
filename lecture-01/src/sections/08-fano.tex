@@ -1,0 +1,115 @@
+% ===========================================================================
+\section{Fano's inequality}\label{sec:fano}
+\warmth{0}\quad\whisper{A decoding error leaves a controlled amount of uncertainty.}
+
+\begin{strand}
+Suppose $Y$ is used to guess $X$. Fano's inequality converts the probability
+of a wrong guess into an upper bound on the uncertainty that remains about
+$X$ after $Y$ is observed.
+\end{strand}
+
+\begin{definition}[error indicator]
+Assume that $X$ and $Y$ take values in the same finite alphabet $\X$, with
+$|\X|\ge2$. Define
+\[
+  Z=\mathbf 1_{\{X\ne Y\}},\qquad
+  P_{\mathrm e}=\PP(X\ne Y)=\PP(Z=1).
+\]
+The binary entropy function is
+\[
+  h_2(t)=-t\log t-(1-t)\log(1-t).
+\]
+\end{definition}
+
+\begin{theorem}[Fano's inequality]\label{thm:fano}
+\[
+  \Ent(X\mid Y)
+  \le h_2(P_{\mathrm e})
+     +P_{\mathrm e}\log\bigl(|\X|-1\bigr).
+\]
+Equivalently,
+\[
+  \Ent(X\mid Y)
+  \le \Ent(Z)+\PP(X\ne Y)\log\bigl(|\X|-1\bigr).
+\]
+\end{theorem}
+
+\begin{proof}
+The indicator $Z$ is determined by $(X,Y)$, so
+$\Ent(Z\mid X,Y)=0$. Apply the chain rule in two orders:
+\begin{align*}
+  \Ent(X\mid Y)
+  &=\Ent(X,Z\mid Y)\\
+  &=\Ent(Z\mid Y)+\Ent(X\mid Y,Z)\\
+  &\le\Ent(Z)+\Ent(X\mid Y,Z).
+\end{align*}
+
+When $Z=0$, the guess is correct: $X=Y$. Hence
+\[
+  \Ent(X\mid Y,Z=0)=0.
+\]
+When $Z=1$ and $Y=y$, the value $X=y$ is excluded, leaving at most
+$|\X|-1$ possibilities. Proposition~\ref{prop:entropy-bounds} therefore gives
+\[
+  \Ent(X\mid Y=y,Z=1)\le\log(|\X|-1).
+\]
+Averaging over $Y$ and the two values of $Z$ yields
+\[
+  \Ent(X\mid Y,Z)
+  \le P_{\mathrm e}\log(|\X|-1).
+\]
+Finally, $Z$ is Bernoulli with parameter $P_{\mathrm e}$, so
+$\Ent(Z)=h_2(P_{\mathrm e})$.
+\end{proof}
+
+\begin{yourturn}
+Recall the two cases that make the proof work:
+\[
+\begin{aligned}
+  Z=0&:\quad X=Y,\quad \Ent(X\mid Y,Z=0)=\answerin[1cm]{0},\\
+  Z=1&:\quad X\text{ has at most }\answerin[1.4cm]{|\X|-1}
+        \text{ possible values}.
+\end{aligned}
+\]
+\recall{Correct guess: no uncertainty. Wrong guess: at most $|\X|-1$
+alternatives remain.}
+\end{yourturn}
+
+\begin{corollary}[one-bit form]\label{cor:fano-one-bit}
+Since binary entropy is at most one bit,
+\[
+  \Ent(X\mid Y)
+  \le 1+\PP(X\ne Y)\log\bigl(|\X|-1\bigr).
+\]
+Swapping $X$ and $Y$ gives the companion bound
+\[
+  \Ent(Y\mid X)
+  \le 1+\PP(X\ne Y)\log\bigl(|\X|-1\bigr).
+\]
+\end{corollary}
+
+\begin{proof}
+Use $h_2(P_{\mathrm e})\le1$ in Theorem~\ref{thm:fano}. For the second
+inequality, apply the same theorem to $(Y,X)$; the error event
+$\{Y\ne X\}$ and its probability are unchanged.
+\end{proof}
+
+\color{inkiron}
+\block{How to read the bound}
+The direct reading is
+\[
+  P_{\mathrm e}\text{ small}
+  \quad\Longrightarrow\quad
+  \Ent(X\mid Y)\text{ small}.
+\]
+A more useful reverse reading comes from solving the same inequality for
+$P_{\mathrm e}$. When $|\X|>2$, Corollary~\ref{cor:fano-one-bit} becomes
+\[
+  P_{\mathrm e}
+  \ge
+  \frac{\Ent(X\mid Y)-1}{\log(|\X|-1)}.
+\]
+Thus a large residual uncertainty certifies that no estimator based on $Y$
+can have a very small error probability. These are inequalities, not
+equalities: slack can enter through $h_2(P_{\mathrm e})\le1$ and through the
+bound of $\log(|\X|-1)$ on the wrong-guess case.

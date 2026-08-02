@@ -1,0 +1,203 @@
+% ===========================================================================
+\section{Entropy under constraints}\label{sec:entropy-properties}
+\warmth{0}\quad\whisper{Support, conditioning, and deterministic maps all limit uncertainty.}
+
+\begin{strand}
+Entropy cannot vary arbitrarily. A finite alphabet fixes its range,
+conditioning can only remove uncertainty, and a deterministic map can only
+merge outcomes. The equality cases tell us exactly when no information was
+lost.
+\end{strand}
+
+\block{Range and equality cases}
+
+\begin{proposition}[entropy bounds]\label{prop:entropy-bounds}
+If $X$ takes values in a finite alphabet $\X$, then
+\[
+  0\le \Ent(X)\le\log|\X|.
+\]
+The lower bound is attained exactly when $X$ is constant, and the upper bound
+is attained exactly when $X$ is uniform on $\X$.
+\end{proposition}
+
+\begin{proof}
+Each summand $-p_X(x)\log p_X(x)$ is non-negative, which proves the lower
+bound. Equality requires one outcome to have probability $1$.
+
+For the upper bound, let $u$ be uniform on $\X$. The uniform-reference
+identity from Proposition~\ref{prop:uniform-kl} gives
+\[
+  \KL(p_X\Vert u)=\log|\X|-\Ent(X)\ge0.
+\]
+Equality in the information inequality holds exactly when $p_X=u$.
+\end{proof}
+
+\begin{yourturn}
+Complete the identity that proves the upper bound:
+\[
+  \KL(p_X\Vert u)=\log|\X|-\answerin[1.8cm]{\Ent(X)}.
+\]
+\recall{Use $\KL(p_X\Vert u)=\log|\X|-\Ent(X)\ge0$.}
+\end{yourturn}
+
+\begin{proposition}[conditioning reduces entropy]\label{prop:conditioning-bounds}
+For discrete random variables $X,Y$,
+\[
+  0\le\Ent(X\mid Y)\le\Ent(X).
+\]
+Moreover,
+\[
+  \Ent(X\mid Y)=\Ent(X)\iff X\text{ and }Y\text{ are independent},
+\]
+whereas
+\[
+  \Ent(X\mid Y)=0\iff X=f(Y)\quad\text{almost surely}
+\]
+for some function $f$.
+\end{proposition}
+
+\begin{proof}
+The lower bound follows because conditional entropy is an average of
+non-negative entropies:
+\[
+  \Ent(X\mid Y)=\sum_yp_Y(y)\Ent(X\mid Y=y)\ge0.
+\]
+It is zero exactly when every conditional law with $p_Y(y)>0$ is a point
+mass, which is equivalent to $X=f(Y)$ almost surely.
+
+For the upper bound, Proposition~\ref{prop:mi-properties} gives
+\[
+  \Ent(X)-\Ent(X\mid Y)=\MI(X;Y)\ge0.
+\]
+Equality holds exactly when $\MI(X;Y)=0$, hence exactly when $X$ and $Y$ are
+independent.
+\end{proof}
+
+\begin{yourturn}
+Match the two equality cases:
+\[
+\begin{aligned}
+  \Ent(X\mid Y)=\Ent(X)
+    &\iff \answerin[3.2cm]{X\perp Y},\\
+  \Ent(X\mid Y)=0
+    &\iff \answerin[3.2cm]{X=f(Y)\ \text{a.s.}}.
+\end{aligned}
+\]
+\recall{The upper equality means independence; zero conditional entropy means
+$X$ is determined by $Y$.}
+\end{yourturn}
+
+\begin{proposition}[entropy chain rule and subadditivity]\label{prop:entropy-chain-n}
+For discrete $X_1,\ldots,X_n$,
+\[
+  \Ent(X_1,\ldots,X_n)
+  =\sum_{i=1}^n\Ent(X_i\mid X_1,\ldots,X_{i-1})
+  \le\sum_{i=1}^n\Ent(X_i).
+\]
+Equality in the inequality holds exactly when the variables are mutually
+independent.
+\end{proposition}
+
+\begin{proof}
+Repeatedly apply the two-variable chain rule
+$\Ent(U,V)=\Ent(U)+\Ent(V\mid U)$. Then use
+\[
+  \Ent(X_i\mid X_1,\ldots,X_{i-1})\le\Ent(X_i)
+\]
+term by term. Equality means that every $X_i$ is independent of its
+predecessors, which is equivalent to mutual independence.
+\end{proof}
+
+\block{Deterministic maps and collisions}
+
+\begin{proposition}[a function cannot increase entropy]\label{prop:function-entropy}
+For any function $f$,
+\[
+  \Ent(f(X))\le\Ent(X).
+\]
+Equality holds exactly when $f$ is injective on the support of $X$.
+\end{proposition}
+
+\begin{proof}
+Because $f(X)$ is determined by $X$,
+\[
+  \Ent(X,f(X))=\Ent(X)+\Ent(f(X)\mid X)=\Ent(X).
+\]
+Expanding in the other order gives
+\[
+  \Ent(X,f(X))
+  =\Ent(f(X))+\Ent(X\mid f(X))
+  \ge\Ent(f(X)).
+\]
+Equality holds exactly when $X$ can be recovered from $f(X)$, which says that
+$f$ is injective on the support of $X$.
+\end{proof}
+
+\begin{yourturn}
+Which non-negative term measures the information lost by $f$?
+\[
+  \Ent(X)-\Ent(f(X))
+  =\answerin[3.4cm]{\Ent(X\mid f(X))}.
+\]
+\recall{The lost information is $\Ent(X\mid f(X))$.}
+\end{yourturn}
+
+\begin{proposition}[collision probability]\label{prop:collision-probability}
+Let $X'$ be an independent copy of $X$. Then
+\[
+  \PP(X=X')\ge 2^{-\Ent(X)}.
+\]
+Equality holds exactly when $X$ is uniform on its support.
+\end{proposition}
+
+\begin{proof}
+Jensen's inequality for the convex function $t\mapsto2^t$ gives
+\[
+  2^{-\Ent(X)}
+  =2^{\E[\log p_X(X)]}
+  \le\E\!\left[2^{\log p_X(X)}\right]
+  =\E[p_X(X)].
+\]
+Independence and identical distribution give
+\[
+  \E[p_X(X)]=\sum_xp_X(x)^2=\PP(X=X').
+\]
+Jensen is an equality exactly when $\log p_X(X)$ is constant on the support,
+that is, when $X$ is uniform there.
+\end{proof}
+
+\begin{yourturn}
+Complete the collision identity:
+\[
+  \E[p_X(X)]=\sum_xp_X(x)^2
+  =\answerin[2.8cm]{\PP(X=X')}.
+\]
+\recall{For an independent copy $X'$, $\sum_xp_X(x)^2=\PP(X=X')$.}
+\end{yourturn}
+
+\block{Mixing distributions}
+
+\begin{proposition}[concavity of entropy]\label{prop:entropy-concavity}
+For pmfs $p,q$ on the same alphabet and $0\le\lambda\le1$,
+\[
+  \Ent\!\bigl(\lambda p+(1-\lambda)q\bigr)
+  \ge\lambda\Ent(p)+(1-\lambda)\Ent(q).
+\]
+\end{proposition}
+
+\begin{proof}
+The function $g(t)=-t\log t$ is concave on $[0,1]$. Hence, for every $x$,
+\[
+  g\!\bigl(\lambda p(x)+(1-\lambda)q(x)\bigr)
+  \ge\lambda g(p(x))+(1-\lambda)g(q(x)).
+\]
+Summing over $x$ proves the claim.
+\end{proof}
+
+\begin{yourturn}
+Name the one-variable function behind entropy's concavity:
+\[
+  g(t)=\answerin[2.4cm]{-t\log t}.
+\]
+\recall{Entropy is a sum of the concave terms $g(t)=-t\log t$.}
+\end{yourturn}

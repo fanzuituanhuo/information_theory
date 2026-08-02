@@ -1,0 +1,89 @@
+% ===========================================================================
+\section{Divergence: comparing two laws}\label{sec:divergence}
+\warmth{0}\quad\whisper{KL divergence is not a distance, but distance intuition is useful.}
+
+\begin{strand}
+$\KL(p\Vert q)$ measures the inefficiency that arises when the true law is $p$
+but we assume the law is $q$. It is asymmetric, so it is not a distance between
+distributions in the strict mathematical sense. Nevertheless, treating it as a
+directed notion of ``distance'' is often very useful.
+\end{strand}
+
+\begin{definition}[Kullback--Leibler divergence]\label{def:kl}
+For pmfs $p$ and $q$ on $\X$,
+\[
+  \KL(p\Vert q)=\sum_{x\in\X}p(x)\log\frac{p(x)}{q(x)}.
+\]
+We take $0\log(0/q)=0$. If $p(x)>0$ for some $x$ with $q(x)=0$, then
+$\KL(p\Vert q)=\infty$.
+\end{definition}
+
+\block{Expectation and entropy forms}
+If $X\sim p$, then
+\begin{align*}
+  \KL(p\Vert q)
+  &=\E_{X\sim p}\!\left[\log\frac{p(X)}{q(X)}\right]\\
+  &=-\E_{X\sim p}[\log q(X)]-\Ent(X).
+\end{align*}
+
+\begin{yourturn}
+Fill the algebraic step:
+\[
+  \E_p\!\left[\log\frac{p(X)}{q(X)}\right]
+  =\E_p[\log p(X)]-\E_p[\log q(X)]
+  =\answerin[4.6cm]{-\Ent(X)-\E_p[\log q(X)]}.
+\]
+\recall{$-\Ent(X)-\E_p[\log q(X)]$.}
+\end{yourturn}
+
+\block{The order cannot be reversed}
+
+\Needspace{11\baselineskip}
+\begin{example}[asymmetry]
+On $\X=\{0,1\}$, let
+\[
+  p=(1/2,1/2),\qquad q=(1,0).
+\]
+Then $\KL(p\Vert q)=\infty$ because $q(1)=0$ while $p(1)>0$, but
+\[
+  \KL(q\Vert p)=\log\frac{1}{1/2}=1\ \text{bit}.
+\]
+Thus $\KL(p\Vert q)$ and $\KL(q\Vert p)$ need not agree.
+\end{example}
+
+\begin{yourturn}
+Explain in one sentence why the first direction is infinite but the reverse
+direction is finite.
+\workspace[2]
+\answerprose{$\KL(p\Vert q)$ sums $p(x)\log\frac{p(x)}{q(x)}$; since $p(1)>0$ while $q(1)=0$, the term $\log\frac{p(1)}{q(1)}=\log\infty$ blows up. In the reverse direction every $x$ with $q(x)>0$ also has $p(x)>0$, so no infinite term appears.}
+\recall{$p(1)>0=q(1)$ makes $\KL(p\Vert q)=\infty$; the reversed support has no such term.}
+\end{yourturn}
+
+\block{Comparison with the uniform law}
+
+\begin{proposition}[uniform reference]\label{prop:uniform-kl}
+If $q$ is uniform on a finite alphabet $\X$, then for $X\sim p$,
+\[
+  \KL(p\Vert q)=\log|\X|-\Ent(X).
+\]
+\end{proposition}
+\begin{proof}
+Since $q(x)=1/|\X|$,
+\begin{align*}
+  \KL(p\Vert q)
+  &=\sum_xp(x)\log p(x)+\sum_xp(x)\log|\X|\\
+  &=-\Ent(X)+\log|\X|\sum_xp(x)\\
+  &=\log|\X|-\Ent(X),
+\end{align*}
+where the last equality uses $\sum_xp(x)=1$.
+\end{proof}
+
+\begin{yourturn}
+Recall the key simplification for a uniform reference law:
+\[
+  \KL(p\Vert q)
+  =-\Ent(X)+\log|\X|\sum_xp(x)
+  =\answerin[3.2cm]{\log|\X|-\Ent(X)}.
+\]
+\recall{$\log|\X|-\Ent(X)$.}
+\end{yourturn}

@@ -1,0 +1,27 @@
+# macOS
+.DS_Store
+**/.DS_Store
+
+# LaTeX build workspace (all lectures)
+**/build/
+
+# LaTeX intermediate files (safety net)
+*.aux
+*.log
+*.xdv
+*.fls
+*.fdb_latexmk
+*.synctex.gz
+*.synctex.gz(busy)
+*.out
+*.toc
+*.lof
+*.lot
+*.bbl
+*.blg
+
+# Temporary rasterized pages
+tmp/
+
+# Editor
+.vscode/settings.json

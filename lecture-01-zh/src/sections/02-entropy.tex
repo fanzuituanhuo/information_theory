@@ -1,0 +1,89 @@
+% ===========================================================================
+\section{熵：平均「surprise」}\label{sec:entropy}
+\warmth{0}\quad\whisper{熵把所有可能结果的「surprise」取平均。}
+
+\begin{strand}
+$-\log p(x)$ 描述某一个结果的「surprise」。熵对它取期望，因此熵依赖于
+$X$ 的\emph{分布}，而不依赖于这一次实际观察到了哪个取值。
+\end{strand}
+
+\begin{definition}[$b$ 进制熵]\label{def:entropy}
+设离散随机变量 $X$ 的字母表为 $\X$，则
+\[
+  \Ent_b(X)
+  =-\sum_{x\in\X}p_X(x)\log_b p_X(x)
+  =\E\!\left[-\log_b p_X(X)\right].
+\]
+约定 $0\log_b0=0$。若无特别说明，取 $b=2$。
+\end{definition}
+
+\begin{remark}
+熵只依赖于 $p_X$，因此 $\Ent(X)$、$\Ent(p_X)$ 和 $\Ent(p)$
+可能表示同一个数。
+\end{remark}
+
+\block{伯努利随机变量}
+
+\begin{example}[二元熵]
+设 $\X=\{H,T\}$，并且 $\PP(X=H)=p$、$\PP(X=T)=1-p$。则
+\[
+  \Ent(X)=-p\log p-(1-p)\log(1-p).
+\]
+在这个特殊情形下，也常把它写成 $\Ent(p)$。
+\end{example}
+
+\begin{yourturn}
+用公式补全三个关键取值：
+\[
+  \Ent(0)=\answerin[1cm]{0},\qquad
+  \Ent\!\left(\tfrac12\right)=\answerin[1cm]{1},\qquad
+  \Ent(1)=\answerin[1cm]{0}\quad\text{比特}.
+\]
+画出 $0\le p\le1$ 时的大致曲线，并标出最高点。
+\workspace[3]
+\recall{三个值依次是 $0,1,0$。曲线关于 $p=1/2$ 对称，并在这里达到最高点。}
+\end{yourturn}
+
+\block{联合熵}
+
+\begin{definition}[联合熵]\label{def:joint-entropy}
+令 $X=(X_1,X_2)$，其联合概率质量函数为 $p_{X_1X_2}$，则
+\[
+  \Ent(X_1,X_2)
+  =-\sum_{x_1\in\X_1}\sum_{x_2\in\X_2}
+    p_{X_1X_2}(x_1,x_2)\log p_{X_1X_2}(x_1,x_2).
+\]
+\end{definition}
+
+\begin{proposition}[独立时的可加性]\label{prop:independent-entropy}
+若 $X_1$ 与 $X_2$ 独立，则
+\[
+  \Ent(X_1,X_2)=\Ent(X_1)+\Ent(X_2).
+\]
+\end{proposition}
+
+\begin{proof}
+独立性给出
+$p_{X_1X_2}(x_1,x_2)=p_{X_1}(x_1)p_{X_2}(x_2)$。
+把它代入定义~\ref{def:joint-entropy}，并拆开乘积的对数：
+\begin{align*}
+  \Ent(X_1,X_2)
+  &=-\sum_{x_1,x_2}p_{X_1}(x_1)p_{X_2}(x_2)
+    \bigl(\log p_{X_1}(x_1)+\log p_{X_2}(x_2)\bigr)\\
+  &=-\sum_{x_1}p_{X_1}(x_1)\log p_{X_1}(x_1)
+      \sum_{x_2}p_{X_2}(x_2)\\
+  &\quad-\sum_{x_2}p_{X_2}(x_2)\log p_{X_2}(x_2)
+      \sum_{x_1}p_{X_1}(x_1)\\
+  &=\Ent(X_1)+\Ent(X_2).
+\end{align*}
+最后一步使用了两个边缘概率质量函数之和均为 $1$。
+\end{proof}
+
+\begin{yourturn}
+复述可加性证明中最关键的一步：
+\[
+  \log\!\bigl(p_{X_1}(x_1)p_{X_2}(x_2)\bigr)
+  =\answerin[5.2cm]{\log p_{X_1}(x_1)+\log p_{X_2}(x_2)}.
+\]
+\recall{$\log p_{X_1}(x_1)+\log p_{X_2}(x_2)$。}
+\end{yourturn}

@@ -1,0 +1,127 @@
+% ===========================================================================
+\section{Codes, length, and decodability}\label{sec:codes}
+\warmth{0}\quad\whisper{A codeword names one symbol; an extended code must preserve a whole sequence.}
+
+\begin{strand}
+Coding begins with a map from source symbols to finite strings. Short strings
+save space, but distinct symbols and distinct source sequences must remain
+distinguishable. This is why expected length and decodability have to be studied
+together.
+\end{strand}
+
+\block{From a source symbol to a codeword}
+
+\begin{definition}[source code]\label{def:source-code}
+Let $X$ be a random variable with finite alphabet $\X$. A $D$-ary source code is
+a map
+\[
+  C:\X\longrightarrow\D^*,
+\]
+where $\D^*$ is the set of \answerin[3.9cm]{finite-length strings} over a
+$D$-ary alphabet $\D$. The string $C(x)$ is the \keyword{codeword} of $x$, and
+$\ell(x)=|C(x)|$ is its length.
+\studentrecall{The blank is ``finite-length strings.''}
+\end{definition}
+
+For instance, if $\X=\{\text{red},\text{blue}\}$ and $\D=\{0,1\}$, one may set
+$C(\text{red})=00$ and $C(\text{blue})=11$.
+
+\begin{definition}[expected length]\label{def:expected-length}
+If $X$ has probability mass function $p$, the expected length of $C$ is
+\[
+  L(C)=\E[\ell(X)]
+      =\sum_{x\in\X}p(x)\ell(x).
+\]
+\end{definition}
+
+\begin{example}[an entropy-matched binary code]\label{ex:dyadic-code}
+Let $\X=\{1,2,3,4\}$, with probabilities and codewords
+\[
+\begin{array}{c|cccc}
+x&1&2&3&4\\ \hline
+p(x)&\tfrac12&\tfrac14&\tfrac18&\tfrac18\\
+C(x)&0&10&110&111
+\end{array}
+\]
+The codeword lengths are $1,2,3,3$, so
+\[
+  L(C)=\tfrac12\cdot1+\tfrac14\cdot2
+       +\tfrac18\cdot3+\tfrac18\cdot3
+       =\answerin[1.4cm]{\tfrac74}\ \text{bits}.
+\]
+Since $\ell(x)=-\log_2 p(x)$ for every symbol here,
+\[
+  \Ent(X)=\sum_xp(x)\log_2\frac1{p(x)}
+         =\answerin[1.4cm]{\tfrac74}\ \text{bits}=L(C).
+\]
+\studentrecall{Both blanks are $\tfrac74$ bits.}
+\end{example}
+
+\begin{yourturn}
+Why does the equality $L(C)=\Ent(X)$ require no averaging trick in this example?
+\studentrecall{Here $\ell(x)=-\log_2p(x)$ for every $x$, so equality holds term by term.}
+\ifshowanswers\else\workspace[2]\fi
+\answerprose{The equality holds term by term: each length satisfies
+$\ell(x)=-\log_2p(x)$. Multiplying by $p(x)$ and summing therefore gives
+$L(C)=\Ent(X)$.}
+\end{yourturn}
+
+\block{Three levels of decodability}
+
+\begin{definition}[nonsingular code]\label{def:nonsingular}
+A code $C$ is \keyword{nonsingular} if different source symbols have different
+codewords:
+\[
+  x\ne x'\quad\Longrightarrow\quad C(x)\ne C(x').
+\]
+Equivalently, $C$ is \answerin[2.2cm]{injective}.
+\studentrecall{The missing word is ``injective.''}
+\end{definition}
+
+Nonsingularity only protects one symbol at a time. To encode a sequence, extend
+$C$ by concatenation:
+\[
+  C^*:\X^*\longrightarrow\D^*,\qquad
+  C^*(x_1x_2\cdots x_n)=C(x_1)C(x_2)\cdots C(x_n).
+\]
+
+\begin{definition}[uniquely decodable code]\label{def:ud}
+A code is \keyword{uniquely decodable} if its extension $C^*$ is nonsingular.
+Thus every encoded string has at most one source sequence that produced it.
+\end{definition}
+
+\begin{definition}[prefix code]\label{def:prefix}
+A code is a \keyword{prefix code}, or instantaneous code, if no codeword is a
+prefix of any other codeword.
+\end{definition}
+
+Every prefix code is uniquely decodable, and every uniquely decodable code is
+nonsingular:
+\[
+  \{\text{prefix codes}\}
+  \subset
+  \{\text{uniquely decodable codes}\}
+  \subset
+  \{\text{nonsingular codes}\}.
+\]
+The converses need not hold.
+
+\begin{example}[uniquely decodable but not prefix]\label{ex:ud-not-prefix}
+For $\X=\{A,B,C,D\}$, consider
+\[
+  C(A)=0,\qquad C(B)=01,\qquad C(C)=011,\qquad C(D)=111.
+\]
+This is not a prefix code because $0$ is a prefix of both $01$ and $011$.
+Nevertheless, it is uniquely decodable. Removing an initial $0$ from a longer
+codeword leaves only $1$ or $11$; comparing these suffixes with $111$ swaps
+$1\leftrightarrow11$ and never produces the empty suffix. Hence no two source
+sequences have the same concatenation.
+\end{example}
+
+\begin{yourturn}
+The code $\{0,01,10\}$ is nonsingular but not uniquely decodable. Exhibit two
+different source sequences with the same encoded string.
+\studentrecall{$AC$ and $BA$ both encode to $010$.}
+\ifshowanswers\else\workspace[1]\fi
+\answerprose{$AC$ and $BA$ both encode as $010$.}
+\end{yourturn}

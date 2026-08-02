@@ -1,0 +1,118 @@
+% ===========================================================================
+\section{编码、码长与可译性}\label{sec:codes}
+\warmth{0}\quad\whisper{一个码字标记一个符号；扩展码还必须保住整个符号序列。}
+
+\begin{strand}
+编码从一个“信源符号到有限字符串”的映射开始。短字符串能够节省空间，但不同的符号，
+乃至不同的信源序列，都必须保持可区分。因此，期望码长与可译性必须放在一起研究。
+\end{strand}
+
+\block{从信源符号到码字}
+
+\begin{definition}[信源编码]\label{def:source-code}
+设随机变量 $X$ 的有限字母表为 $\X$。一个 $D$ 元信源编码是映射
+\[
+  C:\X\longrightarrow\D^*,
+\]
+其中 $\D^*$ 是 $D$ 元字母表 $\D$ 上所有\answerin[3.5cm]{有限长字符串}的集合。
+字符串 $C(x)$ 称为 $x$ 的\keyword{码字}，$\ell(x)=|C(x)|$ 是它的码长。
+\studentrecall{空中应填“有限长字符串”。}
+\end{definition}
+
+例如，若 $\X=\{\text{红},\text{蓝}\}$ 且 $\D=\{0,1\}$，可以取
+$C(\text{红})=00$、$C(\text{蓝})=11$。
+
+\begin{definition}[期望码长]\label{def:expected-length}
+若 $X$ 的概率质量函数为 $p$，编码 $C$ 的期望码长定义为
+\[
+  L(C)=\E[\ell(X)]
+      =\sum_{x\in\X}p(x)\ell(x).
+\]
+\end{definition}
+
+\begin{example}[与熵匹配的二进制编码]\label{ex:dyadic-code}
+令 $\X=\{1,2,3,4\}$，其概率和码字如下：
+\[
+\begin{array}{c|cccc}
+x&1&2&3&4\\ \hline
+p(x)&\tfrac12&\tfrac14&\tfrac18&\tfrac18\\
+C(x)&0&10&110&111
+\end{array}
+\]
+四个码长分别为 $1,2,3,3$，所以
+\[
+  L(C)=\tfrac12\cdot1+\tfrac14\cdot2
+       +\tfrac18\cdot3+\tfrac18\cdot3
+       =\answerin[1.4cm]{\tfrac74}\ \text{比特}.
+\]
+这里每个符号都满足 $\ell(x)=-\log_2p(x)$，因此
+\[
+  \Ent(X)=\sum_xp(x)\log_2\frac1{p(x)}
+         =\answerin[1.4cm]{\tfrac74}\ \text{比特}=L(C).
+\]
+\studentrecall{两个空都应填 $\tfrac74$ 比特。}
+\end{example}
+
+\begin{yourturn}
+为什么这个例子中的 $L(C)=\Ent(X)$ 不需要特殊的平均技巧？
+\studentrecall{每个 $x$ 都满足 $\ell(x)=-\log_2p(x)$，所以等式逐项成立。}
+\ifshowanswers\else\workspace[2]\fi
+\answerprose{这个等式对每一项都成立：每个码长都满足
+$\ell(x)=-\log_2p(x)$。两边乘以 $p(x)$ 后求和，立即得到
+$L(C)=\Ent(X)$。}
+\end{yourturn}
+
+\block{三个层次的可译性}
+
+\begin{definition}[非奇异码]\label{def:nonsingular}
+若不同信源符号具有不同码字，则称编码 $C$ 为\keyword{非奇异码}：
+\[
+  x\ne x'\quad\Longrightarrow\quad C(x)\ne C(x').
+\]
+等价地说，$C$ 是一个\answerin[2.2cm]{单射}。
+\studentrecall{空中应填“单射”。}
+\end{definition}
+
+非奇异性只保护单个符号。为了编码符号序列，将 $C$ 按照拼接方式扩展为
+\[
+  C^*:\X^*\longrightarrow\D^*,\qquad
+  C^*(x_1x_2\cdots x_n)=C(x_1)C(x_2)\cdots C(x_n).
+\]
+
+\begin{definition}[唯一可译码]\label{def:ud}
+若扩展码 $C^*$ 是非奇异的，则称 $C$ 为\keyword{唯一可译码}。换言之，每个编码后的
+字符串至多对应一个产生它的信源序列。
+\end{definition}
+
+\begin{definition}[前缀码]\label{def:prefix}
+若任何码字都不是另一不同码字的前缀，则称该编码为\keyword{前缀码}，也称即时码。
+\end{definition}
+
+每个前缀码都是唯一可译码，每个唯一可译码都是非奇异码：
+\[
+  \{\text{前缀码}\}
+  \subset
+  \{\text{唯一可译码}\}
+  \subset
+  \{\text{非奇异码}\}.
+\]
+反方向一般不成立。
+
+\begin{example}[唯一可译但不是前缀码]\label{ex:ud-not-prefix}
+对 $\X=\{A,B,C,D\}$，考虑
+\[
+  C(A)=0,\qquad C(B)=01,\qquad C(C)=011,\qquad C(D)=111.
+\]
+它不是前缀码，因为 $0$ 是 $01$ 和 $011$ 的前缀；但它仍是唯一可译码。从较长码字
+中删去开头的 $0$，只会留下 $1$ 或 $11$；再将这些后缀与 $111$ 比较，只会使
+$1\leftrightarrow11$ 来回转换，永远不会得到空后缀。因此不会有两个信源序列产生
+相同的拼接结果。
+\end{example}
+
+\begin{yourturn}
+编码 $\{0,01,10\}$ 是非奇异码，却不是唯一可译码。请给出两个编码结果相同的不同
+信源序列。
+\studentrecall{$AC$ 与 $BA$ 都编码为 $010$。}
+\ifshowanswers\else\workspace[1]\fi
+\answerprose{$AC$ 与 $BA$ 都编码为 $010$。}
+\end{yourturn}

@@ -1,0 +1,138 @@
+% ===========================================================================
+\section{散度不等式}\label{sec:divergence-properties}
+\warmth{0}\quad\whisper{log-sum 不等式把逐点的比值变成整体的比较。}
+
+\begin{strand}
+KL 散度不只是一个公式。它最有用的性质都来自同一个动作：把正项分组，
+对它们的比值使用凸性，并追踪取等条件。非负性、链式法则、粗粒化与凸性
+背后都是这个机制。
+\end{strand}
+
+\begin{lemma}[信息不等式]\label{lem:information-inequality}
+对同一字母表上的概率质量函数 $p,q$，
+\[
+  \KL(p\Vert q)\ge0,
+\]
+且等号成立当且仅当 $p=q$。
+\end{lemma}
+
+\begin{proof}
+若存在 $p(x)>0$ 但 $q(x)=0$ 的 $x$，则
+$\KL(p\Vert q)=+\infty$。否则，令 $X\sim p$ 且
+$S=\{x:p(x)>0\}$。对凸函数 $-\log$ 使用 Jensen 不等式：
+\begin{align*}
+  \KL(p\Vert q)
+  &=\E_p\!\left[-\log\frac{q(X)}{p(X)}\right]\\
+  &\ge-\log\E_p\!\left[\frac{q(X)}{p(X)}\right]
+   =-\log\sum_{x\in S}q(x)
+  \ge-\log1=0.
+\end{align*}
+Jensen 中取等要求 $q(x)/p(x)$ 在 $S$ 上为常数；第二个不等式取等要求
+$q$ 在 $S$ 外没有概率质量。再由归一化可知该常数只能为 $1$，故 $p=q$。
+\end{proof}
+
+\begin{theorem}[log-sum 不等式]\label{thm:log-sum}
+设 $a_1,\ldots,a_n$ 与 $b_1,\ldots,b_n$ 非负，并令
+$a=\sum_i a_i$、$b=\sum_i b_i$，则
+\[
+  \sum_{i=1}^n a_i\log\frac{a_i}{b_i}
+  \ge a\log\frac{a}{b}.
+\]
+若所有相关项均为正，则等号成立当且仅当 $a_i/b_i$ 不依赖于 $i$。
+\end{theorem}
+
+\begin{proof}
+边界情形由零项的通常约定直接得到。在非平凡且有限的情形 $a,b>0$ 下，
+令 $\alpha_i=a_i/a$、$\beta_i=b_i/b$。于是
+\begin{align*}
+  \sum_i a_i\log\frac{a_i}{b_i}
+  &=a\log\frac{a}{b}
+    +a\sum_i\alpha_i\log\frac{\alpha_i}{\beta_i}\\
+  &=a\log\frac{a}{b}+a\KL(\alpha\Vert\beta)\\
+  &\ge a\log\frac{a}{b},
+\end{align*}
+其中最后一步使用引理~\ref{lem:information-inequality}。
+等号成立恰好等价于 $\alpha=\beta$，也就是在公共支撑上
+$a_i/b_i=a/b$。
+\end{proof}
+
+\begin{yourturn}
+log-sum 不等式何时取等？
+\[
+  \frac{a_1}{b_1}=\cdots=\frac{a_n}{b_n}
+  =\answerin[1.5cm]{\frac{a}{b}}.
+\]
+\recall{所有比值都等于同一个值 $a/b$ 时取等。}
+\end{yourturn}
+
+\block{模型失配的链式法则}
+
+对联合概率质量函数 $p_{XY}=p_Xp_{Y\mid X}$ 与
+$q_{XY}=q_Xq_{Y\mid X}$，定义条件散度
+\[
+  \KL(p_{Y\mid X}\Vert q_{Y\mid X}\mid p_X)
+  :=\sum_xp_X(x)\KL\!\left(
+    p_{Y\mid X}(\,\cdot\mid x)\Vert q_{Y\mid X}(\,\cdot\mid x)\right).
+\]
+
+\begin{proposition}[散度的链式法则]\label{prop:kl-chain}
+\[
+  \KL(p_{XY}\Vert q_{XY})
+  =\KL(p_X\Vert q_X)
+   +\KL(p_{Y\mid X}\Vert q_{Y\mid X}\mid p_X).
+\]
+\end{proposition}
+
+\begin{proof}
+分解两个联合分布并拆开对数：
+\begin{align*}
+  \KL(p_{XY}\Vert q_{XY})
+  &=\sum_{x,y}p_{XY}(x,y)
+    \log\frac{p_X(x)p_{Y\mid X}(y\mid x)}
+              {q_X(x)q_{Y\mid X}(y\mid x)}\\
+  &=\sum_xp_X(x)\log\frac{p_X(x)}{q_X(x)}
+    +\sum_xp_X(x)\sum_yp_{Y\mid X}(y\mid x)
+      \log\frac{p_{Y\mid X}(y\mid x)}
+                {q_{Y\mid X}(y\mid x)}.
+\end{align*}
+这正是结论中的两项。
+\end{proof}
+
+\begin{corollary}[边缘化不会增大散度]
+\[
+  \KL(p_{XY}\Vert q_{XY})\ge\KL(p_X\Vert q_X).
+\]
+\end{corollary}
+
+\begin{proof}
+两边之差是命题~\ref{prop:kl-chain} 中的条件散度；它是非负散度的平均。
+\end{proof}
+
+\block{混合两对分布}
+
+\begin{proposition}[联合凸性]\label{prop:kl-joint-convex}
+对概率质量函数 $p_1,p_2,q_1,q_2$ 以及 $0\le\lambda\le1$，
+\begin{align*}
+  &\KL\!\left(\lambda p_1+(1-\lambda)p_2
+    \,\middle\Vert\,\lambda q_1+(1-\lambda)q_2\right)\\
+  &\qquad\le
+    \lambda\KL(p_1\Vert q_1)
+    +(1-\lambda)\KL(p_2\Vert q_2).
+\end{align*}
+\end{proposition}
+
+\begin{proof}
+对每个结果 $x$，在 log-sum 不等式中取
+$a_1=\lambda p_1(x)$、$a_2=(1-\lambda)p_2(x)$，并用 $q_1,q_2$
+构造相应的 $b_1,b_2$。再对 $x$ 求和，即得结论。
+\end{proof}
+
+\Needspace{8\baselineskip}
+\begin{yourturn}
+在散度链式法则中，减去边缘项后还剩什么？
+\[
+  \KL(p_{XY}\Vert q_{XY})-\KL(p_X\Vert q_X)
+  =\answerin[5.1cm]{\KL(p_{Y\mid X}\Vert q_{Y\mid X}\mid p_X)}.
+\]
+\recall{余项是条件散度的平均，因此非负。}
+\end{yourturn}

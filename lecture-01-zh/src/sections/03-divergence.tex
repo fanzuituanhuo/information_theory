@@ -1,0 +1,87 @@
+% ===========================================================================
+\section{散度：比较两个分布}\label{sec:divergence}
+\warmth{0}\quad\whisper{KL 散度并非距离，但距离的直觉很好用。}
+
+\begin{strand}
+$\KL(p\Vert q)$ 描述真实分布为 $p$、而假设分布为 $q$ 时的无效性。
+它是不对称的，因此并非严格数学意义上两个分布之间的距离；不过，把它视作一种
+有方向的“距离”通常非常有用。
+\end{strand}
+
+\begin{definition}[Kullback--Leibler 散度]\label{def:kl}
+设 $p,q$ 是字母表 $\X$ 上的概率质量函数，则
+\[
+  \KL(p\Vert q)=\sum_{x\in\X}p(x)\log\frac{p(x)}{q(x)}.
+\]
+约定 $0\log(0/q)=0$。若存在某个 $x$ 使得 $p(x)>0$ 而 $q(x)=0$，
+则 $\KL(p\Vert q)=\infty$。
+\end{definition}
+
+\block{期望形式与熵形式}
+若 $X\sim p$，则
+\begin{align*}
+  \KL(p\Vert q)
+  &=\E_{X\sim p}\!\left[\log\frac{p(X)}{q(X)}\right]\\
+  &=-\E_{X\sim p}[\log q(X)]-\Ent(X).
+\end{align*}
+
+\begin{yourturn}
+补全下面的代数步骤：
+\[
+  \E_p\!\left[\log\frac{p(X)}{q(X)}\right]
+  =\E_p[\log p(X)]-\E_p[\log q(X)]
+  =\answerin[4.6cm]{-\Ent(X)-\E_p[\log q(X)]}.
+\]
+\recall{答案是 $-\Ent(X)-\E_p[\log q(X)]$。}
+\end{yourturn}
+
+\block{次序不能交换}
+
+\Needspace{11\baselineskip}
+\begin{example}[非对称性]
+在 $\X=\{0,1\}$ 上，令
+\[
+  p=(1/2,1/2),\qquad q=(1,0).
+\]
+由于 $q(1)=0$ 而 $p(1)>0$，所以 $\KL(p\Vert q)=\infty$；但
+\[
+  \KL(q\Vert p)=\log\frac{1}{1/2}=1\ \text{比特}.
+\]
+因此 $\KL(p\Vert q)$ 与 $\KL(q\Vert p)$ 不一定相等。
+\end{example}
+
+\begin{yourturn}
+用一句话解释：为什么第一个方向是无穷，而反向却是有限的？
+\workspace[2]
+\answerprose{$\KL(p\Vert q)$ 求和 $p(x)\log\frac{p(x)}{q(x)}$；由于 $p(1)>0$ 而 $q(1)=0$，项 $\log\frac{p(1)}{q(1)}=\log\infty$ 爆炸。反向时，凡 $q(x)>0$ 的 $x$ 都有 $p(x)>0$，因此不出现无穷项。}
+\recall{$p(1)>0=q(1)$ 使 $\KL(p\Vert q)=\infty$；反向的支撑上没有这种项。}
+\end{yourturn}
+
+\block{与均匀分布比较}
+
+\begin{proposition}[均匀参照分布]\label{prop:uniform-kl}
+若 $q$ 是有限字母表 $\X$ 上的均匀分布，且 $X\sim p$，则
+\[
+  \KL(p\Vert q)=\log|\X|-\Ent(X).
+\]
+\end{proposition}
+\begin{proof}
+因为 $q(x)=1/|\X|$，
+\begin{align*}
+  \KL(p\Vert q)
+  &=\sum_xp(x)\log p(x)+\sum_xp(x)\log|\X|\\
+  &=-\Ent(X)+\log|\X|\sum_xp(x)\\
+  &=\log|\X|-\Ent(X).
+\end{align*}
+最后一步使用了 $\sum_xp(x)=1$。
+\end{proof}
+
+\begin{yourturn}
+复述均匀参照分布证明中的关键化简：
+\[
+  \KL(p\Vert q)
+  =-\Ent(X)+\log|\X|\sum_xp(x)
+  =\answerin[3.2cm]{\log|\X|-\Ent(X)}.
+\]
+\recall{$\log|\X|-\Ent(X)$。}
+\end{yourturn}

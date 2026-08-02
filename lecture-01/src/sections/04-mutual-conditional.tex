@@ -1,0 +1,98 @@
+% ===========================================================================
+\section{Shared and remaining uncertainty}\label{sec:mutual}
+\warmth{0}\quad\whisper{Mutual information measures how much one random variable tells us about another; conditional entropy measures what remains.}
+
+\begin{strand}
+Mutual information $\MI(X;Y)$ is a measure of the amount of information one
+random variable contains about another; equivalently, it is the reduction in
+uncertainty about one random variable once the other is known.
+\end{strand}
+
+\begin{definition}[mutual information]\label{def:mi}
+For discrete $X$ and $Y$ taking values in $\X$ and $\Y$,
+\[
+  \MI(X;Y)
+  =\sum_{x\in\X}\sum_{y\in\Y}
+   p_{XY}(x,y)\log\frac{p_{XY}(x,y)}{p_X(x)p_Y(y)}.
+\]
+Equivalently,
+\[
+  \MI(X;Y)=\KL\!\left(p_{XY}\Vert p_Xp_Y\right).
+\]
+\end{definition}
+
+\block{Entropy form}
+Taking expectation with respect to the joint law,
+\begin{align*}
+  \MI(X;Y)
+  &=\E\!\left[\log\frac{p_{XY}(X,Y)}{p_X(X)p_Y(Y)}\right]\\
+  &=\Ent(X)+\Ent(Y)-\Ent(X,Y).
+\end{align*}
+
+Indeed, the three expectations in the log-ratio are
+\[
+  \E[\log p_{XY}(X,Y)]
+  -\E[\log p_X(X)]
+  -\E[\log p_Y(Y)]
+  =-\Ent(X,Y)+\Ent(X)+\Ent(Y).
+\]
+
+\block{Conditional entropy}
+
+\begin{definition}[conditional entropy]\label{def:conditional}
+The conditional entropy of $Y$ given $X$ is
+\[
+  \Ent(Y\mid X)
+  =-\sum_{x\in\X}\sum_{y\in\Y}
+    p_{XY}(x,y)\log p_{Y\mid X}(y\mid x).
+\]
+Equivalently, it is the average of the entropies of the conditional laws:
+\[
+  \Ent(Y\mid X)
+  =\sum_{x\in\X}p_X(x)\Ent(Y\mid X=x).
+\]
+\end{definition}
+
+\begin{proposition}[chain rule]\label{prop:chain}
+\[
+  \Ent(Y\mid X)=\Ent(X,Y)-\Ent(X),
+  \qquad
+  \Ent(X\mid Y)=\Ent(X,Y)-\Ent(Y).
+\]
+\end{proposition}
+\begin{proof}
+Bayes' rule gives
+$p_{Y\mid X}(y\mid x)=p_{XY}(x,y)/p_X(x)$.
+Substituting this ratio into Definition~\ref{def:conditional} gives
+\begin{align*}
+  \Ent(Y\mid X)
+  &=-\sum_{x,y}p_{XY}(x,y)
+    \log\frac{p_{XY}(x,y)}{p_X(x)}\\
+  &=-\sum_{x,y}p_{XY}(x,y)\log p_{XY}(x,y)
+    +\sum_{x,y}p_{XY}(x,y)\log p_X(x)\\
+  &=\Ent(X,Y)+\sum_xp_X(x)\log p_X(x)\\
+  &=\Ent(X,Y)-\Ent(X).
+\end{align*}
+Interchanging $X$ and $Y$ yields
+$\Ent(X\mid Y)=\Ent(X,Y)-\Ent(Y)$.
+\end{proof}
+
+\begin{yourturn}
+Recall the key logarithm split in the chain-rule proof:
+\[
+  \log\!\bigl(p_X(x)p_{Y\mid X}(y\mid x)\bigr)
+  =\answerin[5.2cm]{\log p_X(x)+\log p_{Y\mid X}(y\mid x)}.
+\]
+\recall{$\log p_X(x)+\log p_{Y\mid X}(y\mid x)$.}
+\end{yourturn}
+
+\block{All identities on one line}
+\begin{strand}
+The definitions now meet:
+\[
+  \MI(X;Y)
+  =\Ent(X)+\Ent(Y)-\Ent(X,Y)
+  =\Ent(Y)-\Ent(Y\mid X)
+  =\Ent(X)-\Ent(X\mid Y).
+\]
+\end{strand}

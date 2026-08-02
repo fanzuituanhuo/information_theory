@@ -1,0 +1,66 @@
+% ===========================================================================
+\section{Probability laws and surprise}\label{sec:surprise}
+\warmth{0}\quad\whisper{The probability law is the object; surprise is a logarithm of that law.}
+
+\begin{strand}
+Before measuring information, keep the random variable separate from its law.
+For a discrete random variable, the probability mass function records the chance
+of every possible value. The same law may also be viewed as a probability measure
+or through its cumulative distribution function.
+\end{strand}
+
+\block{Three views of the law}
+
+\begin{definition}[probability mass function]\label{def:pmf}
+Let $X$ take values in a discrete alphabet $\X$. Its probability mass function is
+\[
+  p:\X\longrightarrow[0,1],
+  \qquad p(x)=\PP(X=x).
+\]
+We also write $p_X$ when the random variable must be made explicit.
+\end{definition}
+
+\begin{definition}[distribution and CDF]
+The distribution of a random variable $X$ is denoted $P_X$. For any set $A$ in the value space, define
+\[
+  P_X(A)=\PP(X\in A).
+\]
+If $X$ is a real-valued random variable, its cumulative distribution function is defined as
+\[
+  F_X(y)=\PP(X\le y),\qquad y\in\mathbb{R}.
+\]
+\end{definition}
+
+\begin{yourturn}
+Complete the dictionary:
+\[
+  p_X(x)=\answerin[2.8cm]{\PP(X=x)},\qquad
+  P_X((a,b))=\answerin[3.4cm]{\PP(a<X<b)}.
+\]
+\recall{$p_X(x)=\PP(X=x)$ and $P_X((a,b))=\PP(a<X<b)$.}
+\end{yourturn}
+
+\block{Why surprise is logarithmic}
+
+\begin{definition}[surprise of an event]\label{def:surprise}
+We seek a function $s(A)$ that depends continuously on $\PP(A)$, decreases as
+$\PP(A)$ increases, and satisfies
+\[
+  s(A\cap B)=s(A)+s(B)
+\]
+whenever $A$ and $B$ are independent. Up to the choice of logarithm base, these
+requirements give
+\[
+  s(A)=-\log\PP(A).
+\]
+\end{definition}
+
+\begin{yourturn}
+If independent events have probabilities $\PP(A)=1/2$ and $\PP(B)=1/4$, then
+\[
+  s(A)=\answerin[1.1cm]{1},\qquad
+  s(B)=\answerin[1.1cm]{2},\qquad
+  s(A\cap B)=\answerin[1.1cm]{3}\ \text{bits}.
+\]
+\end{yourturn}
+\recall{$1$, $2$, and $3$ bits. Independence gives $\PP(A\cap B)=\PP(A)\PP(B)=1/8$.}

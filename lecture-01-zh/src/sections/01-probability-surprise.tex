@@ -1,0 +1,64 @@
+% ===========================================================================
+\section{概率分布与「surprise」}\label{sec:surprise}
+\warmth{0}\quad\whisper{概率分布是研究对象，「surprise」是它的一个对数。}
+
+\begin{strand}
+在度量信息之前，先区分随机变量与它的分布。对离散随机变量，概率质量函数
+记录每个可能取值出现的概率。同一个分布也可以写成概率测度，或用累积分布
+函数来描述。
+\end{strand}
+
+\block{分布的三种写法}
+
+\begin{definition}[概率质量函数]\label{def:pmf}
+设离散随机变量 $X$ 的取值字母表为 $\X$。它的概率质量函数为
+\[
+  p:\X\longrightarrow[0,1],
+  \qquad p(x)=\PP(X=x).
+\]
+需要强调随机变量时，也把它写成 $p_X$。
+\end{definition}
+
+\begin{definition}[分布与累积分布函数]
+随机变量 $X$ 的分布记为 $P_X$。对于取值空间中的任意集合 $A$，定义
+\[
+  P_X(A)=\PP(X\in A).
+\]
+若 $X$ 是实值随机变量，则它的累积分布函数定义为
+\[
+  F_X(y)=\PP(X\le y),\qquad y\in\mathbb{R}.
+\]
+\end{definition}
+
+\begin{yourturn}
+补全下面的对应关系：
+\[
+  p_X(x)=\answerin[2.8cm]{\PP(X=x)},\qquad
+  P_X((a,b))=\answerin[3.4cm]{\PP(a<X<b)}.
+\]
+\recall{$p_X(x)=\PP(X=x)$，$P_X((a,b))=\PP(a<X<b)$。}
+\end{yourturn}
+
+\block{为什么「surprise」是对数}
+
+\begin{definition}[事件的「surprise」]\label{def:surprise}
+设 $s(A)$ 是事件 $A$ 的「surprise」。我们要求它连续依赖于 $\PP(A)$，
+随 $\PP(A)$ 增大而减小，并且当 $A,B$ 独立时满足
+\[
+  s(A\cap B)=s(A)+s(B).
+\]
+在选择对数底数的自由之外，这些要求导出
+\[
+  s(A)=-\log\PP(A).
+\]
+\end{definition}
+
+\begin{yourturn}
+若独立事件满足 $\PP(A)=1/2$、$\PP(B)=1/4$，则
+\[
+  s(A)=\answerin[1.1cm]{1},\qquad
+  s(B)=\answerin[1.1cm]{2},\qquad
+  s(A\cap B)=\answerin[1.1cm]{3}\ \text{比特}.
+\]
+\end{yourturn}
+\recall{答案依次为 $1,2,3$ 比特。独立性给出 $\PP(A\cap B)=\PP(A)\PP(B)=1/8$。}

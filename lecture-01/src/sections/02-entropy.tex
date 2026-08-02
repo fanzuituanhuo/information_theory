@@ -1,0 +1,89 @@
+% ===========================================================================
+\section{Entropy: average surprise}\label{sec:entropy}
+\warmth{0}\quad\whisper{Entropy averages the surprise of all possible outcomes.}
+
+\begin{strand}
+The surprise $-\log p(x)$ belongs to one outcome. Entropy takes its expectation,
+so it depends on the \emph{law} of $X$, not on which value happens to be observed.
+\end{strand}
+
+\begin{definition}[entropy in base $b$]\label{def:entropy}
+For a discrete random variable $X$ with alphabet $\X$,
+\[
+  \Ent_b(X)
+  =-\sum_{x\in\X}p_X(x)\log_b p_X(x)
+  =\E\!\left[-\log_b p_X(X)\right].
+\]
+We use the convention $0\log_b0=0$. Unless stated otherwise, $b=2$.
+\end{definition}
+
+\begin{remark}
+Because entropy depends only on $p_X$, the notations
+$\Ent(X)$, $\Ent(p_X)$, and $\Ent(p)$ may describe the same number.
+\end{remark}
+
+\block{A Bernoulli random variable}
+
+\begin{example}[binary entropy]
+Let $\X=\{H,T\}$ with $\PP(X=H)=p$ and $\PP(X=T)=1-p$. Then
+\[
+  \Ent(X)=-p\log p-(1-p)\log(1-p).
+\]
+In this special case we sometimes write $\Ent(p)$.
+\end{example}
+
+\begin{yourturn}
+Use the formula to fill the three anchor values:
+\[
+  \Ent(0)=\answerin[1cm]{0},\qquad
+  \Ent\!\left(\tfrac12\right)=\answerin[1cm]{1},\qquad
+  \Ent(1)=\answerin[1cm]{0}\quad\text{bits}.
+\]
+Sketch the curve for $0\le p\le1$ and mark its highest point.
+\workspace[3]
+\recall{The values are $0,1,0$. The curve is symmetric about $p=1/2$ and peaks there.}
+\end{yourturn}
+
+\block{Joint entropy}
+
+\begin{definition}[joint entropy]\label{def:joint-entropy}
+For $X=(X_1,X_2)$ with joint pmf $p_{X_1X_2}$,
+\[
+  \Ent(X_1,X_2)
+  =-\sum_{x_1\in\X_1}\sum_{x_2\in\X_2}
+    p_{X_1X_2}(x_1,x_2)\log p_{X_1X_2}(x_1,x_2).
+\]
+\end{definition}
+
+\begin{proposition}[additivity under independence]\label{prop:independent-entropy}
+If $X_1$ and $X_2$ are independent, then
+\[
+  \Ent(X_1,X_2)=\Ent(X_1)+\Ent(X_2).
+\]
+\end{proposition}
+
+\begin{proof}
+Independence gives
+$p_{X_1X_2}(x_1,x_2)=p_{X_1}(x_1)p_{X_2}(x_2)$.
+Insert this into Definition~\ref{def:joint-entropy} and split the logarithm:
+\begin{align*}
+  \Ent(X_1,X_2)
+  &=-\sum_{x_1,x_2}p_{X_1}(x_1)p_{X_2}(x_2)
+    \bigl(\log p_{X_1}(x_1)+\log p_{X_2}(x_2)\bigr)\\
+  &=-\sum_{x_1}p_{X_1}(x_1)\log p_{X_1}(x_1)
+      \sum_{x_2}p_{X_2}(x_2)\\
+  &\quad-\sum_{x_2}p_{X_2}(x_2)\log p_{X_2}(x_2)
+      \sum_{x_1}p_{X_1}(x_1)\\
+  &=\Ent(X_1)+\Ent(X_2),
+\end{align*}
+because each marginal pmf sums to $1$.
+\end{proof}
+
+\begin{yourturn}
+Recall the key step in the additivity proof:
+\[
+  \log\!\bigl(p_{X_1}(x_1)p_{X_2}(x_2)\bigr)
+  =\answerin[5.2cm]{\log p_{X_1}(x_1)+\log p_{X_2}(x_2)}.
+\]
+\recall{$\log p_{X_1}(x_1)+\log p_{X_2}(x_2)$.}
+\end{yourturn}

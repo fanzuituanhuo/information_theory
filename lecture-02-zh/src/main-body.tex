@@ -1,0 +1,47 @@
+\begin{document}
+
+\loomcover
+  {信息论}
+  {第二讲 · 从信源符号到可译字符串\\[2pt]{\small\color{selvage}Oxford B8.4 · 2024--25}}
+  {依据手写笔记整理的读填笔记}
+  {\today}
+
+\section*{一条主线与知识地图}
+\addcontentsline{toc}{section}{一条主线与知识地图}
+\warmth{0}
+
+\begin{strand}
+信源编码把每个信源符号替换成一个有限字符串。编码质量有两个侧面：以期望码长衡量的
+\keyword{效率}，以及在码字拼接后检验的\keyword{可译性}。核心设计问题是在缩短字符串的
+同时，保留足以识别码字边界的结构。
+\end{strand}
+
+\block{目前的知识地图}
+\noindent\begin{tabularx}{\linewidth}{@{}c l L@{}}
+\toprule
+{\color{indigo}站} & {\color{indigo}对象} & \multicolumn{1}{l}{\color{madder}要回答的问题}\\
+\midrule
+1 & $C:\X\to\D^*$ & 每个信源符号由哪个有限字符串表示？\\
+2 & $L(C)=\E[\ell(X)]$ & 平均要使用多少个编码符号？\\
+3 & $C^*:\X^*\to\D^*$ & 码字拼接起来以后还能否唯一解码？\\
+\bottomrule
+\end{tabularx}
+
+\block{全文约定}
+信源字母表 $\X$ 有限，$\D^*$ 表示由 $D$ 元编码字母表 $\D$ 中的符号组成的所有
+有限长字符串。例子通常取 $\D=\{0,1\}$。
+
+\clearpage
+{\small\tableofcontents}
+
+\clearpage
+\section*{第二讲 · 信源编码}
+\addcontentsline{toc}{section}{第二讲 · 信源编码}
+\begin{strand}
+先给信源符号分配字符串，再按照信源分布计算平均长度，最后提出决定性问题：拼接操作
+是否保留了足够的结构，使我们能够逆转编码过程？
+\end{strand}
+
+\input{sections/01-codes-and-decodability}
+
+\end{document}

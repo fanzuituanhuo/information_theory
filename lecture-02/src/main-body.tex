@@ -1,0 +1,50 @@
+\begin{document}
+
+\loomcover
+  {Information Theory}
+  {Lecture 2 · from symbols to decodable strings\\[2pt]{\small\color{selvage}Oxford B8.4 · 2024--25}}
+  {fill-in notes from handwritten notes}
+  {\today}
+
+\section*{The one idea, and the map}
+\addcontentsline{toc}{section}{The one idea, and the map}
+\warmth{0}
+
+\begin{strand}
+A source code replaces each source symbol by a finite string. Its quality has
+two sides: \keyword{efficiency}, measured by expected length, and
+\keyword{decodability}, tested after codewords are concatenated. The central
+design problem is to make strings short without losing their boundaries.
+\end{strand}
+
+\block{The map so far}
+\noindent\begin{tabularx}{\linewidth}{@{}c l L@{}}
+\toprule
+{\color{indigo}stop} & {\color{indigo}object} & \multicolumn{1}{l}{\color{madder}question}\\
+\midrule
+1 & $C:\X\to\D^*$ & Which finite string represents each source symbol?\\
+2 & $L(C)=\E[\ell(X)]$ & How many code symbols are used on average?\\
+3 & $C^*:\X^*\to\D^*$ & Can concatenated codewords still be decoded uniquely?\\
+\bottomrule
+\end{tabularx}
+
+\block{Conventions}
+The source alphabet $\X$ is finite, and $\D^*$ is the set of all finite-length
+strings over a $D$-ary code alphabet $\D$. Most examples use
+$\D=\{0,1\}$.
+
+\clearpage
+{\small\tableofcontents}
+
+\clearpage
+\section*{Lecture 2 · Source coding}
+\addcontentsline{toc}{section}{Lecture 2 · Source coding}
+\begin{strand}
+Assign strings to symbols, average their lengths under the source law, and then
+ask the decisive question: does concatenation preserve enough structure to undo
+the encoding?
+\end{strand}
+
+\input{sections/01-codes-and-decodability}
+
+\end{document}

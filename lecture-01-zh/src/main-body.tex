@@ -1,0 +1,71 @@
+\begin{document}
+
+\loomcover
+  {信息论}
+  {第一讲 · 从「surprise」到误差界\\[2pt]{\small\color{selvage}Oxford B8.4 · 2024--25}}
+  {依据手写笔记整理的读填笔记}
+  {2026年7月25日}
+
+\section*{一条主线与知识地图}
+\addcontentsline{toc}{section}{一条主线与知识地图}
+\warmth{0}
+
+\begin{strand}
+概率分布告诉我们哪些结果更可能发生。信息论先把它变成\keyword{对数「surprise」}，
+再对它作平均、比较和条件化，得到熵、散度与互信息。接下来的内容说明这些量在
+比较和处理中受到哪些结构性限制，并最终把剩余不确定性转化为估计误差的下界。
+\end{strand}
+
+\block{知识地图：从 surprise 到误差界的八站路线}
+\noindent\begin{tabularx}{\linewidth}{@{}c l L@{}}
+\toprule
+{\color{indigo}站} & {\color{indigo}核心对象} & \multicolumn{1}{l}{\color{madder}打开什么问题}\\
+\midrule
+1 & $-\log p(x)$：surprise
+  & 把概率分布变成可加的信息刻度\\
+2 & $\Ent(X)$：平均 surprise
+  & 度量不确定性，并刻画最大熵分布\\
+3 & $\KL(p\Vert q)$：模型失配
+  & 以有方向的方式比较真实分布与参照分布\\
+4 & $\MI(X;Y)$ 与 $\Ent(Y\mid X)$
+  & 区分共享的信息与仍然剩余的不确定性\\
+5 & log-sum 与散度不等式
+  & 得到非负性、链式法则与凸性\\
+6 & 条件互信息
+  & 得到数据处理：变换不能创造信息\\
+7 & 约束下的熵
+  & 给出取值范围、取等条件，以及确定性映射或混合的影响\\
+8 & Fano 不等式
+  & 把剩余不确定性转成解码误差的下界\\
+\bottomrule
+\end{tabularx}
+
+\block{全文约定}
+未注明底数时，$\log=\log_2$，信息量的单位为比特。
+对于零概率项，约定 $0\log 0=0$。
+
+\clearpage
+{\small\tableofcontents}
+
+\clearpage
+\section*{第一讲 · 从「surprise」到误差界}
+\addcontentsline{toc}{section}{第一讲 · 从「surprise」到误差界}
+\begin{strand}
+从概率分布出发构造四个基本量：surprise、熵、散度与互信息，并用条件熵
+把它们连接起来；再用 log-sum、非负性与链式法则说明数据处理不可能创造信息，
+最后把解码错误转化为熵的界。
+\end{strand}
+
+\input{sections/01-probability-surprise}
+\input{sections/02-entropy}
+\input{sections/03-divergence}
+\input{sections/04-mutual-conditional}
+
+\clearpage
+\input{sections/05-divergence-properties}
+\input{sections/06-information-properties}
+
+\input{sections/07-entropy-properties}
+\input{sections/08-fano}
+
+\end{document}

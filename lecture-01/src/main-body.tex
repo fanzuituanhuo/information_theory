@@ -1,0 +1,74 @@
+\begin{document}
+
+\loomcover
+  {Information Theory}
+  {Lecture 1 · from surprise to error bounds\\[2pt]{\small\color{selvage}Oxford B8.4 · 2024--25}}
+  {fill-in notes from handwritten notes}
+  {\today}
+
+\section*{The one idea, and the map}
+\addcontentsline{toc}{section}{The one idea, and the map}
+\warmth{0}
+
+\begin{strand}
+A probability law tells us which outcomes are likely. Information theory turns
+this into \keyword{logarithmic surprise}, then averages, compares, and conditions
+it to obtain entropy, divergence, and mutual information. The rest of the
+lecture establishes what these quantities can do under comparison and processing,
+and ends by turning residual uncertainty into a lower bound on estimation error.
+\end{strand}
+
+\block{The map: eight stops from surprise to error bounds}
+\noindent\begin{tabularx}{\linewidth}{@{}c l L@{}}
+\toprule
+{\color{indigo}stop} & {\color{indigo}idea} & \multicolumn{1}{l}{\color{madder}what it unlocks}\\
+\midrule
+1 & $-\log p(x)$: surprise
+  & turns a probability law into an additive information scale\\
+2 & $\Ent(X)$: average surprise
+  & quantifies uncertainty and identifies the maximum-entropy law\\
+3 & $\KL(p\Vert q)$: model mismatch
+  & compares a true law with a reference law, in a directed way\\
+4 & $\MI(X;Y)$ and $\Ent(Y\mid X)$
+  & separate shared information from uncertainty that remains\\
+5 & log-sum and divergence inequalities
+  & give non-negativity, chain rules, and convexity\\
+6 & conditional mutual information
+  & yields data processing: transformations cannot create information\\
+7 & entropy under constraints
+  & gives range, equality cases, and the effect of deterministic maps or mixing\\
+8 & Fano's inequality
+  & converts residual uncertainty into a lower bound on decoding error\\
+\bottomrule
+\end{tabularx}
+
+\block{Notation used throughout}
+Unless a base is shown, $\log=\log_2$ and information is measured in bits.
+For zero-probability terms we use $0\log 0=0$.
+
+\clearpage
+{\small\tableofcontents}
+
+\clearpage
+\section*{Lecture 1 · From surprise to error bounds}
+\addcontentsline{toc}{section}{Lecture 1 · From surprise to error bounds}
+\begin{strand}
+Build the four basic quantities from a probability law: surprise, entropy,
+divergence, and mutual information, with conditional entropy as the bridge.
+Then use log-sum, non-negativity, and chain rules to show that processing
+cannot create information, before turning decoding errors into entropy bounds.
+\end{strand}
+
+\input{sections/01-probability-surprise}
+\input{sections/02-entropy}
+\input{sections/03-divergence}
+\input{sections/04-mutual-conditional}
+
+\clearpage
+\input{sections/05-divergence-properties}
+\input{sections/06-information-properties}
+
+\input{sections/07-entropy-properties}
+\input{sections/08-fano}
+
+\end{document}

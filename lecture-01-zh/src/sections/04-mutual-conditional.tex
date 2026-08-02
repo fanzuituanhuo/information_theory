@@ -1,0 +1,96 @@
+% ===========================================================================
+\section{共享信息与剩余不确定性}\label{sec:mutual}
+\warmth{0}\quad\whisper{互信息度量一个随机变量包含另一个随机变量的信息量；条件熵度量剩余的不确定性。}
+
+\begin{strand}
+互信息 $\MI(X;Y)$ 是一个随机变量包含另一个随机变量信息量的度量，
+也就是已知一个随机变量时，另一个随机变量不确定度的减少量。
+\end{strand}
+
+\begin{definition}[互信息]\label{def:mi}
+设离散随机变量 $X,Y$ 分别取值于 $\X,\Y$，则
+\[
+  \MI(X;Y)
+  =\sum_{x\in\X}\sum_{y\in\Y}
+   p_{XY}(x,y)\log\frac{p_{XY}(x,y)}{p_X(x)p_Y(y)}.
+\]
+等价地，
+\[
+  \MI(X;Y)=\KL\!\left(p_{XY}\Vert p_Xp_Y\right).
+\]
+\end{definition}
+
+\block{熵的表达式}
+在联合分布下取期望，
+\begin{align*}
+  \MI(X;Y)
+  &=\E\!\left[\log\frac{p_{XY}(X,Y)}{p_X(X)p_Y(Y)}\right]\\
+  &=\Ent(X)+\Ent(Y)-\Ent(X,Y).
+\end{align*}
+
+对数比中的三个期望完整写为
+\[
+  \E[\log p_{XY}(X,Y)]
+  -\E[\log p_X(X)]
+  -\E[\log p_Y(Y)]
+  =-\Ent(X,Y)+\Ent(X)+\Ent(Y).
+\]
+
+\block{条件熵}
+
+\begin{definition}[条件熵]\label{def:conditional}
+$Y$ 在给定 $X$ 时的条件熵为
+\[
+  \Ent(Y\mid X)
+  =-\sum_{x\in\X}\sum_{y\in\Y}
+    p_{XY}(x,y)\log p_{Y\mid X}(y\mid x).
+\]
+等价地，它是各个条件分布之熵的平均：
+\[
+  \Ent(Y\mid X)
+  =\sum_{x\in\X}p_X(x)\Ent(Y\mid X=x).
+\]
+\end{definition}
+
+\begin{proposition}[链式法则]\label{prop:chain}
+\[
+  \Ent(Y\mid X)=\Ent(X,Y)-\Ent(X),
+  \qquad
+  \Ent(X\mid Y)=\Ent(X,Y)-\Ent(Y).
+\]
+\end{proposition}
+\begin{proof}
+贝叶斯公式给出
+$p_{Y\mid X}(y\mid x)=p_{XY}(x,y)/p_X(x)$。
+把这个比值代入定义~\ref{def:conditional}：
+\begin{align*}
+  \Ent(Y\mid X)
+  &=-\sum_{x,y}p_{XY}(x,y)
+    \log\frac{p_{XY}(x,y)}{p_X(x)}\\
+  &=-\sum_{x,y}p_{XY}(x,y)\log p_{XY}(x,y)
+    +\sum_{x,y}p_{XY}(x,y)\log p_X(x)\\
+  &=\Ent(X,Y)+\sum_xp_X(x)\log p_X(x)\\
+  &=\Ent(X,Y)-\Ent(X).
+\end{align*}
+交换 $X$ 与 $Y$，同理得到
+$\Ent(X\mid Y)=\Ent(X,Y)-\Ent(Y)$。
+\end{proof}
+
+\begin{yourturn}
+复述链式法则证明中最关键的对数拆分：
+\[
+  \log\!\bigl(p_X(x)p_{Y\mid X}(y\mid x)\bigr)
+  =\answerin[5.2cm]{\log p_X(x)+\log p_{Y\mid X}(y\mid x)}.
+\]
+\recall{$\log p_X(x)+\log p_{Y\mid X}(y\mid x)$。}
+\end{yourturn}
+
+\block{把所有恒等式放在一起}
+\begin{strand}
+\[
+  \MI(X;Y)
+  =\Ent(X)+\Ent(Y)-\Ent(X,Y)
+  =\Ent(Y)-\Ent(Y\mid X)
+  =\Ent(X)-\Ent(X\mid Y).
+\]
+\end{strand}

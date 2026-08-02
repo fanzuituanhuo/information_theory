@@ -1,0 +1,195 @@
+% ===========================================================================
+\section{约束下的熵}\label{sec:entropy-properties}
+\warmth{0}\quad\whisper{支撑、条件化与确定性映射都会限制不确定性。}
+
+\begin{strand}
+熵不能任意变化。有限字母表固定了它的取值范围，条件化只能消除不确定性，
+而确定性映射只能合并结果。取等条件进一步告诉我们：什么时候信息没有损失。
+\end{strand}
+
+\block{取值范围与取等条件}
+
+\begin{proposition}[熵的界]\label{prop:entropy-bounds}
+若 $X$ 取值于有限字母表 $\X$，则
+\[
+  0\le \Ent(X)\le\log|\X|.
+\]
+下界成立当且仅当 $X$ 为常量；上界成立当且仅当 $X$ 在 $\X$ 上均匀分布。
+\end{proposition}
+
+\begin{proof}
+每一项 $-p_X(x)\log p_X(x)$ 都非负，因此得到下界。等号要求某个结果的
+概率为 $1$。
+
+对上界，令 $u$ 为 $\X$ 上的均匀分布。命题~\ref{prop:uniform-kl}
+中的均匀参照恒等式给出
+\[
+  \KL(p_X\Vert u)=\log|\X|-\Ent(X)\ge0.
+\]
+信息不等式取等当且仅当 $p_X=u$。
+\end{proof}
+
+\begin{yourturn}
+补全证明上界所用的恒等式：
+\[
+  \KL(p_X\Vert u)=\log|\X|-\answerin[1.8cm]{\Ent(X)}.
+\]
+\recall{使用 $\KL(p_X\Vert u)=\log|\X|-\Ent(X)\ge0$。}
+\end{yourturn}
+
+\begin{proposition}[条件化降低熵]\label{prop:conditioning-bounds}
+对离散随机变量 $X,Y$，
+\[
+  0\le\Ent(X\mid Y)\le\Ent(X).
+\]
+此外，
+\[
+  \Ent(X\mid Y)=\Ent(X)\iff X\text{ 与 }Y\text{ 独立},
+\]
+而
+\[
+  \Ent(X\mid Y)=0\iff X=f(Y)\quad\text{几乎处处成立}
+\]
+其中 $f$ 为某个函数。
+\end{proposition}
+
+\begin{proof}
+条件熵是非负熵的平均，因此
+\[
+  \Ent(X\mid Y)=\sum_yp_Y(y)\Ent(X\mid Y=y)\ge0.
+\]
+它为零当且仅当每个满足 $p_Y(y)>0$ 的条件分布都是点质量；这等价于
+$X=f(Y)$ 几乎处处成立。
+
+对上界，命题~\ref{prop:mi-properties} 给出
+\[
+  \Ent(X)-\Ent(X\mid Y)=\MI(X;Y)\ge0.
+\]
+等号成立当且仅当 $\MI(X;Y)=0$，也就是 $X,Y$ 独立。
+\end{proof}
+
+\begin{yourturn}
+配对两个取等条件：
+\[
+\begin{aligned}
+  \Ent(X\mid Y)=\Ent(X)
+    &\iff \answerin[3.2cm]{X\perp Y},\\
+  \Ent(X\mid Y)=0
+    &\iff \answerin[3.2cm]{X=f(Y)\ \text{a.s.}}.
+\end{aligned}
+\]
+\recall{上界取等意味着独立；条件熵为零意味着 $X$ 由 $Y$ 决定。}
+\end{yourturn}
+
+\begin{proposition}[熵的链式法则与次可加性]\label{prop:entropy-chain-n}
+对离散随机变量 $X_1,\ldots,X_n$，
+\[
+  \Ent(X_1,\ldots,X_n)
+  =\sum_{i=1}^n\Ent(X_i\mid X_1,\ldots,X_{i-1})
+  \le\sum_{i=1}^n\Ent(X_i).
+\]
+不等式取等当且仅当这些随机变量相互独立。
+\end{proposition}
+
+\begin{proof}
+反复使用二元链式法则
+$\Ent(U,V)=\Ent(U)+\Ent(V\mid U)$，再逐项应用
+\[
+  \Ent(X_i\mid X_1,\ldots,X_{i-1})\le\Ent(X_i).
+\]
+取等意味着每个 $X_i$ 都与它之前的变量独立，这等价于相互独立。
+\end{proof}
+
+\block{确定性映射与碰撞}
+
+\begin{proposition}[函数不会增大熵]\label{prop:function-entropy}
+对任意函数 $f$，
+\[
+  \Ent(f(X))\le\Ent(X).
+\]
+等号成立当且仅当 $f$ 在 $X$ 的支撑上为单射。
+\end{proposition}
+
+\begin{proof}
+因为 $f(X)$ 由 $X$ 完全决定，
+\[
+  \Ent(X,f(X))=\Ent(X)+\Ent(f(X)\mid X)=\Ent(X).
+\]
+按另一顺序展开：
+\[
+  \Ent(X,f(X))
+  =\Ent(f(X))+\Ent(X\mid f(X))
+  \ge\Ent(f(X)).
+\]
+等号成立当且仅当可以从 $f(X)$ 恢复 $X$，也就是 $f$ 在 $X$ 的支撑上
+为单射。
+\end{proof}
+
+\begin{yourturn}
+哪个非负项度量了 $f$ 丢失的信息？
+\[
+  \Ent(X)-\Ent(f(X))
+  =\answerin[3.4cm]{\Ent(X\mid f(X))}.
+\]
+\recall{损失的信息是 $\Ent(X\mid f(X))$。}
+\end{yourturn}
+
+\begin{proposition}[碰撞概率]\label{prop:collision-probability}
+令 $X'$ 为 $X$ 的独立同分布副本，则
+\[
+  \PP(X=X')\ge 2^{-\Ent(X)}.
+\]
+等号成立当且仅当 $X$ 在其支撑上均匀分布。
+\end{proposition}
+
+\begin{proof}
+对凸函数 $t\mapsto2^t$ 使用 Jensen 不等式：
+\[
+  2^{-\Ent(X)}
+  =2^{\E[\log p_X(X)]}
+  \le\E\!\left[2^{\log p_X(X)}\right]
+  =\E[p_X(X)].
+\]
+独立同分布给出
+\[
+  \E[p_X(X)]=\sum_xp_X(x)^2=\PP(X=X').
+\]
+Jensen 取等当且仅当 $\log p_X(X)$ 在支撑上为常数，也就是 $X$ 在支撑上
+均匀分布。
+\end{proof}
+
+\begin{yourturn}
+补全碰撞恒等式：
+\[
+  \E[p_X(X)]=\sum_xp_X(x)^2
+  =\answerin[2.8cm]{\PP(X=X')}.
+\]
+\recall{对独立副本 $X'$，$\sum_xp_X(x)^2=\PP(X=X')$。}
+\end{yourturn}
+
+\block{混合分布}
+
+\begin{proposition}[熵的凹性]\label{prop:entropy-concavity}
+对同一字母表上的概率质量函数 $p,q$ 以及 $0\le\lambda\le1$，
+\[
+  \Ent\!\bigl(\lambda p+(1-\lambda)q\bigr)
+  \ge\lambda\Ent(p)+(1-\lambda)\Ent(q).
+\]
+\end{proposition}
+
+\begin{proof}
+函数 $g(t)=-t\log t$ 在 $[0,1]$ 上为凹函数。因此对每个 $x$，
+\[
+  g\!\bigl(\lambda p(x)+(1-\lambda)q(x)\bigr)
+  \ge\lambda g(p(x))+(1-\lambda)g(q(x)).
+\]
+对 $x$ 求和即得结论。
+\end{proof}
+
+\begin{yourturn}
+写出熵的凹性背后的一元函数：
+\[
+  g(t)=\answerin[2.4cm]{-t\log t}.
+\]
+\recall{熵是凹函数项 $g(t)=-t\log t$ 的和。}
+\end{yourturn}
