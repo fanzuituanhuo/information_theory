@@ -2,19 +2,21 @@
 
 \loomcover
   {Information Theory}
-  {Lecture 2 · from symbols to decodable strings\\[2pt]{\small\color{selvage}Oxford B8.4 · 2024--25}}
+  {Lecture 2 · from codewords to typical sequences\\[2pt]{\small\color{selvage}Oxford B8.4 · 2024--25}}
   {fill-in notes from handwritten notes}
   {\today}
 
 \section*{The one idea, and the map}
+\phantomsection
 \addcontentsline{toc}{section}{The one idea, and the map}
 \warmth{0}
 
 \begin{strand}
 A source code replaces each source symbol by a finite string. Its quality has
 two sides: \keyword{efficiency}, measured by expected length, and
-\keyword{decodability}, tested after codewords are concatenated. The central
-design problem is to make strings short without losing their boundaries.
+\keyword{decodability}, tested after codewords are concatenated. Kraft--McMillan
+controls which lengths fit; the AEP then shows why entropy is the natural scale
+for coding long i.i.d. blocks.
 \end{strand}
 
 \block{The map so far}
@@ -25,6 +27,8 @@ design problem is to make strings short without losing their boundaries.
 1 & $C:\X\to\D^*$ & Which finite string represents each source symbol?\\
 2 & $L(C)=\E[\ell(X)]$ & How many code symbols are used on average?\\
 3 & $C^*:\X^*\to\D^*$ & Can concatenated codewords still be decoded uniquely?\\
+4 & $\sum_xD^{-\ell(x)}\le1$ & Which length lists can belong to a decodable code?\\
+5 & $-n^{-1}\log p(X^n)\to\Ent(X)$ & Where does the probability mass of a long block concentrate?\\
 \bottomrule
 \end{tabularx}
 
@@ -38,13 +42,21 @@ $\D=\{0,1\}$.
 
 \clearpage
 \section*{Lecture 2 · Source coding}
+\phantomsection
 \addcontentsline{toc}{section}{Lecture 2 · Source coding}
 \begin{strand}
 Assign strings to symbols, average their lengths under the source law, and then
 ask the decisive question: does concatenation preserve enough structure to undo
-the encoding?
+the encoding? For long i.i.d. blocks, identify the typical sequences that carry
+almost all probability and reveal entropy as the exponential counting rate.
 \end{strand}
 
 \input{sections/01-codes-and-decodability}
+
+\clearpage
+\input{sections/02-kraft-mcmillan}
+
+\clearpage
+\input{sections/03-aep-typicality}
 
 \end{document}

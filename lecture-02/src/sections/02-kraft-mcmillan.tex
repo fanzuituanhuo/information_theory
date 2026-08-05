@@ -1,0 +1,117 @@
+% ===========================================================================
+\section{Kraft--McMillan: when lengths fit}\label{sec:kraft-mcmillan}
+\warmth{0}\quad\whisper{A decodable code spends a finite amount of room in the code tree.}
+
+\begin{strand}
+The Kraft sum turns a list of codeword lengths into a capacity test. Unique
+decodability forces the sum to be at most one; conversely, every integer length
+list that passes this test can be packed into a prefix code.
+\end{strand}
+
+\trigger{Use this test before trying to draw codewords: impossible length lists fail immediately.}
+
+\block{The two directions}
+\noindent\begin{tabularx}{\linewidth}{@{}l L@{}}
+\toprule
+{\color{indigo}direction} & \multicolumn{1}{l}{\color{madder}meaning}\\
+\midrule
+necessity & uniquely decodable $\Longrightarrow \sum_xD^{-\ell(x)}\le1$\\
+sufficiency & integer lengths with $\sum_xD^{-\ell(x)}\le1$
+  $\Longrightarrow$ a prefix code with exactly those lengths\\
+\bottomrule
+\end{tabularx}
+
+\begin{theorem}[Kraft--McMillan inequality]\label{thm:kraft-mcmillan}
+Let $C:\X\to\D^*$ be a $D$-ary uniquely decodable code, and write
+$\ell_x=|C(x)|$. Then
+\[
+  \sum_{x\in\X}D^{-\ell_x}\le1.
+\]
+Conversely, if positive integers $(\ell_x)_{x\in\X}$ satisfy this inequality,
+then there exists a $D$-ary prefix code $C$ such that $|C(x)|=\ell_x$ for every
+$x\in\X$.
+\end{theorem}
+
+\block{Necessity: amplify by concatenating $n$ symbols}
+
+\begin{proof}[Necessary direction]
+Set
+\[
+  K=\sum_{x\in\X}D^{-\ell_x},\qquad
+  \ell_{\min}=\min_x\ell_x,qquad
+  \ell_{\max}=\max_x\ell_x.
+\]
+For a source string $x^n=(x_1,\ldots,x_n)$, its encoded length is
+$\ell(x^n)=\sum_{i=1}^n\ell_{x_i}$. Expanding the $n$th power gives
+\[
+  K^n
+  =\sum_{x^n\in\X^n}D^{-\ell(x^n)}
+  =\sum_{k=n\ell_{\min}}^{n\ell_{\max}}A_kD^{-k},
+\]
+where $A_k$ is the number of source strings in $\X^n$ whose encoded output has
+length $k$.
+
+Unique decodability makes these $A_k$ output strings distinct. There are only
+$D^k$ strings of length $k$ over $\D$, so $A_k\le D^k$. Therefore
+\[
+  K^n
+  \le \sum_{k=n\ell_{\min}}^{n\ell_{\max}}1
+  =n(\ell_{\max}-\ell_{\min})+1.
+\]
+Taking $n$th roots and then letting $n\to\infty$ yields $K\le1$.
+\end{proof}
+
+\begin{yourturn}
+Where exactly did unique decodability enter the proof?
+\studentrecall{It makes the $A_k$ encoded strings distinct, hence $A_k\le D^k$.}
+\ifshowanswers\else\workspace[2]\fi
+\answerprose{It was used to turn source-string counting into output-string
+counting: distinct source strings must give distinct encoded strings, so among
+the $D^k$ possible strings of length $k$ we can have at most $A_k\le D^k$.}
+\end{yourturn}
+
+\block{Sufficiency: pack adjacent $D$-ary intervals}
+
+\begin{proof}[Sufficient direction]
+Relabel $\X=\{1,\ldots,M\}$ so that
+$\ell_1\le\ell_2\le\cdots\le\ell_M$, and define
+\[
+  r_m=\sum_{i=1}^{m-1}D^{-\ell_i},\qquad 1\le m\le M.
+\]
+The Kraft inequality gives $0\le r_m<1$. Since $\ell_i\le\ell_m$ for $i<m$,
+$D^{\ell_m}r_m$ is an integer, so $r_m$ has a terminating base-$D$ expansion
+with at most $\ell_m$ digits. Let $C(m)$ be its first $\ell_m$ digits, padding
+with zeros when necessary.
+
+To see that the resulting code is prefix-free, take $m<n$. By construction,
+\[
+  r_n-r_m=\sum_{i=m}^{n-1}D^{-\ell_i}\ge D^{-\ell_m}.
+\]
+But every base-$D$ fraction whose first $\ell_m$ digits equal $C(m)$ lies in
+the half-open interval $[r_m,r_m+D^{-\ell_m})$. Thus $r_n$ cannot begin with
+$C(m)$, so $C(m)$ is not a prefix of $C(n)$. Hence $C$ is a prefix code with
+the prescribed lengths.
+\end{proof}
+
+\begin{example}[a tight binary packing]
+For lengths $(1,2,3,3)$,
+\[
+  2^{-1}+2^{-2}+2^{-3}+2^{-3}=1.
+\]
+The construction uses left endpoints $0,\tfrac12,\tfrac34,\tfrac78$, whose
+binary expansions give the prefix code $0,10,110,111$.
+\end{example}
+
+\begin{yourturn}
+Could a binary uniquely decodable code have lengths $(1,2,2)$? Compute the
+Kraft sum and state the verdict.
+\[
+  2^{-1}+2^{-2}+2^{-2}=\answerin[1.2cm]{1}.
+\]
+\studentrecall{The sum is $1$, so the lengths are feasible; for example $0,10,11$.}
+\answerprose{Yes. The Kraft sum is $1$, so the converse constructs a prefix
+code; one choice is $0,10,11$.}
+\end{yourturn}
+
+\vspace{1.2cm}
+\recall{Why does the $n$th-root limit force the Kraft sum to be at most one?}

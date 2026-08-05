@@ -1,0 +1,220 @@
+% ===========================================================================
+\section{AEP 与典型序列}\label{sec:aep}
+\warmth{0}\quad\whisper{长随机分组的表现仿佛只有一批近似等概率的结果。}
+
+\begin{strand}
+渐近等分性质把熵变成一幅几何图景：几乎全部概率都落在约 $2^{n\Ent(X)}$ 个长度为
+$n$ 的序列上，而其中每个序列的概率约为 $2^{-n\Ent(X)}$。
+\end{strand}
+
+\trigger{当需要把单符号分布转化成长分组结论时，使用典型集。}
+
+\block{Bernoulli 预览}
+
+\begin{example}[数零与一]
+设 $X\sim\operatorname{Bernoulli}(p)$，且 $X_1,\ldots,X_n$ 是它的 i.i.d.
+副本。若实现值 $x^n=(x_1,\ldots,x_n)$ 含有 $N_1(x^n)$ 个一，则
+\[
+  p_{X^n}(x^n)=p^{N_1(x^n)}(1-p)^{n-N_1(x^n)}.
+\]
+大数定律给出 $N_1(X^n)/n\to p$（依概率）。因此对大多数长序列，
+\[
+\begin{aligned}
+  -\frac1n\log p_{X^n}(X^n)
+  &\approx -p\log p-(1-p)\log(1-p)\\
+  &=\answerin[1.8cm]{\Ent(X)}.
+\end{aligned}
+\]
+\studentrecall{极限是二元熵 $\Ent(X)=h_2(p)$。}
+等价地，一个典型实现值的概率约为 $2^{-n\Ent(X)}$。
+\end{example}
+
+\block{随机变量收敛的三种方式}
+
+\begin{definition}[依概率收敛]\label{def:convergence-in-probability}
+设 $Y_1,Y_2,\ldots$ 与 $Y$ 是同一概率空间上的实值随机变量。若对每个
+$\epsilon>0$ 都有
+\[
+  \PP\bigl(|Y_n-Y|>\epsilon\bigr)
+  \longrightarrow \answerin[1.2cm]{0}
+  \qquad(n\to\infty),
+\]
+则称 $Y_n$ \keyword{依概率收敛}于 $Y$，记作 $Y_n\xrightarrow{\mathrm{P}}Y$。
+\studentrecall{对每个固定误差尺度，超过该尺度的概率都趋于 $0$。}
+因此，依概率收敛控制的是“出现固定大小误差的概率”；它并不声称每条样本路径最终都
+一直靠近极限。
+\end{definition}
+
+\begin{definition}[均方收敛]\label{def:mean-square-convergence}
+设 $Y_1,Y_2,\ldots$ 与 $Y$ 都平方可积。若
+\[
+  \E\!\left[|Y_n-Y|^2\right]\longrightarrow0,
+\]
+则称 $Y_n$ \keyword{均方收敛}于 $Y$，也称在 $L^2$ 中收敛，记作
+$Y_n\xrightarrow{L^2}Y$。它要求平均平方误差趋于零，而不只是较大误差出现的概率
+趋于零。
+\end{definition}
+
+\clearpage
+\begin{definition}[以概率 $1$ 收敛]\label{def:almost-sure-convergence}
+若
+\[
+  \PP\!\left(\left\{\omega:
+  \lim_{n\to\infty}Y_n(\omega)=Y(\omega)\right\}\right)=1,
+\]
+则称 $Y_n$ \keyword{以概率 $1$ 收敛}于 $Y$，也称几乎必然收敛，记作
+$Y_n\xrightarrow{\mathrm{a.s.}}Y$。也就是说，除去同一个零概率例外集合后，对其余
+每条样本路径，数列 $Y_n(\omega)$ 都收敛到 $Y(\omega)$。
+\end{definition}
+
+最常用的蕴含关系是
+\[
+  Y_n\xrightarrow{L^2}Y
+  \quad\Longrightarrow\quad
+  Y_n\xrightarrow{\mathrm{P}}Y,
+  \qquad
+  Y_n\xrightarrow{\mathrm{a.s.}}Y
+  \quad\Longrightarrow\quad
+  Y_n\xrightarrow{\mathrm{P}}Y.
+\]
+第一个蕴含来自
+$\PP(|Y_n-Y|>\epsilon)\le\E[|Y_n-Y|^2]/\epsilon^2$。
+一般而言，若没有额外条件，均方收敛与几乎必然收敛互不蕴含。
+
+在 AEP 中，$Y_n=-n^{-1}\log p_{X^n}(X_1,\ldots,X_n)$，而极限
+$Y=\Ent(X)$ 是常数；定理所断言的是依概率收敛。
+
+\begin{theorem}[弱渐近等分性质]\label{thm:weak-aep}
+设 $X$ 是有限字母表上的离散随机变量，$X_1,X_2,\ldots$ 是 $X$ 的 i.i.d.
+副本。则
+\[
+  -\frac1n\log p_{X^n}(X_1,\ldots,X_n)
+  \longrightarrow \Ent(X)
+  \qquad\text{（依概率）}.
+\]
+\end{theorem}
+
+\begin{proof}
+在 $X$ 的支撑上定义 $Z_i=-\log p_X(X_i)$。由独立性，
+\[
+  -\log p_{X^n}(X_1,\ldots,X_n)
+  =\sum_{i=1}^n-\log p_X(X_i)=\sum_{i=1}^n Z_i.
+\]
+随机变量 $Z_i$ 独立同分布，并且
+\[
+  \E[Z_i]=\sum_xp_X(x)\log\frac1{p_X(x)}=\Ent(X).
+\]
+对 $n^{-1}\sum_iZ_i$ 使用弱大数定律即得结论。
+\end{proof}
+
+\begin{yourturn}
+AEP 证明中，大数定律作用于哪个单符号随机变量？
+\studentrecall{作用于 surprise $Z=-\log p_X(X)$，其均值为 $\Ent(X)$。}
+\ifshowanswers\else\workspace[1]\fi
+\answerprose{对 surprise $Z=-\log p_X(X)$ 使用大数定律；它的期望恰好是
+$\Ent(X)$。}
+\end{yourturn}
+
+\block{弱典型性：精确定义“近似”}
+
+\begin{definition}[弱典型集]\label{def:weak-typical-set}
+对 $\epsilon>0$，长度为 $n$ 的弱典型集定义为
+\[
+  T_{n,\epsilon}
+  =\left\{x^n\in\X^n:
+  \left|-\frac1n\log p_{X^n}(x^n)-\Ent(X)\right|
+  \le \answerin[1.2cm]{\epsilon}\right\}.
+\]
+\studentrecall{允许的每符号误差是 $\epsilon$。}
+其中的元素称为长度为 $n$ 的 $\epsilon$-典型序列。
+\end{definition}
+
+\begin{theorem}[典型集的性质]\label{thm:typical-set-properties}
+对每个 $\epsilon>0$，当 $n$ 充分大时：
+\begin{enumerate}
+  \item 每个 $x^n\in T_{n,\epsilon}$ 都满足
+  \[
+    2^{-n(\Ent(X)+\epsilon)}
+    \le p_{X^n}(x^n)
+    \le 2^{-n(\Ent(X)-\epsilon)};
+  \]
+  \item $\PP(X^n\in T_{n,\epsilon})>1-\epsilon$；
+  \item 集合大小满足
+  \[
+    (1-\epsilon)2^{n(\Ent(X)-\epsilon)}
+    <|T_{n,\epsilon}|
+    \le2^{n(\Ent(X)+\epsilon)}.
+  \]
+\end{enumerate}
+第一条对每个 $n$ 都直接来自定义；只有后两条需要 $n$ 充分大。
+\end{theorem}
+
+\begin{proof}
+对定义中的不等式取指数便得到第一条。AEP 给出
+\[
+  \PP(X^n\notin T_{n,\epsilon})
+  =\PP\!\left(\left|-\frac1n\log p_{X^n}(X^n)-\Ent(X)\right|>\epsilon\right)
+  \longrightarrow0,
+\]
+从而得到第二条。
+
+为证明基数上界，对每个典型序列使用概率下界：
+\[
+  1\ge\sum_{x^n\in T_{n,\epsilon}}p_{X^n}(x^n)
+  \ge |T_{n,\epsilon}|\,2^{-n(\Ent(X)+\epsilon)}.
+\]
+为证明基数下界，把概率上界与总质量估计结合：
+\[
+  1-\epsilon
+  <\sum_{x^n\in T_{n,\epsilon}}p_{X^n}(x^n)
+  \le |T_{n,\epsilon}|\,2^{-n(\Ent(X)-\epsilon)}.
+\]
+整理两个不等式即可得到所述界。
+\end{proof}
+
+\begin{yourturn}
+结合概率界与基数界，补全 AEP 口号：约有
+\answerin[2.6cm]{$2^{n\Ent(X)}$} 个典型序列，每个序列的概率约为
+\answerin[2.6cm]{$2^{-n\Ent(X)}$}。
+\studentrecall{数量约为 $2^{n\Ent(X)}$；概率约为 $2^{-n\Ent(X)}$。}
+\end{yourturn}
+
+\block{承载几乎全部质量的最小集合}
+
+\begin{definition}[最小高概率集合]\label{def:minimum-high-probability-set}
+对 $0<\delta<1$，令 $S_m^\delta\subseteq\X^m$ 是满足
+\[
+  \PP(X^m\in S_m^\delta)\ge1-\delta
+\]
+且具有\answerin[3.4cm]{最小基数}的集合。
+\studentrecall{在保留至少 $1-\delta$ 概率的前提下，使集合基数最小。}
+这对应手写稿中的“强”观点：只保留为承载指定概率质量所必需的最高概率序列。
+\end{definition}
+
+\begin{proposition}[两种典型集的指数等价性]\label{prop:typical-set-equivalence}
+设 $(\delta_j)$ 是任意满足 $\delta_j>0$ 且 $\delta_j\to0$ 的序列。则
+\[
+  \lim_{j\to\infty}\limsup_{m\to\infty}
+  \left|\frac1m\log
+  \frac{|S_m^{\delta_j}|}{|T_{m,\delta_j}|}\right|=0.
+\]
+因此，当容差趋于零时，最小高概率集合与弱典型集虽然可能包含不同的具体序列，
+但它们在指数尺度上的大小相同。
+\end{proposition}
+
+\begin{proof}
+对每个固定的 $0<\delta<1$，AEP 与典型集的界给出
+\[
+  \lim_{m\to\infty}\frac1m\log|S_m^\delta|=\Ent(X),
+  \qquad
+  \Ent(X)-\delta
+  \le\liminf_m\frac1m\log|T_{m,\delta}|
+  \le\limsup_m\frac1m\log|T_{m,\delta}|
+  \le\Ent(X)+\delta.
+\]
+第一个极限的上界可通过选取典型集得到；下界则把任意质量至少为 $1-\delta$ 的集合
+与一个 $\eta$-典型集相交，再令 $\eta\downarrow0$ 得到。因此，基数比的归一化对数
+之绝对值的上极限至多为 $\delta$。代入 $\delta=\delta_j$ 并令 $j\to\infty$ 即证。
+\end{proof}
+
+\recall{“每个典型序列的概率”与“典型序列的数量”如何相乘回到一？}

@@ -1,0 +1,111 @@
+% ===========================================================================
+\section{Kraft--McMillan：码长何时装得下}\label{sec:kraft-mcmillan}
+\warmth{0}\quad\whisper{可译码在码树中占用的空间总量是有限的。}
+
+\begin{strand}
+Kraft 和式把一列码长变成一个容量检验：唯一可译性迫使这个和不超过一；反过来，
+任何通过检验的整数码长列表都能被装入一棵前缀码树。
+\end{strand}
+
+\trigger{在尝试画出码字之前先做这个检验：不可能的码长列表会立刻失败。}
+
+\block{两个方向}
+\noindent\begin{tabularx}{\linewidth}{@{}l L@{}}
+\toprule
+{\color{indigo}方向} & \multicolumn{1}{l}{\color{madder}含义}\\
+\midrule
+必要性 & 唯一可译码 $\Longrightarrow \sum_xD^{-\ell(x)}\le1$\\
+充分性 & 满足 $\sum_xD^{-\ell(x)}\le1$ 的整数码长
+  $\Longrightarrow$ 存在具有这些码长的前缀码\\
+\bottomrule
+\end{tabularx}
+
+\begin{theorem}[Kraft--McMillan 不等式]\label{thm:kraft-mcmillan}
+设 $C:\X\to\D^*$ 是一个 $D$ 元唯一可译码，并记
+$\ell_x=|C(x)|$。则
+\[
+  \sum_{x\in\X}D^{-\ell_x}\le1.
+\]
+反过来，若正整数列 $(\ell_x)_{x\in\X}$ 满足这个不等式，则存在一个 $D$ 元前缀码
+$C$，使得每个 $x\in\X$ 都满足 $|C(x)|=\ell_x$。
+\end{theorem}
+
+\block{必要性：拼接 $n$ 个符号来放大约束}
+
+\begin{proof}[必要性]
+记
+\[
+  K=\sum_{x\in\X}D^{-\ell_x},\qquad
+  \ell_{\min}=\min_x\ell_x,\qquad
+  \ell_{\max}=\max_x\ell_x.
+\]
+对信源字符串 $x^n=(x_1,\ldots,x_n)$，编码后的总长度为
+$\ell(x^n)=\sum_{i=1}^n\ell_{x_i}$。展开 $n$ 次方可得
+\[
+  K^n
+  =\sum_{x^n\in\X^n}D^{-\ell(x^n)}
+  =\sum_{k=n\ell_{\min}}^{n\ell_{\max}}A_kD^{-k},
+\]
+其中 $A_k$ 表示编码后总长度为 $k$ 的 $\X^n$ 中信源字符串的数量。
+
+唯一可译性保证这 $A_k$ 个输出字符串彼此不同，而 $\D$ 上长度为 $k$ 的字符串总共
+只有 $D^k$ 个，所以 $A_k\le D^k$。因此
+\[
+  K^n
+  \le \sum_{k=n\ell_{\min}}^{n\ell_{\max}}1
+  =n(\ell_{\max}-\ell_{\min})+1.
+\]
+两边取 $n$ 次方根，再令 $n\to\infty$，得到 $K\le1$。
+\end{proof}
+
+\begin{yourturn}
+证明中的哪一步真正使用了唯一可译性？
+\studentrecall{它保证 $A_k$ 个编码结果互异，因此 $A_k\le D^k$。}
+\ifshowanswers\else\workspace[2]\fi
+\answerprose{唯一可译性把信源字符串计数转成了输出字符串计数：不同信源字符串必须
+产生不同的编码字符串，所以在总共 $D^k$ 个长度为 $k$ 的字符串中，至多能出现
+$A_k\le D^k$ 个编码结果。}
+\end{yourturn}
+
+\block{充分性：依次装入相邻的 $D$ 进制区间}
+
+\begin{proof}[充分性]
+重新标记 $\X=\{1,\ldots,M\}$，使得
+$\ell_1\le\ell_2\le\cdots\le\ell_M$，并定义
+\[
+  r_m=\sum_{i=1}^{m-1}D^{-\ell_i},\qquad 1\le m\le M.
+\]
+Kraft 不等式给出 $0\le r_m<1$。由于对 $i<m$ 有 $\ell_i\le\ell_m$，
+$D^{\ell_m}r_m$ 是整数，所以 $r_m$ 具有一个至多含 $\ell_m$ 位的有限 $D$ 进制
+展开。令 $C(m)$ 为其前 $\ell_m$ 位，不足处补零。
+
+为了验证所得编码是前缀码，取 $m<n$。由构造，
+\[
+  r_n-r_m=\sum_{i=m}^{n-1}D^{-\ell_i}\ge D^{-\ell_m}.
+\]
+另一方面，所有以 $C(m)$ 这 $\ell_m$ 位开头的 $D$ 进制小数都落在半开区间
+$[r_m,r_m+D^{-\ell_m})$ 中。因此 $r_n$ 不可能以 $C(m)$ 开头，也就是说
+$C(m)$ 不是 $C(n)$ 的前缀。故 $C$ 是一个具有指定码长的前缀码。
+\end{proof}
+
+\begin{example}[恰好填满的二进制编码]
+对码长 $(1,2,3,3)$，
+\[
+  2^{-1}+2^{-2}+2^{-3}+2^{-3}=1.
+\]
+上述构造取区间左端点 $0,\tfrac12,\tfrac34,\tfrac78$，它们的二进制展开给出
+前缀码 $0,10,110,111$。
+\end{example}
+
+\begin{yourturn}
+二进制唯一可译码能否具有码长 $(1,2,2)$？计算 Kraft 和式并作出判断。
+\[
+  2^{-1}+2^{-2}+2^{-2}=\answerin[1.2cm]{1}.
+\]
+\studentrecall{和式等于 $1$，所以可行；例如可取 $0,10,11$。}
+\answerprose{可以。Kraft 和式等于 $1$，因此逆命题保证存在前缀码；例如
+$0,10,11$。}
+\end{yourturn}
+
+\vspace{1.2cm}
+\recall{为什么取 $n$ 次方根的极限会迫使 Kraft 和式不超过一？}

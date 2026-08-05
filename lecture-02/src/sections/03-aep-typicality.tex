@@ -1,0 +1,234 @@
+% ===========================================================================
+\section{AEP and typical sequences}\label{sec:aep}
+\warmth{0}\quad\whisper{A long random block behaves as though its likely outcomes were nearly equiprobable.}
+
+\begin{strand}
+The asymptotic equipartition property turns entropy into a geometric picture:
+almost all probability lies on roughly $2^{n\Ent(X)}$ length-$n$ sequences,
+and each of those sequences has probability roughly $2^{-n\Ent(X)}$.
+\end{strand}
+
+\trigger{Use typical sets when a one-symbol distribution must be converted into a statement about long blocks.}
+
+\block{A Bernoulli preview}
+
+\begin{example}[counting zeros and ones]
+Let $X\sim\operatorname{Bernoulli}(p)$ and let $X_1,\ldots,X_n$ be i.i.d.
+copies. If a realization $x^n=(x_1,\ldots,x_n)$ contains $N_1(x^n)$ ones,
+then
+\[
+  p_{X^n}(x^n)=p^{N_1(x^n)}(1-p)^{n-N_1(x^n)}.
+\]
+The law of large numbers says $N_1(X^n)/n\to p$ in probability. Thus, for
+most long realizations,
+\[
+\begin{aligned}
+  -\frac1n\log p_{X^n}(X^n)
+  &\approx -p\log p-(1-p)\log(1-p)\\
+  &=\answerin[1.8cm]{\Ent(X)}.
+\end{aligned}
+\]
+\studentrecall{The limit is the binary entropy $\Ent(X)=h_2(p)$.}
+Equivalently, a typical realization has probability about $2^{-n\Ent(X)}$.
+\end{example}
+
+\block{Three modes of random-variable convergence}
+
+\begin{definition}[convergence in probability]\label{def:convergence-in-probability}
+Let $Y_1,Y_2,\ldots$ and $Y$ be real-valued random variables on the same
+probability space. We say that $Y_n$ \keyword{converges in probability} to $Y$,
+and write $Y_n\xrightarrow{\mathrm{P}}Y$, if for every $\epsilon>0$,
+\[
+  \PP\bigl(|Y_n-Y|>\epsilon\bigr)
+  \longrightarrow \answerin[1.2cm]{0}
+  \qquad\text{as }n\to\infty.
+\]
+\studentrecall{For every fixed tolerance, the probability of exceeding it tends to $0$.}
+Thus convergence in probability controls the probability of a fixed-size error;
+it does not assert that every sample path eventually stays close.
+\end{definition}
+
+\begin{definition}[mean-square convergence]\label{def:mean-square-convergence}
+Suppose $Y_1,Y_2,\ldots$ and $Y$ are square-integrable. We say that $Y_n$
+\keyword{converges in mean square}, or in $L^2$, to $Y$ if
+\[
+  \E\!\left[|Y_n-Y|^2\right]\longrightarrow0.
+\]
+The notation is $Y_n\xrightarrow{L^2}Y$. This asks the average squared error,
+not merely the probability of a large error, to vanish.
+\end{definition}
+
+\clearpage
+\begin{definition}[almost-sure convergence]\label{def:almost-sure-convergence}
+We say that $Y_n$ \keyword{converges almost surely}, or with probability one,
+to $Y$ if
+\[
+  \PP\!\left(\left\{\omega:
+  \lim_{n\to\infty}Y_n(\omega)=Y(\omega)\right\}\right)=1.
+\]
+The notation is $Y_n\xrightarrow{\mathrm{a.s.}}Y$. Thus, outside a single
+probability-zero exceptional set, the numerical sequence $Y_n(\omega)$
+converges to $Y(\omega)$ along every remaining sample path.
+\end{definition}
+
+The implications needed most often are
+\[
+  Y_n\xrightarrow{L^2}Y
+  \quad\Longrightarrow\quad
+  Y_n\xrightarrow{\mathrm{P}}Y,
+  \qquad
+  Y_n\xrightarrow{\mathrm{a.s.}}Y
+  \quad\Longrightarrow\quad
+  Y_n\xrightarrow{\mathrm{P}}Y.
+\]
+The first follows from
+$\PP(|Y_n-Y|>\epsilon)\le\E[|Y_n-Y|^2]/\epsilon^2$.
+In general, mean-square and almost-sure convergence do not imply one another
+without extra assumptions.
+
+In the AEP, $Y_n=-n^{-1}\log p_{X^n}(X_1,\ldots,X_n)$ and the limit
+$Y=\Ent(X)$ is constant; the theorem asserts convergence in probability.
+
+\begin{theorem}[weak asymptotic equipartition property]\label{thm:weak-aep}
+Let $X$ be a discrete random variable on a finite alphabet, and let
+$X_1,X_2,\ldots$ be i.i.d. copies of $X$. Then
+\[
+  -\frac1n\log p_{X^n}(X_1,\ldots,X_n)
+  \longrightarrow \Ent(X)
+  \qquad\text{in probability}.
+\]
+\end{theorem}
+
+\begin{proof}
+On the support of $X$, define $Z_i=-\log p_X(X_i)$. Independence gives
+\[
+  -\log p_{X^n}(X_1,\ldots,X_n)
+  =\sum_{i=1}^n-\log p_X(X_i)=\sum_{i=1}^n Z_i.
+\]
+The variables $Z_i$ are i.i.d. and
+\[
+  \E[Z_i]=\sum_xp_X(x)\log\frac1{p_X(x)}=\Ent(X).
+\]
+The weak law of large numbers applied to $n^{-1}\sum_iZ_i$ proves the claim.
+\end{proof}
+
+\begin{yourturn}
+What is the one-symbol random variable to which the law of large numbers is
+applied in the AEP proof?
+\studentrecall{Use the surprise $Z=-\log p_X(X)$, whose mean is $\Ent(X)$.}
+\ifshowanswers\else\workspace[1]\fi
+\answerprose{Apply the law of large numbers to the surprise
+$Z=-\log p_X(X)$. Its expectation is exactly $\Ent(X)$.}
+\end{yourturn}
+
+\block{Weak typicality: make ``about'' precise}
+
+\begin{definition}[weakly typical set]\label{def:weak-typical-set}
+For $\epsilon>0$, the length-$n$ weakly typical set is
+\[
+  T_{n,\epsilon}
+  =\left\{x^n\in\X^n:
+  \left|-\frac1n\log p_{X^n}(x^n)-\Ent(X)\right|
+  \le \answerin[1.2cm]{\epsilon}\right\}.
+\]
+\studentrecall{The permitted per-symbol error is $\epsilon$.}
+Its members are the $\epsilon$-typical sequences of length $n$.
+\end{definition}
+
+\begin{theorem}[typical-set properties]\label{thm:typical-set-properties}
+For every $\epsilon>0$, all sufficiently large $n$ satisfy:
+\begin{enumerate}
+  \item every $x^n\in T_{n,\epsilon}$ obeys
+  \[
+    2^{-n(\Ent(X)+\epsilon)}
+    \le p_{X^n}(x^n)
+    \le 2^{-n(\Ent(X)-\epsilon)};
+  \]
+  \item $\PP(X^n\in T_{n,\epsilon})>1-\epsilon$;
+  \item the cardinality is bounded by
+  \[
+    (1-\epsilon)2^{n(\Ent(X)-\epsilon)}
+    <|T_{n,\epsilon}|
+    \le2^{n(\Ent(X)+\epsilon)}.
+  \]
+\end{enumerate}
+The first property follows from the definition for every $n$; only the latter
+two require $n$ to be large.
+\end{theorem}
+
+\begin{proof}
+The first claim is obtained by exponentiating the defining inequality. The AEP
+gives
+\[
+  \PP(X^n\notin T_{n,\epsilon})
+  =\PP\!\left(\left|-\frac1n\log p_{X^n}(X^n)-\Ent(X)\right|>\epsilon\right)
+  \longrightarrow0,
+\]
+which proves the second claim.
+
+For the upper cardinality bound, use the lower probability bound on each typical
+sequence:
+\[
+  1\ge\sum_{x^n\in T_{n,\epsilon}}p_{X^n}(x^n)
+  \ge |T_{n,\epsilon}|\,2^{-n(\Ent(X)+\epsilon)}.
+\]
+For the lower cardinality bound, use the upper probability bound together with
+the mass estimate:
+\[
+  1-\epsilon
+  <\sum_{x^n\in T_{n,\epsilon}}p_{X^n}(x^n)
+  \le |T_{n,\epsilon}|\,2^{-n(\Ent(X)-\epsilon)}.
+\]
+Rearranging gives the stated bounds.
+\end{proof}
+
+\begin{yourturn}
+Complete the AEP slogan by combining the probability and cardinality bounds:
+there are about \answerin[2.6cm]{$2^{n\Ent(X)}$} typical sequences, each with
+probability about \answerin[2.6cm]{$2^{-n\Ent(X)}$}.
+\studentrecall{Count $\approx2^{n\Ent(X)}$; probability $\approx2^{-n\Ent(X)}$.}
+\end{yourturn}
+
+\block{The smallest set carrying almost all mass}
+
+\begin{definition}[minimum high-probability set]\label{def:minimum-high-probability-set}
+For $0<\delta<1$, let $S_m^\delta\subseteq\X^m$ be a set of
+\answerin[3.4cm]{minimum cardinality} subject to
+\[
+  \PP(X^m\in S_m^\delta)\ge1-\delta.
+\]
+\studentrecall{Minimize cardinality while retaining probability at least $1-\delta$.}
+This is the ``strong'' viewpoint in the handwritten notes: keep only the most
+probable sequences needed to capture the prescribed mass.
+\end{definition}
+
+\begin{proposition}[exponential equivalence of typical sets]\label{prop:typical-set-equivalence}
+Let $(\delta_j)$ be any positive sequence with $\delta_j\to0$. Then
+\[
+  \lim_{j\to\infty}\limsup_{m\to\infty}
+  \left|\frac1m\log
+  \frac{|S_m^{\delta_j}|}{|T_{m,\delta_j}|}\right|=0.
+\]
+Thus the minimum high-probability set and the weakly typical set may differ in
+their individual members, but not in their exponential size as the tolerance
+shrinks.
+\end{proposition}
+
+\begin{proof}
+For each fixed $0<\delta<1$, the AEP and the typical-set bounds imply
+\[
+  \lim_{m\to\infty}\frac1m\log|S_m^\delta|=\Ent(X),
+  \qquad
+  \Ent(X)-\delta
+  \le\liminf_m\frac1m\log|T_{m,\delta}|
+  \le\limsup_m\frac1m\log|T_{m,\delta}|
+  \le\Ent(X)+\delta.
+\]
+For the first limit, an upper bound comes from choosing a typical set; a lower
+bound follows by intersecting any set of mass at least $1-\delta$ with an
+$\eta$-typical set and then letting $\eta\downarrow0$. Hence the normalized
+logarithm of the ratio has absolute limsup at most $\delta$. Substituting
+$\delta=\delta_j$ and letting $j\to\infty$ proves the result.
+\end{proof}
+
+\recall{How do ``probability per typical sequence'' and ``number of typical sequences'' multiply back to one?}
