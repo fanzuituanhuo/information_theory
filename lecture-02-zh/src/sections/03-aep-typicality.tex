@@ -17,7 +17,7 @@ $n$ 的序列上，而其中每个序列的概率约为 $2^{-n\Ent(X)}$。
 \[
   p_{X^n}(x^n)=p^{N_1(x^n)}(1-p)^{n-N_1(x^n)}.
 \]
-大数定律给出 $N_1(X^n)/n\to p$（依概率）。因此对大多数长序列，
+弱大数定律给出 $N_1(X^n)/n\to p$（依概率）。因此对大多数长序列，
 \[
 \begin{aligned}
   -\frac1n\log p_{X^n}(X^n)
@@ -79,7 +79,18 @@ $Y_n\xrightarrow{\mathrm{a.s.}}Y$。也就是说，除去同一个零概率例�
 \]
 第一个蕴含来自
 $\PP(|Y_n-Y|>\epsilon)\le\E[|Y_n-Y|^2]/\epsilon^2$。
-一般而言，若没有额外条件，均方收敛与几乎必然收敛互不蕴含。
+一般而言，若没有额外条件，均方收敛与几乎必然收敛互不蕴含。（对 AEP 的
+i.i.d. 变量而言两者其实都成立：方差有限给出 $L^2$ 收敛，强大数定律给出
+几乎必然收敛；依概率收敛是三者中最弱的，也恰是弱典型性所需。）
+
+\block{弱大数定律}
+
+\begin{theorem}[弱大数定律]\label{thm:wlln}
+设 $Y_1,Y_2,\ldots$ 独立同分布，均值 $\mu=\E[Y_1]$ 与方差都有限。则
+\[
+  \frac1n\sum_{i=1}^n Y_i\xrightarrow{\mathrm{P}}\mu.
+\]
+\end{theorem}
 
 在 AEP 中，$Y_n=-n^{-1}\log p_{X^n}(X_1,\ldots,X_n)$，而极限
 $Y=\Ent(X)$ 是常数；定理所断言的是依概率收敛。

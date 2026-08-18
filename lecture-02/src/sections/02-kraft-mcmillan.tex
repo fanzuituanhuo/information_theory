@@ -15,8 +15,8 @@ list that passes this test can be packed into a prefix code.
 \toprule
 {\color{indigo}direction} & \multicolumn{1}{l}{\color{madder}meaning}\\
 \midrule
-necessity & uniquely decodable $\Longrightarrow \sum_xD^{-\ell(x)}\le1$\\
-sufficiency & integer lengths with $\sum_xD^{-\ell(x)}\le1$
+necessity & uniquely decodable $\Longrightarrow \sum_xD^{-\ell_x}\le1$\\
+sufficiency & integer lengths with $\sum_xD^{-\ell_x}\le1$
   $\Longrightarrow$ a prefix code with exactly those lengths\\
 \bottomrule
 \end{tabularx}
@@ -42,10 +42,10 @@ Set
   \ell_{\max}=\max_x\ell_x.
 \]
 For a source string $x^n=(x_1,\ldots,x_n)$, its encoded length is
-$\ell(x^n)=\sum_{i=1}^n\ell_{x_i}$. Expanding the $n$th power gives
+$|C^*(x^n)|=\sum_{i=1}^n\ell_{x_i}$. Expanding the $n$th power gives
 \[
   K^n
-  =\sum_{x^n\in\X^n}D^{-\ell(x^n)}
+  =\sum_{x^n\in\X^n}D^{-|C^*(x^n)|}
   =\sum_{k=n\ell_{\min}}^{n\ell_{\max}}A_kD^{-k},
 \]
 where $A_k$ is the number of source strings in $\X^n$ whose encoded output has

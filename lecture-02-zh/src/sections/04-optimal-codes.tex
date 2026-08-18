@@ -1,0 +1,143 @@
+% ===========================================================================
+\section{最优码与信源编码定理}\label{sec:optimal-codes}
+\warmth{0}\quad\whisper{Kraft--McMillan 把「找最好的码」变成一个约束极小化问题，其解正是 $-\log_Dp(x)$。}
+
+\begin{strand}
+熵是期望码长的普遍下界；Shannon 码与这个下界相差不到一个 $D$ 元符号。
+\end{strand}
+
+\trigger{当需要把某个码的期望长度与信息论下界作比较时，就用这一节。}
+
+\block{什么叫「最优」}
+
+\begin{definition}[最优码]\label{def:optimal-code}
+设随机变量 $X$ 的 pmf 为 $p$。符号码 $C:\X\to\D^*$ 称为对 $X$ \keyword{最优}，
+如果它在所有\answerin[3.6cm]{唯一可译}的码 $C':\X\to\D^*$ 中最小化
+\answerin[2.8cm]{$\E[|C(X)|]$}。
+\studentrecall{在唯一可译码中最小化 $\E[|C(X)|]$。}
+\end{definition}
+
+比较的范围是唯一可译码而不是前缀码；由 Kraft--McMillan，这两类码可实现的码长列表
+完全相同，所以只在前缀码里寻找最优解不会有任何损失。
+
+\block{定义背后的优化问题}
+
+记 $\ell_x=|C(x)|$。Kraft--McMillan 说：一列码长能被某个唯一可译码实现，当且仅当
+它通过 Kraft 检验。于是最优性就是约束优化问题
+\[
+  \text{最小化}\quad \sum_{x\in\X}p(x)\ell_x
+  \qquad\text{约束}\qquad
+  \sum_{x:\,p(x)>0}D^{-\ell_x}\le1,
+  \quad \ell_x\in\mathbb{N}.
+\]
+
+\block{用 Lagrange 乘子求松弛解}
+
+忽略整数约束，把 $\ell_x$ 当作实数，并把 Kraft 约束取成等号。Lagrange 函数为
+\[
+  J(\ell,\lambda)=\sum_xp(x)\ell_x
+  -\lambda\left(\sum_xD^{-\ell_x}-1\right).
+\]
+令 $\partial J/\partial\ell_x=0$ 得 $p(x)+\lambda D^{-\ell_x}\ln D=0$，即
+$D^{-\ell_x}=-p(x)/(\lambda\ln D)$。对 $x$ 求和并代入约束
+$\sum_xD^{-\ell_x}=1$，迫使 $-\lambda\ln D=1$，因此
+\[
+  D^{-\ell_x}=p(x),
+  \qquad
+  \ell_x=\answerin[2.6cm]{-\log_Dp(x)}.
+\]
+\studentrecall{驻点是 $\ell_x=-\log_Dp(x)$，对应 $L=\Ent_D(X)$。}
+目标函数关于 $\ell$ 是凸的，约束集也是凸的，所以这个驻点确实是极小点。它对应的
+平均长度为
+\[
+  \E[|C(X)|]=\sum_x-p(x)\log_Dp(x)=\Ent_D(X).
+\]
+这里 $\Ent_D(X)=\sum_xp(x)\log_D\frac1{p(x)}=\Ent(X)/\log_2D$ 是以 $D$ 元单位
+度量的熵；$D=2$ 时就是以比特为单位的通常的熵。
+
+\block{下界就是熵}
+
+\begin{theorem}[信源编码定理：逐符号版本]\label{thm:source-coding-symbol}
+设 $X$ 在有限集 $\X$ 中取值，$C$ 是一个唯一可译的 $D$ 元信源码。则
+\[
+  \Ent_D(X)\le\E\bigl[|C(X)|\bigr],
+\]
+且等号成立当且仅当对每个满足 $p(x)>0$ 的 $x$ 都有 $-\log_Dp(x)\in\mathbb{N}$。
+\end{theorem}
+
+\begin{proof}
+令 $\ell_x=|C(x)|$，并定义辅助分布
+\[
+  q(x)=\frac{D^{-\ell_x}}{\sum_{x'}D^{-\ell_{x'}}},
+  \qquad
+  c=\sum_{x'}D^{-\ell_{x'}}.
+\]
+于是
+\[
+\begin{aligned}
+  \E[|C(X)|]-\Ent_D(X)
+  &=\sum_xp(x)\ell_x+\sum_xp(x)\log_Dp(x)\\
+  &=-\sum_xp(x)\log_D\!\left(D^{-\ell_x}\right)+\sum_xp(x)\log_Dp(x)\\
+  &=-\sum_xp(x)\log_D\bigl(q(x)\,c\bigr)+\sum_xp(x)\log_Dp(x)\\
+  &=-\log_Dc+\sum_xp(x)\log_D\frac{p(x)}{q(x)}\\
+  &=-\log_Dc+\KL_D(p\,\|\,q)\ \ge\ 0.
+\end{aligned}
+\]
+最后一步用到两件事：由 Kraft--McMillan 有 $c\le1$，故 $-\log_Dc\ge0$；以及相对熵
+非负。等号要求两项同时为零，即 $c=1$ 且 $p=q$，这恰好是 $D^{-\ell_x}=p(x)$，
+也就是 $\ell_x=-\log_Dp(x)\in\mathbb{N}$。
+\end{proof}
+
+\begin{yourturn}
+证明把差值 $\E[|C(X)|]-\Ent_D(X)$ 拆成了两个非负项。分别说出它们是什么，以及各自
+非负的依据。
+\studentrecall{$-\log_Dc\ge0$ 来自 Kraft；$\KL_D(p\|q)\ge0$ 来自 Gibbs 不等式。}
+\ifshowanswers\else\workspace[2]\fi
+\answerprose{一项是松弛量 $-\log_Dc$，其中 $c=\sum_xD^{-\ell_x}$，由
+Kraft--McMillan 的 $c\le1$ 保证非负；另一项是散度 $\KL_D(p\|q)$，由 Gibbs 不等式
+保证非负。只有当码把码树恰好填满（$c=1$）且与信源匹配（$q=p$）时，差值才为零。}
+\end{yourturn}
+
+\block{向上取整最多多花一个符号}
+
+\begin{proposition}[Shannon 码]\label{prop:shannon-code}
+设 $X$ 如上。存在前缀码 $\bar C$ 满足
+\[
+  \Ent_D(X)\le\E\bigl[|\bar C(X)|\bigr]<\Ent_D(X)+1,
+\]
+因而最优码也满足同样的上下界。
+\end{proposition}
+
+\begin{proof}
+取 $\ell_x=\lceil-\log_Dp(x)\rceil$。由于 $\ell_x\ge-\log_Dp(x)$，
+\[
+  \sum_xD^{-\ell_x}
+  \le\sum_xD^{\log_Dp(x)}
+  =\sum_xp(x)=1,
+\]
+所以由 Kraft--McMillan 存在恰好具有这些码长的前缀码。由取整的定义，
+\[
+  -\log_Dp(x)\le\ell_x<-\log_Dp(x)+1 .
+\]
+以 $p(x)$ 为权对 $x$ 求平均即得所述界。最优码不会比这个码更长，而由
+定理~\ref{thm:source-coding-symbol} 它也不会短于 $\Ent_D(X)$。
+\end{proof}
+
+\begin{yourturn}
+把 $-\log_Dp(x)$ 换成它的上取整之后，为什么 Kraft 检验仍然通过？
+\studentrecall{码长变长只会让每一项 $D^{-\ell_x}$ 变小。}
+\ifshowanswers\else\workspace[1]\fi
+\answerprose{增大码长会减小 $D^{-\ell_x}$，所以 Kraft 和式只会变小：它仍不超过
+$\sum_xp(x)=1$。}
+\end{yourturn}
+
+\begin{yourturn}
+Shannon 码界中的「$+1$」来自哪里？为什么一旦对长分组编码它就无关紧要？
+\studentrecall{它是取整损失，每个符号至多一个编码符号；长度 $n$ 的分组把它除以 $n$。}
+\ifshowanswers\else\workspace[2]\fi
+\answerprose{它是强制码长取整数的代价：每个符号因取整损失不到一个编码符号。对
+$n$ 个符号一起编码时，这一次损失被摊到 $n$ 个信源符号上，每符号超出至多 $1/n$。}
+\end{yourturn}
+
+\vspace{0.8cm}
+\recall{证明中的哪两个不等式恰好在 $L(C)=\Ent_D(X)$ 时同时取等？}

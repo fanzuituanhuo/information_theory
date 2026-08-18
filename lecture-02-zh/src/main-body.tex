@@ -23,10 +23,14 @@
 {\color{indigo}站} & {\color{indigo}对象} & \multicolumn{1}{l}{\color{madder}要回答的问题}\\
 \midrule
 1 & $C:\X\to\D^*$ & 每个信源符号由哪个有限字符串表示？\\
-2 & $L(C)=\E[\ell(X)]$ & 平均要使用多少个编码符号？\\
+2 & $L(C)=\E[|C(X)|]$ & 平均要使用多少个编码符号？\\
 3 & $C^*:\X^*\to\D^*$ & 码字拼接起来以后还能否唯一解码？\\
-4 & $\sum_xD^{-\ell(x)}\le1$ & 哪些码长列表能够对应可译码？\\
+4 & $\sum_xD^{-\ell_x}\le1$ & 哪些码长列表能够对应可译码？\\
 5 & $-n^{-1}\log p(X^n)\to\Ent(X)$ & 长分组的概率质量集中在哪里？\\
+6 & $\Ent_D(X)\le L(C)<\Ent_D(X)+1$ & 唯一可译码最短能做到多短？\\
+7 & $n^{-1}\E[|C(X^n)|]\to\Ent(X)$ & 对整个分组编码换来了什么？\\
+8 & $-n^{-1}\log p(X^n)\to\bar\Ent$ & 信源不是 i.i.d. 时还剩下什么？\\
+9 & $\Ent_D(X)+\KL_D(p\|q)$ & 显式的码要付多少代价？按错误分布设计又如何？\\
 \bottomrule
 \end{tabularx}
 
@@ -54,5 +58,14 @@
 
 \clearpage
 \input{sections/03-aep-typicality}
+
+\clearpage
+\input{sections/04-optimal-codes}
+
+\clearpage
+\input{sections/05-block-codes}
+
+\clearpage
+\input{sections/06-shannon-fano-codes}
 
 \end{document}

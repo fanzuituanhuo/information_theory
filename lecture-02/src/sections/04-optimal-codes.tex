@@ -1,0 +1,158 @@
+% ===========================================================================
+\section{Optimal codes and the source coding theorem}\label{sec:optimal-codes}
+\warmth{0}\quad\whisper{Kraft--McMillan turns ``find the best code'' into a constrained minimization whose answer is $-\log_Dp(x)$.}
+
+\begin{strand}
+Entropy is the universal lower bound on expected length; a Shannon code comes
+within one $D$-ary symbol of it.
+\end{strand}
+
+\trigger{Use this section when a code's expected length must be compared with an information-theoretic floor.}
+
+\block{What ``optimal'' means}
+
+\begin{definition}[optimal code]\label{def:optimal-code}
+A symbol code $C:\X\to\D^*$ is \keyword{optimal} for a random variable $X$ with
+pmf $p$ if it minimizes \answerin[2.8cm]{$\E[|C(X)|]$} among all
+\answerin[3.6cm]{uniquely decodable} codes $C':\X\to\D^*$.
+\studentrecall{Minimize $\E[|C(X)|]$ over uniquely decodable codes.}
+\end{definition}
+
+The competition is over uniquely decodable codes, not over prefix codes; by
+Kraft--McMillan the two classes have the same achievable length lists, so
+nothing is lost by looking for the optimum inside the prefix codes.
+
+\block{The optimization problem behind the definition}
+
+Write $\ell_x=|C(x)|$. Kraft--McMillan says a length list is realizable by a
+uniquely decodable code exactly when it passes the Kraft test, so optimality is
+the constrained problem
+\[
+  \text{minimize}\quad \sum_{x\in\X}p(x)\ell_x
+  \qquad\text{subject to}\qquad
+  \sum_{x:\,p(x)>0}D^{-\ell_x}\le1,
+  \quad \ell_x\in\mathbb{N}.
+\]
+
+\block{The relaxed solution by Lagrange multipliers}
+
+Ignore the integer constraint, treat the $\ell_x$ as real, and impose the Kraft
+constraint with equality. The Lagrangian is
+\[
+  J(\ell,\lambda)=\sum_xp(x)\ell_x
+  -\lambda\left(\sum_xD^{-\ell_x}-1\right).
+\]
+Setting $\partial J/\partial\ell_x=0$ gives
+$p(x)+\lambda D^{-\ell_x}\ln D=0$, that is
+$D^{-\ell_x}=-p(x)/(\lambda\ln D)$. Summing over $x$ and using the constraint
+$\sum_xD^{-\ell_x}=1$ forces $-\lambda\ln D=1$, hence
+\[
+  D^{-\ell_x}=p(x),
+  \qquad
+  \ell_x=\answerin[2.6cm]{-\log_Dp(x)}.
+\]
+\studentrecall{The stationary point is $\ell_x=-\log_Dp(x)$, giving $L=\Ent_D(X)$.}
+The objective is convex in $\ell$ and the constraint set is convex, so this
+stationary point is a minimum. Its value is the average length
+\[
+  \E[|C(X)|]=\sum_x-p(x)\log_Dp(x)=\Ent_D(X).
+\]
+Here $\Ent_D(X)=\sum_xp(x)\log_D\frac1{p(x)}=\Ent(X)/\log_2D$ is entropy
+measured in $D$-ary units. For $D=2$ it is the usual entropy in bits.
+
+\block{The floor is entropy}
+
+\begin{theorem}[source coding theorem, one symbol at a time]\label{thm:source-coding-symbol}
+Let $X$ take finitely many values in $\X$ and let $C$ be a uniquely decodable
+$D$-ary source code. Then
+\[
+  \Ent_D(X)\le\E\bigl[|C(X)|\bigr],
+\]
+with equality if and only if $-\log_Dp(x)\in\mathbb{N}$ for every $x$ with
+$p(x)>0$.
+\end{theorem}
+
+\begin{proof}
+Set $\ell_x=|C(x)|$ and define the auxiliary pmf
+\[
+  q(x)=\frac{D^{-\ell_x}}{\sum_{x'}D^{-\ell_{x'}}},
+  \qquad
+  c=\sum_{x'}D^{-\ell_{x'}}.
+\]
+Then
+\[
+\begin{aligned}
+  \E[|C(X)|]-\Ent_D(X)
+  &=\sum_xp(x)\ell_x+\sum_xp(x)\log_Dp(x)\\
+  &=-\sum_xp(x)\log_D\!\left(D^{-\ell_x}\right)+\sum_xp(x)\log_Dp(x)\\
+  &=-\sum_xp(x)\log_D\bigl(q(x)\,c\bigr)+\sum_xp(x)\log_Dp(x)\\
+  &=-\log_Dc+\sum_xp(x)\log_D\frac{p(x)}{q(x)}\\
+  &=-\log_Dc+\KL_D(p\,\|\,q)\ \ge\ 0.
+\end{aligned}
+\]
+The last step uses two facts: $c\le1$ by Kraft--McMillan, so $-\log_Dc\ge0$;
+and relative entropy is nonnegative. Equality forces both terms to vanish,
+i.e.\ $c=1$ and $p=q$, which is exactly $D^{-\ell_x}=p(x)$, that is
+$\ell_x=-\log_Dp(x)\in\mathbb{N}$.
+\end{proof}
+
+\begin{yourturn}
+The proof splits the gap $\E[|C(X)|]-\Ent_D(X)$ into two nonnegative pieces.
+Name each piece and say which property makes it nonnegative.
+\studentrecall{$-\log_Dc\ge0$ by Kraft; $\KL_D(p\|q)\ge0$ by Gibbs' inequality.}
+\ifshowanswers\else\workspace[2]\fi
+\answerprose{The slack term $-\log_Dc$ with $c=\sum_xD^{-\ell_x}$ is nonnegative
+because Kraft--McMillan gives $c\le1$; the divergence $\KL_D(p\|q)$ is
+nonnegative by Gibbs' inequality. The gap closes only when the code fills the
+code tree exactly ($c=1$) and matches the source ($q=p$).}
+\end{yourturn}
+
+\block{Rounding up costs at most one symbol}
+
+\begin{proposition}[Shannon code]\label{prop:shannon-code}
+Let $X$ be as above. There exists a prefix code $\bar C$ with
+\[
+  \Ent_D(X)\le\E\bigl[|\bar C(X)|\bigr]<\Ent_D(X)+1,
+\]
+and hence an optimal code obeys the same bounds.
+\end{proposition}
+
+\begin{proof}
+Set $\ell_x=\lceil-\log_Dp(x)\rceil$. Since
+$\ell_x\ge-\log_Dp(x)$,
+\[
+  \sum_xD^{-\ell_x}
+  \le\sum_xD^{\log_Dp(x)}
+  =\sum_xp(x)=1,
+\]
+so by Kraft--McMillan there exists a prefix code with exactly these lengths. By
+definition of the ceiling,
+\[
+  -\log_Dp(x)\le\ell_x<-\log_Dp(x)+1 .
+\]
+Averaging over $x$ with weights $p(x)$ gives the stated bounds. An optimal code
+cannot be longer than this one, and by
+Theorem~\ref{thm:source-coding-symbol} it cannot be shorter than $\Ent_D(X)$.
+\end{proof}
+
+\begin{yourturn}
+Why is the Kraft test still passed after replacing $-\log_Dp(x)$ by its ceiling?
+\studentrecall{Rounding lengths up only shrinks each term $D^{-\ell_x}$.}
+\ifshowanswers\else\workspace[1]\fi
+\answerprose{Increasing a length decreases $D^{-\ell_x}$, so the Kraft sum can
+only decrease: it stays at most $\sum_xp(x)=1$.}
+\end{yourturn}
+
+\begin{yourturn}
+Where does the ``$+1$'' in the Shannon-code bound come from, and why is it
+harmless once we encode long blocks?
+\studentrecall{It is the rounding loss, at most one code symbol per source symbol; blocks of length $n$ divide it by $n$.}
+\ifshowanswers\else\workspace[2]\fi
+\answerprose{It is the cost of forcing integer lengths: each symbol loses less
+than one code symbol to rounding. Coding blocks of $n$ symbols spreads that
+single loss over $n$ source symbols, leaving an excess of at most $1/n$ per
+symbol.}
+\end{yourturn}
+
+\vspace{0.8cm}
+\recall{Which two inequalities in the proof become equalities exactly when $L(C)=\Ent_D(X)$?}

@@ -19,7 +19,7 @@ a map
 \]
 where $\D^*$ is the set of \answerin[3.9cm]{finite-length strings} over a
 $D$-ary alphabet $\D$. The string $C(x)$ is the \keyword{codeword} of $x$, and
-$\ell(x)=|C(x)|$ is its length.
+$|C(x)|$ is its length.
 \studentrecall{The blank is ``finite-length strings.''}
 \end{definition}
 
@@ -29,8 +29,8 @@ $C(\text{red})=00$ and $C(\text{blue})=11$.
 \begin{definition}[expected length]\label{def:expected-length}
 If $X$ has probability mass function $p$, the expected length of $C$ is
 \[
-  L(C)=\E[\ell(X)]
-      =\sum_{x\in\X}p(x)\ell(x).
+  L(C)=\E[|C(X)|]
+      =\sum_{x\in\X}p(x)|C(x)|.
 \]
 \end{definition}
 
@@ -49,7 +49,7 @@ The codeword lengths are $1,2,3,3$, so
        +\tfrac18\cdot3+\tfrac18\cdot3
        =\answerin[1.4cm]{\tfrac74}\ \text{bits}.
 \]
-Since $\ell(x)=-\log_2 p(x)$ for every symbol here,
+Since $|C(x)|=-\log_2 p(x)$ for every symbol here,
 \[
   \Ent(X)=\sum_xp(x)\log_2\frac1{p(x)}
          =\answerin[1.4cm]{\tfrac74}\ \text{bits}=L(C).
@@ -59,10 +59,10 @@ Since $\ell(x)=-\log_2 p(x)$ for every symbol here,
 
 \begin{yourturn}
 Why does the equality $L(C)=\Ent(X)$ require no averaging trick in this example?
-\studentrecall{Here $\ell(x)=-\log_2p(x)$ for every $x$, so equality holds term by term.}
+\studentrecall{Here $|C(x)|=-\log_2p(x)$ for every $x$, so equality holds term by term.}
 \ifshowanswers\else\workspace[2]\fi
 \answerprose{The equality holds term by term: each length satisfies
-$\ell(x)=-\log_2p(x)$. Multiplying by $p(x)$ and summing therefore gives
+$|C(x)|=-\log_2p(x)$. Multiplying by $p(x)$ and summing therefore gives
 $L(C)=\Ent(X)$.}
 \end{yourturn}
 

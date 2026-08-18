@@ -14,8 +14,8 @@ Kraft 和式把一列码长变成一个容量检验：唯一可译性迫使这�
 \toprule
 {\color{indigo}方向} & \multicolumn{1}{l}{\color{madder}含义}\\
 \midrule
-必要性 & 唯一可译码 $\Longrightarrow \sum_xD^{-\ell(x)}\le1$\\
-充分性 & 满足 $\sum_xD^{-\ell(x)}\le1$ 的整数码长
+必要性 & 唯一可译码 $\Longrightarrow \sum_xD^{-\ell_x}\le1$\\
+充分性 & 满足 $\sum_xD^{-\ell_x}\le1$ 的整数码长
   $\Longrightarrow$ 存在具有这些码长的前缀码\\
 \bottomrule
 \end{tabularx}
@@ -40,10 +40,10 @@ $C$，使得每个 $x\in\X$ 都满足 $|C(x)|=\ell_x$。
   \ell_{\max}=\max_x\ell_x.
 \]
 对信源字符串 $x^n=(x_1,\ldots,x_n)$，编码后的总长度为
-$\ell(x^n)=\sum_{i=1}^n\ell_{x_i}$。展开 $n$ 次方可得
+$|C^*(x^n)|=\sum_{i=1}^n\ell_{x_i}$。展开 $n$ 次方可得
 \[
   K^n
-  =\sum_{x^n\in\X^n}D^{-\ell(x^n)}
+  =\sum_{x^n\in\X^n}D^{-|C^*(x^n)|}
   =\sum_{k=n\ell_{\min}}^{n\ell_{\max}}A_kD^{-k},
 \]
 其中 $A_k$ 表示编码后总长度为 $k$ 的 $\X^n$ 中信源字符串的数量。

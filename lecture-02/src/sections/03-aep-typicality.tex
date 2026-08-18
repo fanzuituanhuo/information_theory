@@ -19,7 +19,7 @@ then
 \[
   p_{X^n}(x^n)=p^{N_1(x^n)}(1-p)^{n-N_1(x^n)}.
 \]
-The law of large numbers says $N_1(X^n)/n\to p$ in probability. Thus, for
+The weak law of large numbers says $N_1(X^n)/n\to p$ in probability. Thus, for
 most long realizations,
 \[
 \begin{aligned}
@@ -84,7 +84,20 @@ The implications needed most often are
 The first follows from
 $\PP(|Y_n-Y|>\epsilon)\le\E[|Y_n-Y|^2]/\epsilon^2$.
 In general, mean-square and almost-sure convergence do not imply one another
-without extra assumptions.
+without extra assumptions. (For the AEP's i.i.d. variables both do hold:
+finite variance gives $L^2$ convergence, and the strong law of large numbers
+gives almost-sure convergence; convergence in probability is the weakest of
+the three --- and all that weak typicality needs.)
+
+\block{The weak law of large numbers}
+
+\begin{theorem}[weak law of large numbers]\label{thm:wlln}
+Let $Y_1,Y_2,\ldots$ be i.i.d.\ with finite mean $\mu=\E[Y_1]$ and finite
+variance. Then
+\[
+  \frac1n\sum_{i=1}^n Y_i\xrightarrow{\mathrm{P}}\mu.
+\]
+\end{theorem}
 
 In the AEP, $Y_n=-n^{-1}\log p_{X^n}(X_1,\ldots,X_n)$ and the limit
 $Y=\Ent(X)$ is constant; the theorem asserts convergence in probability.

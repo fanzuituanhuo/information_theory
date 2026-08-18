@@ -1,0 +1,134 @@
+% ===========================================================================
+\section{两个显式构造：Shannon 码与 Fano 码}\label{sec:shannon-fano}
+\warmth{0}\quad\whisper{Kraft 只保证「存在」这样的码；这里给出两份真正能动手造出码字的配方。}
+
+\begin{strand}
+命题~\ref{prop:shannon-code} 给出了码长 $\lceil-\log_Dp(x)\rceil$，却没有给出码字。
+Shannon 的配方从累积分布函数上直接读出码字；Fano 的配方则把字母表反复劈成概率尽量
+均衡的两半。Shannon 的版本还顺带回答了一个问题：如果按\emph{错误的}分布设计码，代价
+恰好是一个相对熵。
+\end{strand}
+
+\trigger{当你需要真正写出码字，或者码是按另一个分布设计的时候，用这一节。}
+
+\block{Shannon 码}
+
+想法是给 $x$ 分配长度 $\ell_x=\lceil\log_D\frac1{p(x)}\rceil$ 的码字，并且用累积概率的
+$D$ 进制展开来决定究竟取\emph{哪一个}这么长的串。
+
+\begin{definition}[Shannon 码]\label{def:shannon-code-construction}
+设 $\X=\{x_1,\ldots,x_m\}$，pmf 为 $p$，且 $|\D|=D$。
+\begin{enumerate}
+  \item 把概率按\answerin[3cm]{递减}顺序排列，$p_1\ge p_2\ge\cdots\ge p_m$。
+  \item 令累积概率 $\alpha_k=\sum_{i=1}^{k-1}p_i$，并把 $C(x_k)$ 定义为 $\alpha_k$ 的
+  $D$ 进制展开的前
+  \[
+    \ell_k=\answerin[2.6cm]{\lceil\log_D(1/p_k)\rceil}
+  \]
+  位数字。
+\end{enumerate}
+\studentrecall{按概率递减排序；把 $\alpha_k=\sum_{i<k}p_i$ 的 $D$ 进制展开截到 $\lceil\log_D(1/p_k)\rceil$ 位。}
+\end{definition}
+
+截断误差满足 $0\le\alpha_k-0.C(x_k)<D^{-\ell_k}\le p_k$，而
+$\alpha_{k+1}-\alpha_k=p_k$，所以不同码字对应 $[0,1)$ 中互不相交的子区间。于是这个码
+是前缀码，且码长恰好就是命题~\ref{prop:shannon-code} 中用到的那一组。
+
+\begin{yourturn}
+构造为什么要先把概率排序？不排序的话论证会在哪一步失效？
+\studentrecall{排序保证区间从长到短，短码字不会落进后面符号的区间里。}
+\ifshowanswers\else\workspace[2]\fi
+\answerprose{排序使 $\ell_1\le\ell_2\le\cdots$，于是靠后符号所占的区间比之前每个符号的
+截断分辨率都要短，任何码字都不可能是更早码字的前缀。若不排序，一个概率小、区间长的
+符号可能包含后面符号的截断点，前缀性就可能被破坏。}
+\end{yourturn}
+
+\block{用错误的分布来编码}
+
+假设我们按 pmf $q$ 造 Shannon 码，而信源真实服从 $p$。多付出的代价恰好是相对熵
+$\KL_D(p\,\|\,q)$。
+
+\begin{proposition}[失配的 Shannon 码]\label{prop:mismatched-shannon}
+设 $p,q$ 是 $\X$ 上的 pmf，$X\sim p$，$\D$ 是满足 $|\D|=D$ 的有限编码字母表。若 $C$
+是按分布 $q$ 构造的 Shannon 码，则
+\[
+  \Ent_D(X)+\KL_D(p\,\|\,q)
+  \le\E\bigl[|C(X)|\bigr]
+  <\Ent_D(X)+\KL_D(p\,\|\,q)+1 .
+\]
+\end{proposition}
+
+\begin{proof}
+由构造知 $|C(x)|=\lceil\log_D\frac1{q(x)}\rceil$，于是
+\[
+\begin{aligned}
+  \E\bigl[|C(X)|\bigr]
+  &=\sum_xp(x)\left\lceil\log_D\frac1{q(x)}\right\rceil\\
+  &<\sum_xp(x)\left(\log_D\frac1{q(x)}+1\right)\\
+  &=\sum_xp(x)\left(\log_D\frac{p(x)}{q(x)}
+    +\log_D\frac1{p(x)}\right)+1\\
+  &=\KL_D(p\,\|\,q)+\Ent_D(X)+1 .
+\end{aligned}
+\]
+下界由同一串等式得到：把上取整改为不小于其自变量，也就是把 $+1$ 去掉。
+\end{proof}
+
+\begin{yourturn}
+上面这串推导中，是哪一步代数变形制造出了散度项？
+\studentrecall{在对数里插入 $p(x)/p(x)$，把 $\log_D\frac1q$ 拆成 $\log_D\frac{p}{q}+\log_D\frac1p$。}
+\ifshowanswers\else\workspace[2]\fi
+\answerprose{把 $\frac1{q(x)}=\frac{p(x)}{q(x)}\cdot\frac1{p(x)}$ 代入并拆开对数。第一
+部分取平均得到 $\KL_D(p\|q)$，第二部分取平均得到 $\Ent_D(X)$。}
+\end{yourturn}
+
+\begin{yourturn}
+从命题~\ref{prop:mismatched-shannon} 重新得到命题~\ref{prop:shannon-code}。
+\studentrecall{取 $q=p$，此时 $\KL_D(p\|p)=0$。}
+\ifshowanswers\else\workspace[1]\fi
+\answerprose{取 $q=p$：此时 $\KL_D(p\|p)=0$，两端退化为
+$\Ent_D(X)\le\E[|C(X)|]<\Ent_D(X)+1$。}
+\end{yourturn}
+
+\block{Fano 码（1949）}
+
+Fano 的构造是自顶向下的：反复把字母表劈成概率尽量相等的两组，用「落在哪一组」决定
+下一位编码数字。
+
+\begin{definition}[Fano 码，二元情形]\label{def:fano-code}
+设 $p$ 是 $\X=\{x_1,\ldots,x_m\}$ 上的 pmf，$X\sim p$。
+\begin{enumerate}
+  \item 把符号排序，使得 $p_1\ge p_2\ge\cdots\ge p_m$。
+  \item 找出使
+  \[
+    \left|\sum_{i\le r}p_i-\sum_{i>r}p_i\right|
+  \]
+  最小的下标 $r$，并把 $\X$ 劈成两组
+  $\X_0=\{x_i:i\le r\}$ 与 $\X_1=\{x_i:i>r\}$。
+  \item 把 $\X_0$ 中所有码字的第一位定义为 \answerin[1cm]{$0$}，$\X_1$ 中的定义为
+  \answerin[1cm]{$1$}。
+  \item 在每一组内部重复第 (2)、(3) 步，每轮追加一位数字，直到每组只剩一个符号。
+\end{enumerate}
+\studentrecall{劈成概率尽量相等的两半；落在哪一半就是下一位数字。}
+这样得到一个码 $C_F:\X\to\{0,1\}^*$。
+\end{definition}
+
+由于每个符号都对应劈分树的一片叶子，$C_F$ 是\answerin[2.4cm]{前缀}码，并且可以证明
+\[
+  \E\bigl[|C_F(X)|\bigr]\le\Ent_D(X)+\answerin[0.9cm]{2}.
+\]
+\studentrecall{是前缀码；期望码长至多 $\Ent_D(X)+2$。}
+这个界比 Shannon 的弱一个符号，而且\emph{一般而言 Fano 码并不最优}：每一步贪心地平衡
+概率，可能被 Huffman 自底向上的构造超过。
+
+\begin{yourturn}
+按对 $\E[|C(X)|]$ 的保证，给本讲的三种码——Shannon、Fano、最优码（Huffman）——排序，
+并说明哪一种才真正最优。
+\studentrecall{$\Ent_D<\Ent_D+1$（Shannon）$\le\Ent_D+2$（Fano）；只有 Huffman 最优。}
+\ifshowanswers\else\workspace[3]\fi
+\answerprose{三者都以 $\Ent_D(X)$ 为下界。Shannon 码保证 $<\Ent_D(X)+1$，Fano 码只
+保证 $\le\Ent_D(X)+2$，而最优码不劣于二者，因此同样满足 $<\Ent_D(X)+1$。Shannon 码和
+Fano 码一般都不是最优的；最优值由 Huffman 码达到。}
+\end{yourturn}
+
+\vspace{0.8cm}
+\recall{当信源是 $p$ 而码却按 $q$ 设计时，衡量损失的是哪个量？}

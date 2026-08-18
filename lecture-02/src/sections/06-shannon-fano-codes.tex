@@ -1,0 +1,152 @@
+% ===========================================================================
+\section{Two explicit constructions: Shannon and Fano}\label{sec:shannon-fano}
+\warmth{0}\quad\whisper{Kraft only promised that a code exists; here are two recipes that build one.}
+
+\begin{strand}
+Proposition~\ref{prop:shannon-code} produced the lengths
+$\lceil-\log_Dp(x)\rceil$ but not the codewords. Shannon's recipe reads them off
+the cumulative distribution function; Fano's recipe splits the alphabet into
+balanced halves. Shannon's version also reveals the price of coding with the
+\emph{wrong} distribution: exactly a relative entropy.
+\end{strand}
+
+\trigger{Use this section when you need an actual codeword, or when the code was designed for a distribution other than the true one.}
+
+\block{Shannon's code}
+
+The idea is to give $x$ a codeword of length
+$\ell_x=\lceil\log_D\frac1{p(x)}\rceil$, and to choose \emph{which} string of
+that length by cutting the $D$-ary expansion of the cumulative probability.
+
+\begin{definition}[Shannon code]\label{def:shannon-code-construction}
+Let $\X=\{x_1,\ldots,x_m\}$ with pmf $p$ and let $|\D|=D$.
+\begin{enumerate}
+  \item Order the probabilities in \answerin[3cm]{decreasing} order,
+  $p_1\ge p_2\ge\cdots\ge p_m$.
+  \item Set the cumulative probability
+  $\alpha_k=\sum_{i=1}^{k-1}p_i$, and define $C(x_k)$ to be the first
+  \[
+    \ell_k=\answerin[2.6cm]{\lceil\log_D(1/p_k)\rceil}
+  \]
+  digits in the $D$-ary expansion of $\alpha_k$.
+\end{enumerate}
+\studentrecall{Sort decreasingly; cut the $D$-ary expansion of $\alpha_k=\sum_{i<k}p_i$ after $\lceil\log_D(1/p_k)\rceil$ digits.}
+\end{definition}
+
+The truncation error satisfies $0\le\alpha_k-0.C(x_k)<D^{-\ell_k}\le p_k$, and
+$\alpha_{k+1}-\alpha_k=p_k$, so distinct codewords describe disjoint
+subintervals of $[0,1)$. Hence the code is a prefix code with exactly the
+lengths used in Proposition~\ref{prop:shannon-code}.
+
+\begin{yourturn}
+Why does the construction need the probabilities sorted, and where would the
+argument fail without it?
+\studentrecall{Sorting keeps the intervals in order so a short codeword never sits inside a later one.}
+\ifshowanswers\else\workspace[2]\fi
+\answerprose{Sorting makes $\ell_1\le\ell_2\le\cdots$, so the interval attached
+to a later symbol is shorter than the truncation resolution of every earlier
+one; no codeword can then be a prefix of a previous codeword. Without sorting a
+long, low-probability interval could contain the truncation point of a later
+symbol and prefix-freeness could fail.}
+\end{yourturn}
+
+\block{Coding with the wrong distribution}
+
+Suppose we build the Shannon code from a pmf $q$ while the source really follows
+$p$. The excess cost is exactly the relative entropy $\KL_D(p\,\|\,q)$.
+
+\begin{proposition}[mismatched Shannon code]\label{prop:mismatched-shannon}
+Let $p$ and $q$ be pmfs on $\X$, let $X\sim p$, and let $\D$ be a finite code
+alphabet with $|\D|=D$. If $C$ is the Shannon code built from the distribution
+$q$, then
+\[
+  \Ent_D(X)+\KL_D(p\,\|\,q)
+  \le\E\bigl[|C(X)|\bigr]
+  <\Ent_D(X)+\KL_D(p\,\|\,q)+1 .
+\]
+\end{proposition}
+
+\begin{proof}
+By construction $|C(x)|=\lceil\log_D\frac1{q(x)}\rceil$, so
+\[
+\begin{aligned}
+  \E\bigl[|C(X)|\bigr]
+  &=\sum_xp(x)\left\lceil\log_D\frac1{q(x)}\right\rceil\\
+  &<\sum_xp(x)\left(\log_D\frac1{q(x)}+1\right)\\
+  &=\sum_xp(x)\left(\log_D\frac{p(x)}{q(x)}
+    +\log_D\frac1{p(x)}\right)+1\\
+  &=\KL_D(p\,\|\,q)+\Ent_D(X)+1 .
+\end{aligned}
+\]
+The lower bound follows from the same chain with the ceiling bounded below by
+its argument, i.e.\ by deleting the $+1$.
+\end{proof}
+
+\begin{yourturn}
+In the chain above, which single algebraic step creates the divergence term?
+\studentrecall{Insert $p(x)/p(x)$ inside the logarithm to split $\log_D\frac1{q}$ into $\log_D\frac{p}{q}+\log_D\frac1p$.}
+\ifshowanswers\else\workspace[2]\fi
+\answerprose{Writing $\frac1{q(x)}=\frac{p(x)}{q(x)}\cdot\frac1{p(x)}$ and
+splitting the logarithm. The first piece averages to $\KL_D(p\|q)$, the second
+to $\Ent_D(X)$.}
+\end{yourturn}
+
+\begin{yourturn}
+Recover Proposition~\ref{prop:shannon-code} from
+Proposition~\ref{prop:mismatched-shannon}.
+\studentrecall{Take $q=p$, so $\KL_D(p\|p)=0$.}
+\ifshowanswers\else\workspace[1]\fi
+\answerprose{Take $q=p$: then $\KL_D(p\|p)=0$ and the bounds collapse to
+$\Ent_D(X)\le\E[|C(X)|]<\Ent_D(X)+1$.}
+\end{yourturn}
+
+\block{Fano's code (1949)}
+
+Fano's construction is top-down: repeatedly split the alphabet into two groups
+of as nearly equal probability as possible, and let the split decide the next
+code digit.
+
+\begin{definition}[Fano code, binary case]\label{def:fano-code}
+Let $p$ be a pmf on $\X=\{x_1,\ldots,x_m\}$ and $X\sim p$.
+\begin{enumerate}
+  \item Sort the symbols so that $p_1\ge p_2\ge\cdots\ge p_m$.
+  \item Find the index $r$ minimizing
+  \[
+    \left|\sum_{i\le r}p_i-\sum_{i>r}p_i\right|,
+  \]
+  and split $\X$ into the two groups
+  $\X_0=\{x_i:i\le r\}$ and $\X_1=\{x_i:i>r\}$.
+  \item Define the first digit of every codeword in $\X_0$ to be
+  \answerin[1cm]{$0$}, and in $\X_1$ to be \answerin[1cm]{$1$}.
+  \item Repeat steps (2) and (3) inside each group, appending one digit per
+  round, until every group is a singleton.
+\end{enumerate}
+\studentrecall{Split into two halves of near-equal probability; the side you land on is the next digit.}
+This produces a code $C_F:\X\to\{0,1\}^*$.
+\end{definition}
+
+Because each symbol corresponds to a leaf of the splitting tree, $C_F$ is a
+\answerin[2.4cm]{prefix} code, and one can show
+\[
+  \E\bigl[|C_F(X)|\bigr]\le\Ent_D(X)+\answerin[0.9cm]{2}.
+\]
+\studentrecall{Prefix code; expected length at most $\Ent_D(X)+2$.}
+The bound is one symbol weaker than Shannon's, and indeed \emph{Fano's code is
+not optimal in general}: balancing probabilities greedily at each split can be
+beaten by Huffman's bottom-up construction.
+
+\begin{yourturn}
+Rank the three codes of this lecture --- Shannon, Fano, optimal (Huffman) --- by
+the guarantee each carries on $\E[|C(X)|]$, and say which of them is actually
+optimal.
+\studentrecall{$\Ent_D<\Ent_D+1$ (Shannon) $\le\Ent_D+2$ (Fano); only Huffman is optimal.}
+\ifshowanswers\else\workspace[3]\fi
+\answerprose{All three are bounded below by $\Ent_D(X)$. Shannon's code
+guarantees $<\Ent_D(X)+1$, Fano's only $\le\Ent_D(X)+2$, and the optimal code
+is at least as good as both, so it also satisfies $<\Ent_D(X)+1$. Neither
+Shannon's nor Fano's code is optimal in general; the optimum is attained by the
+Huffman code.}
+\end{yourturn}
+
+\vspace{0.8cm}
+\recall{Which quantity measures the loss from designing a code for $q$ when the source is $p$?}

@@ -25,10 +25,14 @@ for coding long i.i.d. blocks.
 {\color{indigo}stop} & {\color{indigo}object} & \multicolumn{1}{l}{\color{madder}question}\\
 \midrule
 1 & $C:\X\to\D^*$ & Which finite string represents each source symbol?\\
-2 & $L(C)=\E[\ell(X)]$ & How many code symbols are used on average?\\
+2 & $L(C)=\E[|C(X)|]$ & How many code symbols are used on average?\\
 3 & $C^*:\X^*\to\D^*$ & Can concatenated codewords still be decoded uniquely?\\
-4 & $\sum_xD^{-\ell(x)}\le1$ & Which length lists can belong to a decodable code?\\
+4 & $\sum_xD^{-\ell_x}\le1$ & Which length lists can belong to a decodable code?\\
 5 & $-n^{-1}\log p(X^n)\to\Ent(X)$ & Where does the probability mass of a long block concentrate?\\
+6 & $\Ent_D(X)\le L(C)<\Ent_D(X)+1$ & How short can a uniquely decodable code be?\\
+7 & $n^{-1}\E[|C(X^n)|]\to\Ent(X)$ & What does coding whole blocks buy us?\\
+8 & $-n^{-1}\log p(X^n)\to\bar\Ent$ & What survives when the source is not i.i.d.?\\
+9 & $\Ent_D(X)+\KL_D(p\|q)$ & What does an explicit code cost, and what if it is built for the wrong law?\\
 \bottomrule
 \end{tabularx}
 
@@ -58,5 +62,14 @@ almost all probability and reveal entropy as the exponential counting rate.
 
 \clearpage
 \input{sections/03-aep-typicality}
+
+\clearpage
+\input{sections/04-optimal-codes}
+
+\clearpage
+\input{sections/05-block-codes}
+
+\clearpage
+\input{sections/06-shannon-fano-codes}
 
 \end{document}

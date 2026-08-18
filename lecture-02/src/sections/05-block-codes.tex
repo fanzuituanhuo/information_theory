@@ -1,0 +1,158 @@
+% ===========================================================================
+\section{Block codes and Shannon's source coding theorem}\label{sec:block-codes}
+\warmth{0}\quad\whisper{Encode $n$ symbols at once, and the rounding loss is shared by all of them.}
+
+\begin{strand}
+Applying a Shannon code to blocks of $n$ i.i.d.\ symbols keeps the entropy floor
+but divides the $+1$ rounding penalty by $n$. Letting $n$ grow shows that the
+entropy rate is achievable to any accuracy: this is Shannon's 1948 source coding
+theorem.
+\end{strand}
+
+\trigger{Use blocks whenever a per-symbol bound is off by an additive constant that does not shrink on its own.}
+
+\block{The basic idea}
+
+Consider the $\X^n$-valued random variable $(X_1,\ldots,X_n)$, where
+$X_1,\ldots,X_n$ are i.i.d.\ copies of $X$. Independence makes entropy additive,
+\[
+  \Ent(X_1,\ldots,X_n)=\answerin[1.6cm]{n\Ent(X)},
+\]
+\studentrecall{Entropy of an i.i.d. block is $n\Ent(X)$.}
+so Proposition~\ref{prop:shannon-code}, applied to the block variable rather
+than to a single symbol, gives
+\[
+  n\Ent(X)\le\E\bigl[|C(X_1,\ldots,X_n)|\bigr]<n\Ent(X)+1
+\]
+whenever $C$ is an optimal binary code for the block. Dividing by $n$ turns this
+into a per-symbol statement:
+\[
+  \Ent(X)
+  \le\frac1n\E\bigl[|C(X_1,\ldots,X_n)|\bigr]
+  <\Ent(X)+\answerin[1.2cm]{\tfrac1n}.
+\]
+\studentrecall{The per-symbol excess is at most $1/n$.}
+The excess is now under our control: choose $n$ large and it disappears.
+
+\block{Shannon's theorem}
+
+\begin{theorem}[source coding theorem, Shannon 1948]\label{thm:shannon-source-coding}
+Let $X_1,X_2,\ldots$ be an i.i.d.\ sequence of discrete random variables with
+state space $\X$. For every $\epsilon>0$ there exist $n\in\mathbb{N}$ and a map
+\[
+  C:\X^n\longrightarrow\{0,1\}^*
+\]
+such that:
+\begin{enumerate}
+  \item the induced map
+  $C^*:\bigcup_{k=0}^\infty\X^{nk}\to\{0,1\}^*$ given by
+  \[
+    (x_1,\ldots,x_{nk})
+    \longmapsto
+    C(x_1,\ldots,x_n)\,C(x_{n+1},\ldots,x_{2n})
+    \cdots C(x_{(k-1)n+1},\ldots,x_{nk})
+  \]
+  is injective;
+  \item $\displaystyle
+  \frac1n\E\bigl[|C(X_1,\ldots,X_n)|\bigr]\le\Ent(X)+\epsilon$.
+\end{enumerate}
+\end{theorem}
+
+\begin{proof}
+Choose $n$ with $1/n\le\epsilon$, and regard $Y=(X_1,\ldots,X_n)$ as a single
+random variable on the finite alphabet $\X^n$. By
+Proposition~\ref{prop:shannon-code} with $D=2$ there is a binary prefix code
+$C:\X^n\to\{0,1\}^*$ with
+\[
+  \Ent(Y)\le\E\bigl[|C(Y)|\bigr]<\Ent(Y)+1 .
+\]
+Since the $X_i$ are independent, $\Ent(Y)=n\Ent(X)$, so
+\[
+  \frac1n\E\bigl[|C(Y)|\bigr]<\Ent(X)+\frac1n\le\Ent(X)+\epsilon,
+\]
+which is the second claim. For the first, note that $C$ is a prefix code, hence
+uniquely decodable, so its extension to concatenated blocks is injective: a
+decoder reads the encoded string from the left, recovers one block codeword at a
+time, and thereby recovers $(x_1,\ldots,x_{nk})$. Thus $C^*$ is injective.
+\end{proof}
+
+\begin{yourturn}
+Which property of $C$ makes the induced map $C^*$ injective, and why is
+nonsingularity of $C$ alone not enough?
+\studentrecall{Prefix-freeness; a merely nonsingular code can have two block sequences with the same concatenation.}
+\ifshowanswers\else\workspace[2]\fi
+\answerprose{Prefix-freeness. It lets the decoder parse the stream block by
+block without lookahead. A nonsingular code only distinguishes single blocks;
+after concatenation two different block sequences can produce the same string,
+as in the code $\{0,01,10\}$.}
+\end{yourturn}
+
+\block{Two routes to the same rate}
+
+\noindent\begin{tabularx}{\linewidth}{@{}l L@{}}
+\toprule
+{\color{indigo}route} & \multicolumn{1}{l}{\color{madder}how entropy appears}\\
+\midrule
+Shannon code on blocks & lengths $\lceil-\log_2p(x^n)\rceil$ average to
+  $n\Ent(X)+O(1)$\\
+typical sets (\S\ref{sec:aep}) & index the $\approx2^{n\Ent(X)}$ typical
+  sequences with $\approx n\Ent(X)$ bits, and spend a flag bit on the rest\\
+\bottomrule
+\end{tabularx}
+
+\begin{yourturn}
+Using the AEP route, roughly how many bits per symbol are needed to index the
+typical set, and what happens to the atypical sequences?
+\studentrecall{About $\Ent(X)$ bits per symbol; the atypical set has probability $<\epsilon$ and can be encoded wastefully.}
+\ifshowanswers\else\workspace[2]\fi
+\answerprose{Indexing $|T_{n,\epsilon}|\le2^{n(\Ent(X)+\epsilon)}$ sequences needs
+about $\Ent(X)+\epsilon$ bits per symbol. The atypical sequences carry
+probability less than $\epsilon$, so even a wasteful $\log_2|\X|$ bits per symbol
+for them contributes a vanishing amount to the average.}
+\end{yourturn}
+
+\block{Beyond i.i.d.: the entropy rate}
+
+Everything above used independence only once, to write
+$\Ent(X_1,\ldots,X_n)=n\Ent(X)$. For a dependent source that quantity is
+replaced by a limit.
+
+\begin{definition}[entropy rate]\label{def:entropy-rate}
+For a stationary sequence $X_1,X_2,\ldots$ the \keyword{entropy rate} is
+\[
+  \bar\Ent=\lim_{n\to\infty}\answerin[2.4cm]{\tfrac1n\Ent(X_1,\ldots,X_n)},
+\]
+which exists because $\Ent(X_1,\ldots,X_n)$ is subadditive in $n$.
+\studentrecall{Per-symbol entropy of a block, in the limit: $\frac1n\Ent(X_1,\dots,X_n)$.}
+\end{definition}
+
+\begin{theorem}[Shannon--McMillan--Breiman]\label{thm:smb}
+Let $X_1,X_2,\ldots$ be an ergodic stationary sequence on a finite state space
+$\X$. Then
+\[
+  -\frac1n\log p_{X^n}(X_1,\ldots,X_n)
+  \longrightarrow\bar\Ent
+  \qquad\text{in probability, as }n\to\infty,
+\]
+where $\bar\Ent=\lim_{n\to\infty}\frac1n\Ent(X_1,\ldots,X_n)$.
+\end{theorem}
+
+This is the AEP with independence weakened to \emph{ergodic stationarity} and
+$\Ent(X)$ replaced by $\bar\Ent$; the statement even holds almost surely. Once
+it is available, typical sets, block coding and
+Theorem~\ref{thm:shannon-source-coding} all go through verbatim with the
+entropy rate in place of the single-symbol entropy.
+
+\begin{yourturn}
+For an i.i.d.\ sequence, what does $\bar\Ent$ reduce to, and which hypothesis of
+Theorem~\ref{thm:smb} replaces independence?
+\studentrecall{$\bar\Ent=\Ent(X_1)$; independence is weakened to ergodic stationarity.}
+\ifshowanswers\else\workspace[2]\fi
+\answerprose{Additivity gives $\Ent(X_1,\ldots,X_n)=n\Ent(X_1)$, so
+$\bar\Ent=\Ent(X_1)$ and the theorem becomes the AEP. Independence is replaced
+by the assumption that the sequence is stationary and ergodic, which is what
+lets the time average of the surprise converge to its ensemble mean.}
+\end{yourturn}
+
+\vspace{0.8cm}
+\recall{Why does blocking remove the $+1$ penalty but never the entropy floor?}

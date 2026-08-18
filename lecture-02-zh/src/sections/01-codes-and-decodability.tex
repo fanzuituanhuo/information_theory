@@ -15,7 +15,7 @@
   C:\X\longrightarrow\D^*,
 \]
 其中 $\D^*$ 是 $D$ 元字母表 $\D$ 上所有\answerin[3.5cm]{有限长字符串}的集合。
-字符串 $C(x)$ 称为 $x$ 的\keyword{码字}，$\ell(x)=|C(x)|$ 是它的码长。
+字符串 $C(x)$ 称为 $x$ 的\keyword{码字}，$|C(x)|$ 是它的码长。
 \studentrecall{空中应填“有限长字符串”。}
 \end{definition}
 
@@ -25,8 +25,8 @@ $C(\text{红})=00$、$C(\text{蓝})=11$。
 \begin{definition}[期望码长]\label{def:expected-length}
 若 $X$ 的概率质量函数为 $p$，编码 $C$ 的期望码长定义为
 \[
-  L(C)=\E[\ell(X)]
-      =\sum_{x\in\X}p(x)\ell(x).
+  L(C)=\E[|C(X)|]
+      =\sum_{x\in\X}p(x)|C(x)|.
 \]
 \end{definition}
 
@@ -45,7 +45,7 @@ C(x)&0&10&110&111
        +\tfrac18\cdot3+\tfrac18\cdot3
        =\answerin[1.4cm]{\tfrac74}\ \text{比特}.
 \]
-这里每个符号都满足 $\ell(x)=-\log_2p(x)$，因此
+这里每个符号都满足 $|C(x)|=-\log_2p(x)$，因此
 \[
   \Ent(X)=\sum_xp(x)\log_2\frac1{p(x)}
          =\answerin[1.4cm]{\tfrac74}\ \text{比特}=L(C).
@@ -55,10 +55,10 @@ C(x)&0&10&110&111
 
 \begin{yourturn}
 为什么这个例子中的 $L(C)=\Ent(X)$ 不需要特殊的平均技巧？
-\studentrecall{每个 $x$ 都满足 $\ell(x)=-\log_2p(x)$，所以等式逐项成立。}
+\studentrecall{每个 $x$ 都满足 $|C(x)|=-\log_2p(x)$，所以等式逐项成立。}
 \ifshowanswers\else\workspace[2]\fi
 \answerprose{这个等式对每一项都成立：每个码长都满足
-$\ell(x)=-\log_2p(x)$。两边乘以 $p(x)$ 后求和，立即得到
+$|C(x)|=-\log_2p(x)$。两边乘以 $p(x)$ 后求和，立即得到
 $L(C)=\Ent(X)$。}
 \end{yourturn}
 

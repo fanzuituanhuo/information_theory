@@ -1,0 +1,143 @@
+% ===========================================================================
+\section{分组码与 Shannon 信源编码定理}\label{sec:block-codes}
+\warmth{0}\quad\whisper{一次编码 $n$ 个符号，取整的损失就被所有符号分摊。}
+
+\begin{strand}
+把 Shannon 码用在 $n$ 个 i.i.d. 符号组成的分组上，熵这个下界保持不变，而「$+1$」
+的取整代价被除以 $n$。让 $n$ 增大，就说明熵率可以被任意逼近：这正是 Shannon 1948
+年的信源编码定理。
+\end{strand}
+
+\trigger{当一个逐符号的界只差一个不会自动变小的加性常数时，就改用分组。}
+
+\block{基本想法}
+
+考虑取值于 $\X^n$ 的随机变量 $(X_1,\ldots,X_n)$，其中 $X_1,\ldots,X_n$ 是 $X$ 的
+i.i.d. 副本。独立性使熵具有可加性，
+\[
+  \Ent(X_1,\ldots,X_n)=\answerin[1.6cm]{n\Ent(X)},
+\]
+\studentrecall{i.i.d. 分组的熵是 $n\Ent(X)$。}
+于是把命题~\ref{prop:shannon-code} 用在分组变量（而不是单个符号）上，得到：当 $C$
+是该分组的最优二元码时，
+\[
+  n\Ent(X)\le\E\bigl[|C(X_1,\ldots,X_n)|\bigr]<n\Ent(X)+1 .
+\]
+两边除以 $n$，就变成逐符号的陈述：
+\[
+  \Ent(X)
+  \le\frac1n\E\bigl[|C(X_1,\ldots,X_n)|\bigr]
+  <\Ent(X)+\answerin[1.2cm]{\tfrac1n}.
+\]
+\studentrecall{每符号的超出量至多为 $1/n$。}
+现在这个超出量掌握在我们手里：取 $n$ 充分大它就消失。
+
+\block{Shannon 定理}
+
+\begin{theorem}[信源编码定理，Shannon 1948]\label{thm:shannon-source-coding}
+设 $X_1,X_2,\ldots$ 是取值于状态空间 $\X$ 的 i.i.d. 离散随机变量序列。对每个
+$\epsilon>0$，都存在 $n\in\mathbb{N}$ 和映射
+\[
+  C:\X^n\longrightarrow\{0,1\}^*
+\]
+使得：
+\begin{enumerate}
+  \item 诱导映射 $C^*:\bigcup_{k=0}^\infty\X^{nk}\to\{0,1\}^*$，
+  \[
+    (x_1,\ldots,x_{nk})
+    \longmapsto
+    C(x_1,\ldots,x_n)\,C(x_{n+1},\ldots,x_{2n})
+    \cdots C(x_{(k-1)n+1},\ldots,x_{nk}),
+  \]
+  是单射；
+  \item $\displaystyle
+  \frac1n\E\bigl[|C(X_1,\ldots,X_n)|\bigr]\le\Ent(X)+\epsilon$。
+\end{enumerate}
+\end{theorem}
+
+\begin{proof}
+取 $n$ 使得 $1/n\le\epsilon$，并把 $Y=(X_1,\ldots,X_n)$ 看作有限字母表 $\X^n$ 上的
+单个随机变量。对 $D=2$ 应用命题~\ref{prop:shannon-code}，存在二元前缀码
+$C:\X^n\to\{0,1\}^*$ 满足
+\[
+  \Ent(Y)\le\E\bigl[|C(Y)|\bigr]<\Ent(Y)+1 .
+\]
+由 $X_i$ 相互独立可得 $\Ent(Y)=n\Ent(X)$，因此
+\[
+  \frac1n\E\bigl[|C(Y)|\bigr]<\Ent(X)+\frac1n\le\Ent(X)+\epsilon,
+\]
+这就是第二条。至于第一条：$C$ 是前缀码，从而唯一可译，所以它在分组拼接上的延拓是
+单射——解码器从左往右读编码串，每次恢复一个分组码字，于是能还原
+$(x_1,\ldots,x_{nk})$。故 $C^*$ 是单射。
+\end{proof}
+
+\begin{yourturn}
+$C$ 的哪条性质保证诱导映射 $C^*$ 是单射？为什么仅有非奇异性还不够？
+\studentrecall{前缀性；只非奇异的码可能有两个分组序列拼接后相同。}
+\ifshowanswers\else\workspace[2]\fi
+\answerprose{是前缀性。它让解码器无需向前看就能逐个分组地解析码流。非奇异性只区分
+单个分组；拼接之后两个不同的分组序列可能得到同一个字符串，例如码
+$\{0,01,10\}$。}
+\end{yourturn}
+
+\block{通向同一速率的两条路}
+
+\noindent\begin{tabularx}{\linewidth}{@{}l L@{}}
+\toprule
+{\color{indigo}路线} & \multicolumn{1}{l}{\color{madder}熵是如何出现的}\\
+\midrule
+分组上的 Shannon 码 & 码长 $\lceil-\log_2p(x^n)\rceil$ 的平均值为
+  $n\Ent(X)+O(1)$\\
+典型集（见 \S\ref{sec:aep}） & 用约 $n\Ent(X)$ 个比特为约 $2^{n\Ent(X)}$ 个典型
+  序列编号，其余序列用一个标志位另行处理\\
+\bottomrule
+\end{tabularx}
+
+\begin{yourturn}
+沿典型集这条路线，为典型集编号大约需要每符号多少比特？非典型序列怎么办？
+\studentrecall{每符号约 $\Ent(X)$ 比特；非典型集概率小于 $\epsilon$，可以浪费地编码。}
+\ifshowanswers\else\workspace[2]\fi
+\answerprose{给 $|T_{n,\epsilon}|\le2^{n(\Ent(X)+\epsilon)}$ 个序列编号大约需要每符号
+$\Ent(X)+\epsilon$ 比特。非典型序列的总概率小于 $\epsilon$，所以即使对它们浪费地
+使用每符号 $\log_2|\X|$ 比特，对平均值的贡献也可以忽略。}
+\end{yourturn}
+
+\block{超越 i.i.d.：熵率}
+
+上面的推导只用了一次独立性，就是把 $\Ent(X_1,\ldots,X_n)$ 写成 $n\Ent(X)$。
+对有相关性的信源，这个量要换成一个极限。
+
+\begin{definition}[熵率]\label{def:entropy-rate}
+对平稳序列 $X_1,X_2,\ldots$，其\keyword{熵率}定义为
+\[
+  \bar\Ent=\lim_{n\to\infty}\answerin[2.4cm]{\tfrac1n\Ent(X_1,\ldots,X_n)},
+\]
+该极限存在，因为 $\Ent(X_1,\ldots,X_n)$ 关于 $n$ 是次可加的。
+\studentrecall{分组熵的每符号平均在极限下的值：$\frac1n\Ent(X_1,\dots,X_n)$。}
+\end{definition}
+
+\begin{theorem}[Shannon--McMillan--Breiman]\label{thm:smb}
+设 $X_1,X_2,\ldots$ 是有限状态空间 $\X$ 上的遍历平稳序列。则当 $n\to\infty$ 时
+\[
+  -\frac1n\log p_{X^n}(X_1,\ldots,X_n)
+  \longrightarrow\bar\Ent
+  \qquad\text{依概率收敛},
+\]
+其中 $\bar\Ent=\lim_{n\to\infty}\frac1n\Ent(X_1,\ldots,X_n)$。
+\end{theorem}
+
+这就是把 AEP 中的独立性减弱为\emph{遍历平稳}、把 $\Ent(X)$ 换成 $\bar\Ent$ 的版本；
+事实上该结论还可以加强到几乎必然收敛。有了它，典型集、分组编码以及
+定理~\ref{thm:shannon-source-coding} 都能原样搬过来，只要把单符号熵换成熵率。
+
+\begin{yourturn}
+对 i.i.d. 序列，$\bar\Ent$ 退化成什么？定理~\ref{thm:smb} 用哪条假设取代了独立性？
+\studentrecall{$\bar\Ent=\Ent(X_1)$；独立性被减弱为遍历平稳性。}
+\ifshowanswers\else\workspace[2]\fi
+\answerprose{由可加性 $\Ent(X_1,\ldots,X_n)=n\Ent(X_1)$，故 $\bar\Ent=\Ent(X_1)$，
+定理退化为 AEP。取代独立性的是「序列平稳且遍历」这一假设，正是它保证惊讶度的时间
+平均收敛到系综平均。}
+\end{yourturn}
+
+\vspace{0.8cm}
+\recall{为什么分组能去掉「$+1$」的代价，却永远去不掉熵这个下界？}
