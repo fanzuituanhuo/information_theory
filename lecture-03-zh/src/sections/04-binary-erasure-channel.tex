@@ -1,0 +1,119 @@
+% ===========================================================================
+\section{二元删除信道}\label{sec:bec}
+\warmth{0}\quad\whisper{丢掉一个比特，比被这个比特欺骗要便宜。}
+
+\begin{strand}
+删除信道会丢掉比例为 $\alpha$ 的比特，但从不篡改任何比特：接收端总是知道\emph{哪些}
+比特丢了。它的容量是 $1-\alpha$——恰好是幸存下来的那部分信道使用。与 BSC 对照：
+在 BSC 里翻转概率 $\alpha$ 要付的代价是 $h(\alpha)$，要贵得多。
+\end{strand}
+
+\trigger{当某个输出符号意味着“毫无信息”时，就对“它是否出现”这一事件做条件分解。}
+
+\block{信道}
+
+\begin{definition}[二元删除信道]\label{def:bec}
+\keyword{二元删除信道} $\mathrm{BEC}(\alpha)$ 满足 $\X=\{0,1\}$、
+$\Y=\{0,1,e\}$，其中 $e$ 是\keyword{删除}符号，且
+\[
+  p(0\mid0)=p(1\mid1)=1-\alpha,
+  \qquad
+  p(e\mid0)=p(e\mid1)=\alpha .
+\]
+\begin{center}
+\begin{tikzpicture}[x=2.8cm,y=1.2cm,>=latex,font=\small]
+  \node (x0) at (0,2) {$0$};
+  \node (x1) at (0,0) {$1$};
+  \node (y0) at (1,2) {$0$};
+  \node (ye) at (1,1) {$e$};
+  \node (y1) at (1,0) {$1$};
+  \draw[->,indigo] (x0) -- node[above,font=\scriptsize]{$1-\alpha$} (y0);
+  \draw[->,indigo] (x1) -- node[below,font=\scriptsize]{$1-\alpha$} (y1);
+  \draw[->,madder] (x0) -- node[pos=0.6,above,sloped,font=\scriptsize]{$\alpha$} (ye);
+  \draw[->,madder] (x1) -- node[pos=0.6,below,sloped,font=\scriptsize]{$\alpha$} (ye);
+\end{tikzpicture}
+\end{center}
+任何比特都不会被取反，所以落在 $\{0,1\}$ 中的输出可确定地识别输入；输出为 $e$ 则
+什么也没说。每行都是 $(1-\alpha,\alpha,0)$ 的重排，故
+$\Ent(Y\mid X)=\answerin[1.6cm]{h(\alpha)}$。
+\studentrecall{每行实际上是两点上的 $(1-\alpha,\alpha)$，行熵为 $h(\alpha)$。}
+\end{definition}
+
+\block{容量}
+
+\begin{theorem}[BEC 的容量]\label{thm:bec-capacity}
+$\mathrm{BEC}(\alpha)$ 的容量为
+\[
+  C=1-\alpha\quad\text{比特每次信道使用},
+\]
+由均匀输入分布达到。
+\end{theorem}
+
+\begin{proof}
+照例写
+\[
+  C=\max_{p(x)}\MI(X;Y)
+   =\max_{p(x)}\bigl[\Ent(Y)-\Ent(Y\mid X)\bigr]
+   =\max_{p(x)}\Ent(Y)-h(\alpha).
+\]
+为计算 $\Ent(Y)$，令 $E=\mathbf{1}\{Y=e\}$ 为“发生删除”的指示变量。由于 $E$ 是
+$Y$ 的函数，有 $\Ent(Y,E)=\Ent(Y)$，再用链式法则得
+\[
+  \Ent(Y)=\Ent(Y,E)=\Ent(E)+\Ent(Y\mid E).
+\]
+现在 $E\sim\operatorname{Bernoulli}(\alpha)$，故 $\Ent(E)=h(\alpha)$。给定
+$E=1$ 时输出必为 $e$，贡献为零；给定 $E=0$ 时输出等于输入。记
+$\PP(X=1)=\pi$，则
+\[
+  \Ent(Y\mid E)=\alpha\cdot0+(1-\alpha)\,h(\pi),
+  \qquad\text{于是}\qquad
+  \Ent(Y)=h(\alpha)+(1-\alpha)h(\pi).
+\]
+因此
+\[
+  C=\max_{\pi}\bigl[h(\alpha)+(1-\alpha)h(\pi)\bigr]-h(\alpha)
+   =\max_{\pi}(1-\alpha)h(\pi)
+   =1-\alpha,
+\]
+容量在 $\pi=\tfrac12$ 处达到。
+\end{proof}
+
+\begin{remark}
+这里的解释是精确的而非近似的：发送的比特中有比例 $\alpha$ 被丢失，所以最多只有
+比例 $1-\alpha$ 能通过，而这么多确实可以达到。还要注意两个“显然”的界在此表现不同：
+$\Ent(Y)\le\log3$ \emph{不}是紧的，因为删除符号出现的频率永远不会超过 $\alpha$。
+用删除指示变量拆分 $\Ent(Y)$，正是用来替代那个粗糙界的做法。
+\end{remark}
+
+\block{同一噪声水平下的 BSC 与 BEC}
+
+\noindent\begin{tabularx}{\linewidth}{@{}l l L@{}}
+\toprule
+{\color{indigo}信道} & {\color{indigo}容量} & \multicolumn{1}{l}{\color{madder}接收端知道什么}\\
+\midrule
+$\mathrm{BSC}(p)$ & $1-h(p)$ & 收到的每个比特都可能是假的；错误位置未知\\
+$\mathrm{BEC}(\alpha)$ & $1-\alpha$ & 收到的比特一定正确；删除位置被标记出来\\
+\bottomrule
+\end{tabularx}
+
+取 $p=\alpha=0.1$ 时二者分别为 $C\approx0.531$ 与 $C=0.9$：知道损坏发生在\emph{哪里}
+非常值钱。
+
+\begin{yourturn}
+关键技巧是 $\Ent(Y)=\Ent(E)+\Ent(Y\mid E)$。说出使这一等式在此既合法又有用的两个
+事实。
+\studentrecall{$E$ 是 $Y$ 的函数，故 $\Ent(Y,E)=\Ent(Y)$；给定 $E$ 后输出要么固定为 $e$，要么等于 $X$。}
+\ifshowanswers\else\workspace[3]\fi
+\answerprose{第一，$E=\mathbf{1}\{Y=e\}$ 是 $Y$ 的确定性函数，故
+$\Ent(Y,E)=\Ent(Y)$，可以对这一对用链式法则。第二，对 $E$ 取条件把输出分成退化
+情形（$Y=e$，熵为 $0$）与无噪情形（$Y=X$，熵为 $h(\pi)$），因此
+$\Ent(Y\mid E)=(1-\alpha)h(\pi)$。}
+\end{yourturn}
+
+\begin{yourturn}
+凭记忆补全两个容量：$\mathrm{BSC}(p)$ 的 $C=\answerin[2.2cm]{1-h(p)}$，
+$\mathrm{BEC}(\alpha)$ 的 $C=\answerin[2.0cm]{1-\alpha}$。
+\studentrecall{BSC 为 $1-h(p)$；BEC 为 $1-\alpha$。}
+\end{yourturn}
+
+\recall{为什么 $\Ent(Y)\le\log3$ 对 BEC 没有用？}

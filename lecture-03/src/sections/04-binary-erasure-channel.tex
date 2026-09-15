@@ -1,0 +1,126 @@
+% ===========================================================================
+\section{The binary erasure channel}\label{sec:bec}
+\warmth{0}\quad\whisper{Losing a bit is cheaper than being lied to about it.}
+
+\begin{strand}
+The erasure channel loses a fraction $\alpha$ of the bits but never corrupts
+one: the receiver always knows \emph{which} bits were lost. Its capacity is
+$1-\alpha$ --- exactly the fraction of channel uses that survive. Compare this
+with the BSC, where a flip probability of $\alpha$ costs $h(\alpha)$, which is
+much more.
+\end{strand}
+
+\trigger{When one output symbol means ``no information'', condition on the event that it occurred.}
+
+\block{The channel}
+
+\begin{definition}[binary erasure channel]\label{def:bec}
+The \keyword{binary erasure channel} $\mathrm{BEC}(\alpha)$ has $\X=\{0,1\}$ and
+$\Y=\{0,1,e\}$, where $e$ is the \keyword{erasure} symbol, and
+\[
+  p(0\mid0)=p(1\mid1)=1-\alpha,
+  \qquad
+  p(e\mid0)=p(e\mid1)=\alpha .
+\]
+\begin{center}
+\begin{tikzpicture}[x=2.8cm,y=1.2cm,>=latex,font=\small]
+  \node (x0) at (0,2) {$0$};
+  \node (x1) at (0,0) {$1$};
+  \node (y0) at (1,2) {$0$};
+  \node (ye) at (1,1) {$e$};
+  \node (y1) at (1,0) {$1$};
+  \draw[->,indigo] (x0) -- node[above,font=\scriptsize]{$1-\alpha$} (y0);
+  \draw[->,indigo] (x1) -- node[below,font=\scriptsize]{$1-\alpha$} (y1);
+  \draw[->,madder] (x0) -- node[pos=0.6,above,sloped,font=\scriptsize]{$\alpha$} (ye);
+  \draw[->,madder] (x1) -- node[pos=0.6,below,sloped,font=\scriptsize]{$\alpha$} (ye);
+\end{tikzpicture}
+\end{center}
+No bit is ever complemented, so an output in $\{0,1\}$ identifies the input with
+certainty; an output $e$ says nothing at all. Every row is a permutation of
+$(1-\alpha,\alpha,0)$, hence $\Ent(Y\mid X)=\answerin[1.6cm]{h(\alpha)}$.
+\studentrecall{Each row is $(1-\alpha,\alpha)$ on two symbols, so the row entropy is $h(\alpha)$.}
+\end{definition}
+
+\block{Capacity}
+
+\begin{theorem}[capacity of the BEC]\label{thm:bec-capacity}
+The capacity of $\mathrm{BEC}(\alpha)$ is
+\[
+  C=1-\alpha\quad\text{bits per channel use},
+\]
+attained by the uniform input distribution.
+\end{theorem}
+
+\begin{proof}
+Write, as always,
+\[
+  C=\max_{p(x)}\MI(X;Y)
+   =\max_{p(x)}\bigl[\Ent(Y)-\Ent(Y\mid X)\bigr]
+   =\max_{p(x)}\Ent(Y)-h(\alpha).
+\]
+To compute $\Ent(Y)$, let $E=\mathbf{1}\{Y=e\}$ be the indicator of an erasure.
+Since $E$ is a function of $Y$, we have $\Ent(Y,E)=\Ent(Y)$, and the chain rule
+gives
+\[
+  \Ent(Y)=\Ent(Y,E)=\Ent(E)+\Ent(Y\mid E).
+\]
+Now $E\sim\operatorname{Bernoulli}(\alpha)$, so $\Ent(E)=h(\alpha)$. Given
+$E=1$ the output is $e$ with certainty, contributing nothing; given $E=0$ the
+output equals the input. Writing $\PP(X=1)=\pi$,
+\[
+  \Ent(Y\mid E)=\alpha\cdot0+(1-\alpha)\,h(\pi),
+  \qquad\text{so}\qquad
+  \Ent(Y)=h(\alpha)+(1-\alpha)h(\pi).
+\]
+Therefore
+\[
+  C=\max_{\pi}\bigl[h(\alpha)+(1-\alpha)h(\pi)\bigr]-h(\alpha)
+   =\max_{\pi}(1-\alpha)h(\pi)
+   =1-\alpha,
+\]
+the capacity being achieved at $\pi=\tfrac12$.
+\end{proof}
+
+\begin{remark}
+The interpretation is exact rather than approximate: a fraction $\alpha$ of the
+transmitted bits is lost, so at most a fraction $1-\alpha$ can get through, and
+that much is achievable. Note also that here the two ``obvious'' bounds behave
+differently: $\Ent(Y)\le\log3$ is \emph{not} tight, because the erasure symbol
+can never be reached more often than $\alpha$ of the time. Splitting $\Ent(Y)$
+via the erasure indicator is what replaces the crude bound.
+\end{remark}
+
+\block{BSC versus BEC at the same noise level}
+
+\noindent\begin{tabularx}{\linewidth}{@{}l l L@{}}
+\toprule
+{\color{indigo}channel} & {\color{indigo}capacity} & \multicolumn{1}{l}{\color{madder}what the receiver knows}\\
+\midrule
+$\mathrm{BSC}(p)$ & $1-h(p)$ & every received bit may be a lie; the location of errors is unknown\\
+$\mathrm{BEC}(\alpha)$ & $1-\alpha$ & received bits are certainly correct; erasures are flagged\\
+\bottomrule
+\end{tabularx}
+
+At $p=\alpha=0.1$ these give $C\approx0.531$ and $C=0.9$: knowing \emph{where}
+the damage is worth a lot.
+
+\begin{yourturn}
+The key trick was $\Ent(Y)=\Ent(E)+\Ent(Y\mid E)$. State the two facts that make
+this identity legitimate and useful here.
+\studentrecall{$E$ is a function of $Y$, so $\Ent(Y,E)=\Ent(Y)$; and given $E$ the output is either fixed at $e$ or equal to $X$.}
+\ifshowanswers\else\workspace[3]\fi
+\answerprose{First, $E=\mathbf{1}\{Y=e\}$ is a deterministic function of $Y$,
+so $\Ent(Y,E)=\Ent(Y)$ and the chain rule may be applied to the pair. Second,
+conditioning on $E$ splits the output into a degenerate case ($Y=e$, entropy
+$0$) and a noiseless case ($Y=X$, entropy $h(\pi)$), which is why
+$\Ent(Y\mid E)=(1-\alpha)h(\pi)$.}
+\end{yourturn}
+
+\begin{yourturn}
+Complete the two capacities from memory:
+$\mathrm{BSC}(p)$ has $C=\answerin[2.2cm]{1-h(p)}$ and $\mathrm{BEC}(\alpha)$
+has $C=\answerin[2.0cm]{1-\alpha}$.
+\studentrecall{$1-h(p)$ for the BSC; $1-\alpha$ for the BEC.}
+\end{yourturn}
+
+\recall{Why is $\Ent(Y)\le\log3$ useless for the BEC?}

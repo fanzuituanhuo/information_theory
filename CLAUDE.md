@@ -17,7 +17,7 @@
 2. **可填**：关键定义条款、计算过程、结论判据等留空，供主动回忆；
 3. **可出答案**：同一份源码能生成学生版（挖空）和答案版（填红）。
 
-笔记按讲次组织，并为每一讲维护**双语版本**：英文版 `lecture-NN/`、中文版 `lecture-NN-zh/`。每对源码内容同步、共享同一套正文骨架。Lecture 1 覆盖从惊讶度到 Fano 不等式；Lecture 2 开始整理信源编码。
+笔记按讲次组织，并为每一讲维护**双语版本**：英文版 `lecture-NN/`、中文版 `lecture-NN-zh/`。每对源码内容同步、共享同一套正文骨架。Lecture 1 覆盖从惊讶度到 Fano 不等式；Lecture 2 开始整理信源编码；Lecture 3 覆盖信道容量。
 
 ## 目录约定
 
@@ -36,6 +36,8 @@
 - `lecture-01-zh/`：中文版工作目录，结构与 `lecture-01/` 同构。
 - `lecture-02/`：第二讲英文版，聚焦信源编码；目录结构与第一讲同构。
 - `lecture-02-zh/`：第二讲中文版，结构与 `lecture-02/` 同构。
+- `lecture-03/`：第三讲英文版，聚焦信道容量；目录结构与第一讲同构。
+- `lecture-03-zh/`：第三讲中文版，结构与 `lecture-03/` 同构。
 - `.cursor/skills/fill-in-notes/`：**项目化版** skill 的规范源（真实文件），Cursor 在本项目自动加载。
 - `.agents/skills/fill-in-notes/`：符号链接 → `.cursor/skills/fill-in-notes/`，供 Codex 在本项目发现并加载同一份 skill（Codex 跟随 symlink）。
 - `fill-in-notes-skill/`：符号链接 → `.cursor/skills/fill-in-notes/`，旧目录的镜像，保持与规范源一致。
@@ -126,6 +128,7 @@ make             # 所有讲次的中英文学生版与答案版
 make en          # 所有英文讲次
 make zh          # 所有中文讲次
 make lecture-02  # 第二讲中英文学生版与答案版
+make lecture-03  # 第三讲中英文学生版与答案版
 make clean # 清理 build/ 中间产物
 ```
 

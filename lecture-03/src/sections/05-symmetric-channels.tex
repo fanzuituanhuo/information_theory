@@ -1,0 +1,132 @@
+% ===========================================================================
+\section{Symmetric channels}\label{sec:symmetric}
+\warmth{0}\quad\whisper{When the rows all look alike, the uniform input is optimal and capacity is a one-line formula.}
+
+\begin{strand}
+The BSC computation used only two facts: all rows of the transition matrix have
+the same entropy, and the uniform input produces the uniform output. Channels
+with those two features are called (weakly) symmetric, and for them capacity is
+$\log|\Y|-\Ent(r)$ with $r$ any row --- no optimisation needed.
+\end{strand}
+
+\trigger{Check symmetry first; if the channel is symmetric, capacity costs one line instead of a maximisation.}
+
+\block{Definitions}
+
+\begin{definition}[symmetric channel]\label{def:symmetric-channel}
+A discrete memoryless channel is \keyword{symmetric} if the rows of its
+transition matrix $p(y\mid x)$ are permutations of each other, and the
+\answerin[2.0cm]{columns} are permutations of each other as well.
+\studentrecall{Rows are permutations of one another \emph{and} so are the columns.}
+\end{definition}
+
+\begin{definition}[weakly symmetric channel]\label{def:weakly-symmetric-channel}
+A channel is \keyword{weakly symmetric} if the rows of $p(y\mid x)$ are
+permutations of each other and every column has the same
+\answerin[1.6cm]{sum} $\sum_{x}p(y\mid x)$.
+\studentrecall{Rows are permutations of one another and all column sums are equal.}
+Every symmetric channel is weakly symmetric, since permuted columns have equal
+sums.
+\end{definition}
+
+\begin{example}[a symmetric channel]\label{ex:symmetric-3x3}
+Let $\X=\Y=\{1,2,3\}$ with
+\[
+  p(y\mid x)=
+  \begin{pmatrix}
+    0.3 & 0.2 & 0.5\\
+    0.5 & 0.3 & 0.2\\
+    0.2 & 0.5 & 0.3
+  \end{pmatrix}.
+\]
+Each row is a permutation of $r=(0.3,0.2,0.5)$, and each column is a permutation
+of the same vector, so the channel is symmetric.
+\end{example}
+
+\block{Capacity of a weakly symmetric channel}
+
+\begin{theorem}[capacity by symmetry]\label{thm:symmetric-capacity}
+For a weakly symmetric channel with row vector $r$ (any row of the transition
+matrix),
+\[
+  C=\log|\Y|-\Ent(r),
+\]
+and the capacity is achieved by the uniform distribution on $\X$.
+\end{theorem}
+
+\begin{proof}
+Since all rows are permutations of $r$, every row entropy equals $\Ent(r)$, so
+for any input distribution
+\[
+  \MI(X;Y)=\Ent(Y)-\Ent(Y\mid X)
+          =\Ent(Y)-\sum_xp(x)\Ent(r)
+          =\Ent(Y)-\Ent(r)
+          \le\log|\Y|-\Ent(r),
+\]
+with equality if and only if $Y$ is uniform on $\Y$. It remains to show that the
+uniform input makes $Y$ uniform. Let $c=\sum_xp(y\mid x)$ be the common column
+sum. With $p(x)=1/|\X|$,
+\[
+  p(y)=\sum_{x}\frac{1}{|\X|}\,p(y\mid x)=\frac{c}{|\X|},
+\]
+which does not depend on $y$; being a probability distribution it must equal
+$1/|\Y|$. Hence the bound is attained and $C=\log|\Y|-\Ent(r)$.
+\end{proof}
+
+\begin{example}[capacity of Example \ref{ex:symmetric-3x3}]\label{ex:symmetric-3x3-capacity}
+With $r=(0.3,0.2,0.5)$,
+\[
+  \Ent(r)=-0.3\log0.3-0.2\log0.2-0.5\log0.5\approx1.485,
+  \qquad
+  \log|\Y|=\log3\approx1.585,
+\]
+so
+\[
+  C=\log 3-\Ent(r)\approx\answerin[1.8cm]{0.0995}\ \text{bits},
+\]
+attained by the uniform input $p(x)=(\tfrac13,\tfrac13,\tfrac13)$.
+\studentrecall{$C=\log3-\Ent(0.3,0.2,0.5)\approx1.585-1.485\approx0.10$ bits.}
+The channel is close to useless: its rows are nearly uniform, so the output
+barely depends on the input.
+\end{example}
+
+\block{Who is symmetric and who is not}
+
+\noindent\begin{tabularx}{\linewidth}{@{}l l L@{}}
+\toprule
+{\color{indigo}channel} & {\color{indigo}symmetric?} & \multicolumn{1}{l}{\color{madder}capacity via the formula}\\
+\midrule
+noiseless binary & yes & $\log2-\Ent(1,0)=1$\\
+$\mathrm{BSC}(p)$ & yes & $\log2-h(p)=1-h(p)$\\
+Example \ref{ex:symmetric-3x3} & yes & $\log3-\Ent(r)\approx0.0995$\\
+$\mathrm{BEC}(\alpha)$ & no & column sums $1-\alpha,1-\alpha,2\alpha$ differ; formula does not apply\\
+\bottomrule
+\end{tabularx}
+
+The BEC row vectors \emph{are} permutations of one another, so the row condition
+alone is not enough: without equal column sums the uniform input need not give a
+uniform output, and indeed the true answer $1-\alpha$ differs from
+$\log3-h(\alpha)$.
+
+\begin{yourturn}
+State the two places where symmetry is used in the proof, one for each of the
+two defining conditions.
+\studentrecall{Row permutations make $\Ent(Y\mid X)=\Ent(r)$ constant; equal column sums make the uniform input give a uniform output.}
+\ifshowanswers\else\workspace[3]\fi
+\answerprose{Rows being permutations of each other makes every
+$\Ent(Y\mid X=x)$ equal to $\Ent(r)$, so $\Ent(Y\mid X)=\Ent(r)$ regardless of
+$p(x)$. Equal column sums make $p(y)$ constant under the uniform input, so
+$\Ent(Y)=\log|\Y|$ is attained and the inequality becomes an equality.}
+\end{yourturn}
+
+\begin{yourturn}
+Compute the capacity of the channel with $\X=\Y=\{1,2,3\}$ and every row a
+permutation of $(\tfrac12,\tfrac14,\tfrac14)$ arranged so that columns are
+permutations too.
+\studentrecall{$C=\log3-\Ent(\tfrac12,\tfrac14,\tfrac14)=\log3-1.5\approx0.085$ bits.}
+\ifshowanswers\else\workspace[2]\fi
+\answerprose{$\Ent(\tfrac12,\tfrac14,\tfrac14)=\tfrac12\cdot1+\tfrac14\cdot2+\tfrac14\cdot2=1.5$
+bits, so $C=\log3-1.5\approx1.585-1.5=0.085$ bits.}
+\end{yourturn}
+
+\recall{Which condition fails for the BEC, and what goes wrong if you apply the formula anyway?}

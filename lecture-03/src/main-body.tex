@@ -1,0 +1,80 @@
+\begin{document}
+
+\loomcover
+  {Information Theory}
+  {Lecture 3 · channel capacity\\[2pt]{\small\color{selvage}Oxford B8.4 · 2024--25}}
+  {fanzuituanhuo}
+  {\today}
+
+\section*{The one idea, and the map}
+\phantomsection
+\addcontentsline{toc}{section}{The one idea, and the map}
+\warmth{0}
+
+\begin{strand}
+A channel is nothing but a conditional law $p(y\mid x)$. We cannot change that
+law, but we may choose how often we use each input. \keyword{Capacity} is the
+best mutual information such a choice can buy:
+$C=\max_{p(x)}\MI(X;Y)$. Every example in this lecture is one instance of the
+same two-step move --- split $\MI(X;Y)=\Ent(Y)-\Ent(Y\mid X)$, then make the
+output as uncertain as the channel allows.
+\end{strand}
+
+\block{The map so far}
+\noindent\begin{tabularx}{\linewidth}{@{}c l L@{}}
+\toprule
+{\color{indigo}stop} & {\color{indigo}object} & \multicolumn{1}{l}{\color{madder}question}\\
+\midrule
+1 & $(\X,p(y\mid x),\Y)$ & What data specify a channel?\\
+2 & $p(y^n\mid x^n)=\prod_ip(y_i\mid x_i)$ & What does ``memoryless'' rule out?\\
+3 & $C=\max_{p(x)}\MI(X;Y)$ & How much information can one channel use carry?\\
+4 & $C=1$ (noiseless binary) & What does a perfect bit pipe look like?\\
+5 & $\Ent(X\mid Y)=0$ & When does noise cost nothing at all?\\
+6 & $C=1-h(p)$ (BSC) & What do flipped bits cost?\\
+7 & $C=1-\alpha$ (BEC) & What do lost bits cost?\\
+8 & $C=\log|\Y|-\Ent(r)$ & What does symmetry buy us for free?\\
+9 & $0\le C\le\log\min(|\X|,|\Y|)$ & Which values of $C$ are possible at all?\\
+\bottomrule
+\end{tabularx}
+
+\block{Conventions}
+Alphabets $\X$ and $\Y$ are finite. All logarithms are base $2$, so entropies
+and capacities are in bits per channel use. We write $h(p)=-p\log
+p-(1-p)\log(1-p)$ for the binary entropy function, and $\Ent(r)$ for the entropy
+of a probability vector $r$. The input distribution $p(x)$ is ours to choose;
+the transition law $p(y\mid x)$ is not.
+
+\clearpage
+{\small\tableofcontents}
+
+\clearpage
+\section*{Lecture 3 · Channel capacity}
+\phantomsection
+\addcontentsline{toc}{section}{Lecture 3 · Channel capacity}
+\begin{strand}
+First fix what a channel is and what memorylessness means. Then define capacity
+as a maximisation over input distributions, and compute it in the four canonical
+examples: the noiseless binary channel, a channel whose outputs give the input
+away, the binary symmetric channel, and the binary erasure channel. Finally
+isolate the structural reason those computations were easy --- symmetry --- and
+record the general properties of $C$.
+\end{strand}
+
+\input{sections/01-channel-model}
+
+\clearpage
+\input{sections/02-first-examples}
+
+\clearpage
+\input{sections/03-binary-symmetric-channel}
+
+\clearpage
+\input{sections/04-binary-erasure-channel}
+
+\clearpage
+\input{sections/05-symmetric-channels}
+
+\clearpage
+\input{sections/06-properties-of-capacity}
+
+\end{document}

@@ -1,0 +1,151 @@
+% ===========================================================================
+\section{Properties of capacity}\label{sec:properties}
+\warmth{0}\quad\whisper{A concave maximisation over a simplex: the maximum exists, and there is a test for it.}
+
+\begin{strand}
+Once the easy examples are done, two questions remain. Which values can $C$
+take? And what to do when no symmetry hands us the optimal input? The answers:
+$C$ lies between $0$ and $\log\min(|\X|,|\Y|)$, and $\MI(X;Y)$ is a concave
+function of $p(x)$, so the maximisation is a well-behaved convex problem with a
+verifiable optimality condition.
+\end{strand}
+
+\trigger{Use the equal-divergence test when you have guessed a candidate optimal input and want to prove it optimal.}
+
+\block{Range}
+
+\begin{proposition}[elementary bounds]\label{prop:capacity-bounds}
+For every discrete memoryless channel,
+\[
+  0\le C\le\log\min\bigl(|\X|,|\Y|\bigr).
+\]
+Moreover $C=0$ if and only if $X$ and $Y$ are independent for every input
+distribution, i.e.\ all rows of $p(y\mid x)$ are equal.
+\end{proposition}
+
+\begin{proof}
+Non-negativity holds because $\MI(X;Y)\ge0$ always, so the maximum is at least
+$0$. For the upper bound,
+\[
+  \MI(X;Y)\le\Ent(X)\le\log|\X|,
+  \qquad
+  \MI(X;Y)\le\Ent(Y)\le\log|\Y|,
+\]
+using $\MI(X;Y)=\Ent(X)-\Ent(X\mid Y)\le\Ent(X)$ and the symmetric identity.
+Taking the smaller of the two bounds gives the claim. If all rows are equal then
+$p(y)=p(y\mid x)$ for every $x$, so $Y$ is independent of $X$ and every mutual
+information vanishes; conversely $C=0$ forces $\MI(X;Y)=0$ for the uniform
+input, whose support is all of $\X$, which forces $p(y\mid x)=p(y)$ for all $x$.
+\end{proof}
+
+\begin{yourturn}
+Which channel of this lecture attains each of the two extremes
+$C=0$ and $C=\log\min(|\X|,|\Y|)$?
+\studentrecall{$\mathrm{BSC}(1/2)$ gives $C=0$; the noiseless binary channel and the non-overlapping-output channel give $C=1=\log2$.}
+\ifshowanswers\else\workspace[2]\fi
+\answerprose{$C=0$ for $\mathrm{BSC}(\tfrac12)$, whose two rows are both
+$(\tfrac12,\tfrac12)$. The upper extreme $C=\log2=1$ is attained by the noiseless
+binary channel and also by the channel with non-overlapping outputs, where
+$|\X|=2$ and $\Ent(X\mid Y)=0$.}
+\end{yourturn}
+
+\block{Shape of the optimisation}
+
+\begin{proposition}[concavity in the input]\label{prop:concavity}
+For a fixed transition law $p(y\mid x)$, the map $p(x)\mapsto\MI(X;Y)$ is
+continuous and \keyword{concave} on the probability simplex over $\X$.
+\end{proposition}
+
+\begin{proof}
+Write $\MI(X;Y)=\Ent(Y)-\Ent(Y\mid X)$. The second term is
+$\sum_xp(x)\Ent(Y\mid X=x)$, which is linear in $p(x)$. The first term is
+$\Ent$ evaluated at $p(y)=\sum_xp(x)p(y\mid x)$, which is a linear map of
+$p(x)$; since $\Ent$ is concave and the composition of a concave function with a
+linear map is concave, $p(x)\mapsto\Ent(Y)$ is concave. A concave function minus
+a linear function is concave. Continuity is clear from the formulas.
+\end{proof}
+
+The consequences are the practical ones: the simplex is compact, so the maximum
+is attained; every local maximum is global; and standard convex-optimisation
+tools (or the Blahut--Arimoto algorithm) compute $C$ numerically.
+
+\begin{remark}
+Note the contrast with source coding, where the relevant convexity was in the
+distribution being coded. Here the distribution is the \emph{design variable} and
+the channel is fixed. Mutual information is concave in $p(x)$ for fixed
+$p(y\mid x)$, and convex in $p(y\mid x)$ for fixed $p(x)$.
+\end{remark}
+
+\block{A test for optimality}
+
+\begin{theorem}[equal-divergence condition]\label{thm:kt-condition}
+An input distribution $p^*(x)$ with induced output distribution $p^*(y)$ achieves
+capacity if and only if there is a constant $C$ with
+\[
+  \KL\bigl(p(y\mid x)\,\big\|\,p^*(y)\bigr)
+  \begin{cases}
+    =C, & \text{for every }x\text{ with }p^*(x)>0,\\[2pt]
+    \le C, & \text{for every }x\text{ with }p^*(x)=0,
+  \end{cases}
+\]
+and in that case the constant equals the capacity.
+\end{theorem}
+
+The identity behind it is
+$\MI(X;Y)=\sum_xp(x)\,\KL\bigl(p(y\mid x)\|p(y)\bigr)$: the mutual information is
+the average divergence between a row of the channel and the output distribution.
+If two used inputs had different divergences, shifting weight towards the larger
+one would increase the average --- so at the optimum all used rows must be
+\answerin[3.6cm]{equidistant from $p^*(y)$}.
+\studentrecall{At the optimum every used input row has the same divergence from the output law, namely $C$.}
+
+\begin{example}[checking the BEC answer]\label{ex:bec-check}
+For $\mathrm{BEC}(\alpha)$ the uniform input gives
+$p^*(y)=\bigl(\tfrac{1-\alpha}{2},\tfrac{1-\alpha}{2},\alpha\bigr)$ on
+$\{0,1,e\}$. For the input $x=0$, whose row is $(1-\alpha,0,\alpha)$,
+\[
+  \KL\bigl(p(y\mid0)\,\big\|\,p^*(y)\bigr)
+  =(1-\alpha)\log\frac{1-\alpha}{(1-\alpha)/2}
+   +\alpha\log\frac{\alpha}{\alpha}
+  =1-\alpha,
+\]
+and by symmetry the same holds for $x=1$. Both used inputs have divergence
+$1-\alpha$, which confirms both the optimality of the uniform input and the value
+$C=1-\alpha$.
+\end{example}
+
+\begin{yourturn}
+Carry out the same check for $\mathrm{BSC}(p)$: with the uniform input the output
+is uniform, so compute
+$\KL\bigl((1-p,p)\,\big\|\,(\tfrac12,\tfrac12)\bigr)$ and compare with
+$1-h(p)$.
+\studentrecall{$\KL((1-p,p)\|(\tfrac12,\tfrac12))=1-h(p)$, the same for both rows.}
+\ifshowanswers\else\workspace[3]\fi
+\answerprose{$\KL\bigl((1-p,p)\|(\tfrac12,\tfrac12)\bigr)
+=(1-p)\log\frac{1-p}{1/2}+p\log\frac{p}{1/2}
+=1+(1-p)\log(1-p)+p\log p=1-h(p)$, identical for the row of $x=1$. So the
+uniform input is optimal and $C=1-h(p)$, as computed directly.}
+\end{yourturn}
+
+\loose{Asymmetric channels, e.g.\ the $Z$-channel where only one input can be corrupted, have non-uniform optimal inputs --- a good exercise for this test.}
+
+\block{Summary card}
+
+\noindent\begin{tabularx}{\linewidth}{@{}l l L@{}}
+\toprule
+{\color{indigo}channel} & {\color{indigo}$C$} & \multicolumn{1}{l}{\color{madder}optimal input}\\
+\midrule
+noiseless binary & $1$ & uniform\\
+non-overlapping outputs & $\log|\X|$ & uniform\\
+noisy typewriter ($26$ letters) & $\log13$ & uniform\\
+$\mathrm{BSC}(p)$ & $1-h(p)$ & uniform\\
+$\mathrm{BEC}(\alpha)$ & $1-\alpha$ & uniform\\
+weakly symmetric, row $r$ & $\log|\Y|-\Ent(r)$ & uniform\\
+general & $\max_{p(x)}\MI(X;Y)$ & concave maximisation; equal-divergence test\\
+\bottomrule
+\end{tabularx}
+
+The uniform input is optimal in every line above because each of those channels
+is symmetric in some sense; asymmetry is what makes the general problem hard.
+
+\recall{What identity turns $\MI(X;Y)$ into an average of divergences, and what does it say at the optimum?}

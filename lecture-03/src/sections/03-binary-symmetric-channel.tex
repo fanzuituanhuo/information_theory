@@ -1,0 +1,119 @@
+% ===========================================================================
+\section{The binary symmetric channel}\label{sec:bsc}
+\warmth{0}\quad\whisper{The simplest channel with errors, and already the whole difficulty.}
+
+\begin{strand}
+In the binary symmetric channel each input bit is complemented with probability
+$p$. It is the simplest model of a channel with errors, yet it captures most of
+the complexity of the general problem. Its capacity is $1-h(p)$: one bit per use
+minus the entropy the noise injects.
+\end{strand}
+
+\trigger{Use $\MI=\Ent(Y)-\Ent(Y\mid X)$ whenever every row of the transition matrix has the same entropy.}
+
+\block{The channel}
+
+\begin{definition}[binary symmetric channel]\label{def:bsc}
+The \keyword{binary symmetric channel} $\mathrm{BSC}(p)$ has
+$\X=\Y=\{0,1\}$ and transition matrix
+\[
+  p(y\mid x)=
+  \begin{pmatrix}
+    1-p & p\\
+    p & 1-p
+  \end{pmatrix},
+\]
+so the input symbol is complemented with probability $p$.
+\begin{center}
+\begin{tikzpicture}[x=2.8cm,y=1.5cm,>=latex,font=\small]
+  \node (x0) at (0,1) {$0$};
+  \node (x1) at (0,0) {$1$};
+  \node (y0) at (1,1) {$0$};
+  \node (y1) at (1,0) {$1$};
+  \draw[->,indigo] (x0) -- node[above,font=\scriptsize]{$1-p$} (y0);
+  \draw[->,indigo] (x1) -- node[below,font=\scriptsize]{$1-p$} (y1);
+  \draw[->,madder] (x0) -- node[pos=0.22,above,sloped,font=\scriptsize]{$p$} (y1);
+  \draw[->,madder] (x1) -- node[pos=0.22,below,sloped,font=\scriptsize]{$p$} (y0);
+\end{tikzpicture}
+\end{center}
+Both rows are the vector $(1-p,p)$ up to reordering, so every row entropy equals
+$\answerin[1.4cm]{h(p)}$.
+\studentrecall{Each row is a $(1-p,p)$ distribution, whose entropy is the binary entropy $h(p)$.}
+\end{definition}
+
+\block{Capacity}
+
+\begin{theorem}[capacity of the BSC]\label{thm:bsc-capacity}
+The capacity of $\mathrm{BSC}(p)$ is
+\[
+  C=1-h(p)\quad\text{bits per channel use},
+\]
+attained by the uniform input distribution $p(x)=(\tfrac12,\tfrac12)$.
+\end{theorem}
+
+\begin{proof}
+For any input distribution,
+\[
+\begin{aligned}
+  \MI(X;Y)
+  &=\Ent(Y)-\Ent(Y\mid X)\\
+  &=\Ent(Y)-\sum_{x}p(x)\,\Ent(Y\mid X=x)\\
+  &=\Ent(Y)-\sum_{x}p(x)\,h(p)\\
+  &=\Ent(Y)-h(p)\\
+  &\le 1-h(p),
+\end{aligned}
+\]
+where the last step holds because $Y$ is a binary random variable, so
+$\Ent(Y)\le\log|\Y|=1$. Equality requires $Y$ to be uniform. Taking
+$p(x)=(\tfrac12,\tfrac12)$ gives
+\[
+  \PP(Y=0)=\tfrac12(1-p)+\tfrac12p=\tfrac12,
+\]
+so $\Ent(Y)=1$ and the bound is achieved. Hence $C=1-h(p)$.
+\end{proof}
+
+\begin{remark}
+The step that makes the computation short is that $\Ent(Y\mid X)=h(p)$
+\emph{independently of $p(x)$}: the weights $p(x)$ multiply identical row
+entropies. This is exactly the symmetry that Section \ref{sec:symmetric}
+generalises.
+\end{remark}
+\loose{Guessing the uniform input works here only because of symmetry; see Section \ref{sec:properties} otherwise.}
+
+\block{Reading the answer}
+
+\noindent\begin{tabularx}{\linewidth}{@{}l l L@{}}
+\toprule
+{\color{indigo}$p$} & {\color{indigo}$C=1-h(p)$} & \multicolumn{1}{l}{\color{madder}interpretation}\\
+\midrule
+$0$ & $1$ & noiseless channel; one clean bit per use\\
+$1$ & $1$ & every bit is flipped, which the receiver can simply undo\\
+$1/2$ & $0$ & the output is independent of the input; nothing gets through\\
+$0.11$ & $\approx0.5$ & about one usable bit per two channel uses\\
+\bottomrule
+\end{tabularx}
+
+\begin{yourturn}
+Explain in one line why $\mathrm{BSC}(1)$ has the same capacity as
+$\mathrm{BSC}(0)$, and why $p=\tfrac12$ is the worst case.
+\studentrecall{A deterministic flip is invertible; $p=\tfrac12$ makes $Y$ independent of $X$.}
+\ifshowanswers\else\workspace[2]\fi
+\answerprose{At $p=1$ the flip is deterministic, so relabelling the outputs
+recovers a noiseless channel and $h(1)=0$. At $p=\tfrac12$ each output is
+equally likely whatever was sent, so $Y$ is independent of $X$, $h(\tfrac12)=1$
+and $C=0$.}
+\end{yourturn}
+
+\begin{yourturn}
+Reconstruct the chain of five lines in the proof, naming the reason for each
+step.
+\studentrecall{Split $\MI$; average the row entropies; they are all $h(p)$; bound $\Ent(Y)\le1$; uniform input makes $Y$ uniform.}
+\ifshowanswers\else\workspace[4]\fi
+\answerprose{$\MI=\Ent(Y)-\Ent(Y\mid X)$ (definition); expand
+$\Ent(Y\mid X)=\sum_xp(x)\Ent(Y\mid X=x)$ (definition of conditional entropy);
+each $\Ent(Y\mid X=x)=h(p)$ (rows of the matrix); so the sum is $h(p)$ since
+$\sum_xp(x)=1$; finally $\Ent(Y)\le1$ because $Y$ is binary, with equality iff
+$Y$ is uniform, which the uniform input achieves.}
+\end{yourturn}
+
+\recall{Why is $\Ent(Y\mid X)$ constant in $p(x)$ for the BSC?}

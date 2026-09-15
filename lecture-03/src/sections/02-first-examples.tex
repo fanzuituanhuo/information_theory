@@ -1,0 +1,102 @@
+% ===========================================================================
+\section{Two channels where noise is free}\label{sec:first-examples}
+\warmth{0}\quad\whisper{Noise is harmless as long as it never makes two inputs look alike.}
+
+\begin{strand}
+Start with the two easy extremes. If the channel is noiseless, one error-free
+bit per use is obvious. If the channel is noisy but different inputs produce
+disjoint sets of outputs, the receiver still recovers the input exactly --- so
+the capacity is again that of a clean pipe. What costs capacity is not
+randomness, but \emph{confusability}.
+\end{strand}
+
+\trigger{Before computing anything, ask whether the output ever leaves the input in doubt.}
+
+\block{The noiseless binary channel}
+
+\begin{example}[noiseless binary channel]\label{ex:noiseless-binary}
+Let $\X=\Y=\{0,1\}$ and let every input be reproduced exactly.
+\begin{center}
+\begin{tikzpicture}[x=2.4cm,y=1.1cm,>=latex,font=\small]
+  \node (x0) at (0,1) {$0$};
+  \node (x1) at (0,0) {$1$};
+  \node (y0) at (1,1) {$0$};
+  \node (y1) at (1,0) {$1$};
+  \draw[->,indigo] (x0) -- (y0);
+  \draw[->,indigo] (x1) -- (y1);
+\end{tikzpicture}
+\end{center}
+One error-free bit is transmitted per use of the channel, so we expect $C=1$.
+The definition confirms it: here $Y=X$, hence $\Ent(Y\mid X)=0$ and
+\[
+  C=\max_{p(x)}\MI(X;Y)
+   =\max_{p(x)}\Ent(X)
+   =\answerin[1.2cm]{1}\ \text{bit},
+\]
+the maximum being attained at $p(x)=\answerin[2.4cm]{(\tfrac12,\tfrac12)}$.
+\studentrecall{$C=1$ bit, attained by the uniform input $(\tfrac12,\tfrac12)$.}
+\end{example}
+
+\block{A noisy channel with non-overlapping outputs}
+
+\begin{example}[non-overlapping outputs]\label{ex:nonoverlapping}
+Let $\X=\{0,1\}$ and $\Y=\{1,2,3,4\}$, with
+\[
+  p(1\mid0)=p(2\mid0)=\tfrac12,
+  \qquad
+  p(3\mid1)=\tfrac13,\quad p(4\mid1)=\tfrac23 .
+\]
+\begin{center}
+\begin{tikzpicture}[x=2.6cm,y=0.95cm,>=latex,font=\small]
+  \node (x0) at (0,2.6) {$0$};
+  \node (x1) at (0,0.4) {$1$};
+  \node (y1) at (1,3.3) {$1$};
+  \node (y2) at (1,2.1) {$2$};
+  \node (y3) at (1,0.9) {$3$};
+  \node (y4) at (1,-0.3) {$4$};
+  \draw[->,indigo] (x0) -- node[above,sloped,font=\scriptsize]{$1/2$} (y1);
+  \draw[->,indigo] (x0) -- node[below,sloped,font=\scriptsize]{$1/2$} (y2);
+  \draw[->,madder] (x1) -- node[above,sloped,font=\scriptsize]{$1/3$} (y3);
+  \draw[->,madder] (x1) -- node[below,sloped,font=\scriptsize]{$2/3$} (y4);
+\end{tikzpicture}
+\end{center}
+The channel is genuinely noisy: the output is random for both inputs. But the
+output sets $\{1,2\}$ and $\{3,4\}$ are \keyword{disjoint}, so from $y$ the
+receiver can always tell which input was sent. Hence
+\[
+  \Ent(X\mid Y)=\answerin[1.2cm]{0},
+  \qquad
+  \MI(X;Y)=\Ent(X)-\Ent(X\mid Y)=\Ent(X),
+\]
+\studentrecall{Disjoint output sets mean $Y$ determines $X$, so $\Ent(X\mid Y)=0$ and $\MI=\Ent(X)$.}
+and therefore
+\[
+  C=\max_{p(x)}\Ent(X)=1\ \text{bit},
+\]
+again attained by the uniform input. Randomness inside each row is irrelevant;
+only overlap between rows costs capacity.
+\end{example}
+
+\begin{remark}
+It is worth naming the general principle: the capacity of a channel depends on
+its transition matrix only through which inputs can be \emph{confused}. If the
+supports of distinct rows are pairwise disjoint, the channel is as good as a
+noiseless channel on $|\X|$ symbols and $C=\log|\X|$.
+\end{remark}
+
+\begin{yourturn}
+\keyword{Noisy typewriter.} Let $\X=\Y=\{A,B,\ldots,Z\}$ (26 letters) and
+suppose each letter is either printed correctly or printed as the next letter,
+each with probability $1/2$. By using only every other letter of the alphabet as
+an input, the outputs of the used inputs become disjoint. What capacity does
+this suggest, and why can it not be beaten?
+\studentrecall{$13$ usable non-confusable inputs give $C=\log13=\log26-1$ bits.}
+\ifshowanswers\else\workspace[3]\fi
+\answerprose{Using $13$ letters spaced two apart makes the output sets disjoint,
+so those $13$ inputs form a noiseless channel and $C\ge\log13$. Conversely each
+row has entropy $\Ent(Y\mid X=x)=1$ bit, so
+$\MI(X;Y)=\Ent(Y)-1\le\log26-1=\log13$. Hence $C=\log13$ bits, attained by the
+uniform distribution on all $26$ inputs as well.}
+\end{yourturn}
+
+\recall{Which feature of the transition matrix actually destroys capacity: randomness within rows, or overlap between rows?}

@@ -1,0 +1,99 @@
+% ===========================================================================
+\section{The channel as a conditional law}\label{sec:channel-model}
+\warmth{0}\quad\whisper{A channel is a table of conditional probabilities; capacity is the best use we can make of it.}
+
+\begin{strand}
+Everything about a discrete channel is contained in one stochastic matrix. The
+matrix is given to us by physics; what remains free is the distribution with
+which we feed the inputs. Capacity is the value of that freedom.
+\end{strand}
+
+\trigger{Reach for this model whenever the corruption of a symbol depends only on that symbol.}
+
+\block{The data of a channel}
+
+\begin{definition}[discrete channel]\label{def:discrete-channel}
+A \keyword{discrete channel} is a system consisting of an input alphabet $\X$,
+an output alphabet $\Y$, and a probability transition matrix
+$p(y\mid x)$, which gives the probability of observing the output symbol $y$
+when the input symbol $x$ is sent. Being a stochastic matrix means
+\[
+  p(y\mid x)\ge0
+  \quad\text{for all }x,y,
+  \qquad
+  \sum_{y\in\Y}p(y\mid x)=\answerin[1.2cm]{1}
+  \quad\text{for every }x\in\X.
+\]
+\studentrecall{Each \emph{row} of the transition matrix is a probability distribution on $\Y$, so it sums to $1$.}
+The channel is \keyword{discrete} because both alphabets are finite.
+\end{definition}
+
+\begin{definition}[memoryless]\label{def:memoryless}
+The channel is \keyword{memoryless} if the output at each time depends only on
+the input at \answerin[3.2cm]{that same time}, and not on earlier inputs or
+outputs. Equivalently, for every $n$ and every $x^n\in\X^n$, $y^n\in\Y^n$,
+\[
+  p(y^n\mid x^n)=\prod_{i=1}^{n} \answerin[2.4cm]{p(y_i\mid x_i)}.
+\]
+\studentrecall{Only the current input matters, so the block law factorises into single-use laws $p(y_i\mid x_i)$.}
+A channel that is both discrete and memoryless is called a
+\keyword{discrete memoryless channel} (DMC).
+\end{definition}
+
+\begin{remark}
+The product formula quietly assumes two things: that the channel does not
+remember past inputs (memorylessness) and that the input $x_i$ is not allowed to
+depend on the past outputs $y^{i-1}$ (no feedback). Both are needed for the
+factorisation as written, and both hold in the setting of this lecture.
+\end{remark}
+
+\block{Capacity}
+
+\begin{definition}[information channel capacity]\label{def:information-capacity}
+The (``information'') \keyword{channel capacity} of a discrete memoryless
+channel is
+\[
+  C=\max_{p(x)}\MI(X;Y),
+\]
+where the maximum is taken over all possible
+\answerin[4.2cm]{input distributions $p(x)$}.
+\studentrecall{Maximise over the input law $p(x)$; the transition matrix $p(y\mid x)$ is fixed.}
+The joint law is always $p(x,y)=p(x)\,p(y\mid x)$, so choosing $p(x)$ chooses
+both the output distribution $p(y)=\sum_xp(x)p(y\mid x)$ and the value of
+$\MI(X;Y)$.
+\end{definition}
+
+\begin{remark}
+Capacity also has an \keyword{operational} definition: the largest rate, in bits
+per channel use, at which information can be sent with error probability tending
+to $0$. Shannon's second theorem (the channel coding theorem) says that the
+information capacity and the operational capacity coincide --- which is why the
+word ``information'' is usually dropped. This lecture computes the
+$\max_{p(x)}\MI(X;Y)$ side; the coding theorem is the next lecture's business.
+\end{remark}
+
+\block{The one move used in every example}
+
+Because $\MI(X;Y)=\Ent(Y)-\Ent(Y\mid X)$ and
+\[
+  \Ent(Y\mid X)=\sum_{x}p(x)\,\Ent(Y\mid X=x),
+\]
+the second term is an average of \emph{fixed} row entropies of the transition
+matrix. So maximising $\MI(X;Y)$ means making $\Ent(Y)$ large while keeping the
+average row entropy small. When all rows have the \emph{same} entropy, the
+second term does not depend on $p(x)$ at all and only $\Ent(Y)$ has to be
+maximised --- this is the shortcut behind Sections \ref{sec:bsc} and
+\ref{sec:symmetric}.
+
+\begin{yourturn}
+Write down the two-term decomposition of $\MI(X;Y)$ that this lecture uses, and
+say which term the channel fixes and which term the input distribution moves.
+\studentrecall{$\MI=\Ent(Y)-\Ent(Y\mid X)$; the rows of $p(y\mid x)$ fix the conditional entropies, while $p(x)$ moves their weights and $\Ent(Y)$.}
+\ifshowanswers\else\workspace[2]\fi
+\answerprose{$\MI(X;Y)=\Ent(Y)-\Ent(Y\mid X)$ with
+$\Ent(Y\mid X)=\sum_xp(x)\Ent(Y\mid X=x)$. The channel fixes each row entropy
+$\Ent(Y\mid X=x)$; the input distribution chooses their weights, and through
+$p(y)=\sum_xp(x)p(y\mid x)$ it also controls $\Ent(Y)$.}
+\end{yourturn}
+
+\recall{What two assumptions are hidden in $p(y^n\mid x^n)=\prod_ip(y_i\mid x_i)$?}

@@ -1,0 +1,135 @@
+% ===========================================================================
+\section{容量的性质}\label{sec:properties}
+\warmth{0}\quad\whisper{单纯形上的凹函数最大化：最大值存在，而且有检验条件。}
+
+\begin{strand}
+容易的例子做完后还剩两个问题：$C$ 可以取哪些值？没有对称性直接送来最优输入时怎么办？
+答案是：$C$ 介于 $0$ 与 $\log\min(|\X|,|\Y|)$ 之间；并且 $\MI(X;Y)$ 是 $p(x)$ 的
+凹函数，所以这是一个性质良好的凸优化问题，且有可验证的最优性条件。
+\end{strand}
+
+\trigger{已经猜出候选最优输入、想证明它最优时，用等散度检验。}
+
+\block{取值范围}
+
+\begin{proposition}[初等界]\label{prop:capacity-bounds}
+对任意离散无记忆信道，
+\[
+  0\le C\le\log\min\bigl(|\X|,|\Y|\bigr).
+\]
+并且 $C=0$ 当且仅当对任何输入分布 $X$ 与 $Y$ 都独立，即 $p(y\mid x)$ 各行全部相同。
+\end{proposition}
+
+\begin{proof}
+非负性成立是因为总有 $\MI(X;Y)\ge0$，故最大值至少为 $0$。至于上界，
+\[
+  \MI(X;Y)\le\Ent(X)\le\log|\X|,
+  \qquad
+  \MI(X;Y)\le\Ent(Y)\le\log|\Y|,
+\]
+这里用了 $\MI(X;Y)=\Ent(X)-\Ent(X\mid Y)\le\Ent(X)$ 与对称的恒等式。取两个界中较小
+者即得结论。若各行全部相同，则对每个 $x$ 都有 $p(y)=p(y\mid x)$，于是 $Y$ 与 $X$
+独立、所有互信息为零；反之 $C=0$ 迫使支撑为整个 $\X$ 的均匀输入满足
+$\MI(X;Y)=0$，从而对一切 $x$ 有 $p(y\mid x)=p(y)$。
+\end{proof}
+
+\begin{yourturn}
+本讲的哪个信道分别达到两个极端 $C=0$ 与 $C=\log\min(|\X|,|\Y|)$？
+\studentrecall{$\mathrm{BSC}(1/2)$ 给出 $C=0$；无噪二元信道与输出不重叠的信道给出 $C=1=\log2$。}
+\ifshowanswers\else\workspace[2]\fi
+\answerprose{$\mathrm{BSC}(\tfrac12)$ 的两行都是 $(\tfrac12,\tfrac12)$，故 $C=0$。
+上界极端 $C=\log2=1$ 由无噪二元信道达到，也由输出互不重叠的信道达到，后者
+$|\X|=2$ 且 $\Ent(X\mid Y)=0$。}
+\end{yourturn}
+
+\block{优化问题的形状}
+
+\begin{proposition}[关于输入的凹性]\label{prop:concavity}
+固定转移分布 $p(y\mid x)$，则映射 $p(x)\mapsto\MI(X;Y)$ 在 $\X$ 上的概率单纯形上
+连续且\keyword{凹}。
+\end{proposition}
+
+\begin{proof}
+写 $\MI(X;Y)=\Ent(Y)-\Ent(Y\mid X)$。第二项是
+$\sum_xp(x)\Ent(Y\mid X=x)$，关于 $p(x)$ 线性。第一项是 $\Ent$ 在
+$p(y)=\sum_xp(x)p(y\mid x)$ 处的取值，而这是 $p(x)$ 的线性映射；由于 $\Ent$ 是凹
+函数，凹函数与线性映射的复合仍凹，故 $p(x)\mapsto\Ent(Y)$ 是凹的。凹函数减去线性
+函数仍是凹的。连续性由公式即明。
+\end{proof}
+
+由此得到的都是实用推论：单纯形是紧集，故最大值可达；每个局部最大都是全局最大；
+标准凸优化工具（或 Blahut--Arimoto 算法）可以数值计算 $C$。
+
+\begin{remark}
+与信源编码作对比：那里相关的凸性是关于被编码的分布的。这里分布反而是\emph{设计
+变量}，信道是固定的。互信息在 $p(y\mid x)$ 固定时是 $p(x)$ 的凹函数，在 $p(x)$
+固定时是 $p(y\mid x)$ 的凸函数。
+\end{remark}
+
+\block{一个最优性检验}
+
+\begin{theorem}[等散度条件]\label{thm:kt-condition}
+输入分布 $p^*(x)$ 及其诱导的输出分布 $p^*(y)$ 达到容量，当且仅当存在常数 $C$ 使得
+\[
+  \KL\bigl(p(y\mid x)\,\big\|\,p^*(y)\bigr)
+  \begin{cases}
+    =C, & \text{对每个 }p^*(x)>0\text{ 的 }x,\\[2pt]
+    \le C, & \text{对每个 }p^*(x)=0\text{ 的 }x,
+  \end{cases}
+\]
+此时该常数就等于容量。
+\end{theorem}
+
+背后的恒等式是
+$\MI(X;Y)=\sum_xp(x)\,\KL\bigl(p(y\mid x)\|p(y)\bigr)$：互信息是信道各行与输出分布
+之间散度的加权平均。若两个被使用的输入散度不同，把权重移向较大的一个就能提高这个
+平均值——所以在最优点处所有被使用的行必须\answerin[3.6cm]{与 $p^*(y)$ 等距}。
+\studentrecall{最优时每个被使用的输入行与输出分布的散度都相同，且等于 $C$。}
+
+\begin{example}[核对 BEC 的答案]\label{ex:bec-check}
+对 $\mathrm{BEC}(\alpha)$，均匀输入给出 $\{0,1,e\}$ 上的
+$p^*(y)=\bigl(\tfrac{1-\alpha}{2},\tfrac{1-\alpha}{2},\alpha\bigr)$。对输入
+$x=0$（其行为 $(1-\alpha,0,\alpha)$），
+\[
+  \KL\bigl(p(y\mid0)\,\big\|\,p^*(y)\bigr)
+  =(1-\alpha)\log\frac{1-\alpha}{(1-\alpha)/2}
+   +\alpha\log\frac{\alpha}{\alpha}
+  =1-\alpha,
+\]
+由对称性，$x=1$ 同样如此。两个被使用的输入散度都是 $1-\alpha$，这同时验证了均匀
+输入的最优性与容量值 $C=1-\alpha$。
+\end{example}
+
+\begin{yourturn}
+对 $\mathrm{BSC}(p)$ 做同样的核对：均匀输入下输出均匀，计算
+$\KL\bigl((1-p,p)\,\big\|\,(\tfrac12,\tfrac12)\bigr)$ 并与 $1-h(p)$ 比较。
+\studentrecall{$\KL((1-p,p)\|(\tfrac12,\tfrac12))=1-h(p)$，两行结果相同。}
+\ifshowanswers\else\workspace[3]\fi
+\answerprose{$\KL\bigl((1-p,p)\|(\tfrac12,\tfrac12)\bigr)
+=(1-p)\log\frac{1-p}{1/2}+p\log\frac{p}{1/2}
+=1+(1-p)\log(1-p)+p\log p=1-h(p)$，$x=1$ 那一行完全相同。故均匀输入最优且
+$C=1-h(p)$，与直接计算一致。}
+\end{yourturn}
+
+\loose{非对称信道（如只有一个输入会被干扰的 $Z$ 信道）最优输入不均匀——正好拿来练这个检验。}
+
+\block{总结卡片}
+
+\noindent\begin{tabularx}{\linewidth}{@{}l l L@{}}
+\toprule
+{\color{indigo}信道} & {\color{indigo}$C$} & \multicolumn{1}{l}{\color{madder}最优输入}\\
+\midrule
+无噪二元信道 & $1$ & 均匀\\
+输出互不重叠 & $\log|\X|$ & 均匀\\
+噪声打字机（$26$ 字母） & $\log13$ & 均匀\\
+$\mathrm{BSC}(p)$ & $1-h(p)$ & 均匀\\
+$\mathrm{BEC}(\alpha)$ & $1-\alpha$ & 均匀\\
+弱对称，行为 $r$ & $\log|\Y|-\Ent(r)$ & 均匀\\
+一般情形 & $\max_{p(x)}\MI(X;Y)$ & 凹最大化；等散度检验\\
+\bottomrule
+\end{tabularx}
+
+上表中每一行的最优输入都是均匀的，因为这些信道都带有某种对称性；一般问题之难正是
+来自不对称。
+
+\recall{哪个恒等式把 $\MI(X;Y)$ 变成散度的平均？它在最优点说了什么？}

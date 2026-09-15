@@ -1,0 +1,110 @@
+% ===========================================================================
+\section{二元对称信道}\label{sec:bsc}
+\warmth{0}\quad\whisper{最简单的含错信道，却已经包含了几乎全部困难。}
+
+\begin{strand}
+二元对称信道把每个输入比特以概率 $p$ 取反。它是含错信道最简单的模型，却抓住了
+一般问题的大部分复杂性。其容量为 $1-h(p)$：每次使用一个比特，减去噪声注入的熵。
+\end{strand}
+
+\trigger{只要转移矩阵每一行的熵都相同，就用 $\MI=\Ent(Y)-\Ent(Y\mid X)$。}
+
+\block{信道}
+
+\begin{definition}[二元对称信道]\label{def:bsc}
+\keyword{二元对称信道} $\mathrm{BSC}(p)$ 满足 $\X=\Y=\{0,1\}$，转移矩阵为
+\[
+  p(y\mid x)=
+  \begin{pmatrix}
+    1-p & p\\
+    p & 1-p
+  \end{pmatrix},
+\]
+即输入符号以概率 $p$ 被取反。
+\begin{center}
+\begin{tikzpicture}[x=2.8cm,y=1.5cm,>=latex,font=\small]
+  \node (x0) at (0,1) {$0$};
+  \node (x1) at (0,0) {$1$};
+  \node (y0) at (1,1) {$0$};
+  \node (y1) at (1,0) {$1$};
+  \draw[->,indigo] (x0) -- node[above,font=\scriptsize]{$1-p$} (y0);
+  \draw[->,indigo] (x1) -- node[below,font=\scriptsize]{$1-p$} (y1);
+  \draw[->,madder] (x0) -- node[pos=0.22,above,sloped,font=\scriptsize]{$p$} (y1);
+  \draw[->,madder] (x1) -- node[pos=0.22,below,sloped,font=\scriptsize]{$p$} (y0);
+\end{tikzpicture}
+\end{center}
+两行都是向量 $(1-p,p)$ 的重排，故每一行的熵都等于
+$\answerin[1.4cm]{h(p)}$。
+\studentrecall{每一行都是 $(1-p,p)$ 分布，其熵为二元熵 $h(p)$。}
+\end{definition}
+
+\block{容量}
+
+\begin{theorem}[BSC 的容量]\label{thm:bsc-capacity}
+$\mathrm{BSC}(p)$ 的容量为
+\[
+  C=1-h(p)\quad\text{比特每次信道使用},
+\]
+由均匀输入分布 $p(x)=(\tfrac12,\tfrac12)$ 达到。
+\end{theorem}
+
+\begin{proof}
+对任意输入分布，
+\[
+\begin{aligned}
+  \MI(X;Y)
+  &=\Ent(Y)-\Ent(Y\mid X)\\
+  &=\Ent(Y)-\sum_{x}p(x)\,\Ent(Y\mid X=x)\\
+  &=\Ent(Y)-\sum_{x}p(x)\,h(p)\\
+  &=\Ent(Y)-h(p)\\
+  &\le 1-h(p),
+\end{aligned}
+\]
+最后一步是因为 $Y$ 是二元随机变量，故 $\Ent(Y)\le\log|\Y|=1$。取等要求 $Y$ 均匀。
+取 $p(x)=(\tfrac12,\tfrac12)$ 时
+\[
+  \PP(Y=0)=\tfrac12(1-p)+\tfrac12p=\tfrac12,
+\]
+于是 $\Ent(Y)=1$，界被达到。因此 $C=1-h(p)$。
+\end{proof}
+
+\begin{remark}
+让计算变短的关键一步是 $\Ent(Y\mid X)=h(p)$ \emph{与 $p(x)$ 无关}：权重 $p(x)$
+乘的是彼此相同的行熵。这正是第 \ref{sec:symmetric} 节要推广的对称性。
+\end{remark}
+\loose{此处猜到均匀输入最优全靠对称性；没有对称性时见第 \ref{sec:properties} 节。}
+
+\block{读懂这个答案}
+
+\noindent\begin{tabularx}{\linewidth}{@{}l l L@{}}
+\toprule
+{\color{indigo}$p$} & {\color{indigo}$C=1-h(p)$} & \multicolumn{1}{l}{\color{madder}含义}\\
+\midrule
+$0$ & $1$ & 无噪信道；每次使用一个干净比特\\
+$1$ & $1$ & 每个比特都被翻转，接收端直接翻回来即可\\
+$1/2$ & $0$ & 输出与输入独立；什么也传不过去\\
+$0.11$ & $\approx0.5$ & 大约每两次使用换来一个可用比特\\
+\bottomrule
+\end{tabularx}
+
+\begin{yourturn}
+用一句话解释为什么 $\mathrm{BSC}(1)$ 与 $\mathrm{BSC}(0)$ 容量相同，以及为什么
+$p=\tfrac12$ 是最坏情形。
+\studentrecall{确定性的翻转是可逆的；$p=\tfrac12$ 让 $Y$ 与 $X$ 独立。}
+\ifshowanswers\else\workspace[2]\fi
+\answerprose{$p=1$ 时翻转是确定性的，把输出重新贴标签即得无噪信道，且 $h(1)=0$。
+$p=\tfrac12$ 时无论送什么，两个输出等可能，故 $Y$ 与 $X$ 独立，$h(\tfrac12)=1$、
+$C=0$。}
+\end{yourturn}
+
+\begin{yourturn}
+复述证明中的五行链条，并说明每一步的理由。
+\studentrecall{拆开 $\MI$；把行熵取平均；各行熵都是 $h(p)$；用 $\Ent(Y)\le1$；均匀输入让 $Y$ 均匀。}
+\ifshowanswers\else\workspace[4]\fi
+\answerprose{$\MI=\Ent(Y)-\Ent(Y\mid X)$（定义）；展开
+$\Ent(Y\mid X)=\sum_xp(x)\Ent(Y\mid X=x)$（条件熵定义）；每个
+$\Ent(Y\mid X=x)=h(p)$（来自矩阵各行）；由 $\sum_xp(x)=1$ 该和为 $h(p)$；最后因
+$Y$ 二元有 $\Ent(Y)\le1$，取等当且仅当 $Y$ 均匀，而均匀输入正好做到这一点。}
+\end{yourturn}
+
+\recall{为什么 BSC 的 $\Ent(Y\mid X)$ 不随 $p(x)$ 变化？}

@@ -1,0 +1,118 @@
+% ===========================================================================
+\section{对称信道}\label{sec:symmetric}
+\warmth{0}\quad\whisper{各行长得一样时，均匀输入最优，容量只是一行公式。}
+
+\begin{strand}
+BSC 的计算只用了两个事实：转移矩阵所有行的熵相同，以及均匀输入产生均匀输出。
+具备这两点的信道称为（弱）对称信道；对它们而言容量就是 $\log|\Y|-\Ent(r)$，其中
+$r$ 是任意一行——不需要做最大化。
+\end{strand}
+
+\trigger{先检查对称性；若信道对称，容量只花一行而不是一次最大化。}
+
+\block{定义}
+
+\begin{definition}[对称信道]\label{def:symmetric-channel}
+若离散无记忆信道的转移矩阵 $p(y\mid x)$ 各行互为置换，且各\answerin[2.0cm]{列}
+也互为置换，则称该信道\keyword{对称}。
+\studentrecall{行互为置换，\emph{并且}列也互为置换。}
+\end{definition}
+
+\begin{definition}[弱对称信道]\label{def:weakly-symmetric-channel}
+若 $p(y\mid x)$ 各行互为置换，且每一列的\answerin[1.6cm]{和}
+$\sum_{x}p(y\mid x)$ 都相同，则称该信道\keyword{弱对称}。
+\studentrecall{行互为置换，且所有列和相等。}
+由于置换后的列有相同的和，每个对称信道都是弱对称的。
+\end{definition}
+
+\begin{example}[一个对称信道]\label{ex:symmetric-3x3}
+设 $\X=\Y=\{1,2,3\}$，
+\[
+  p(y\mid x)=
+  \begin{pmatrix}
+    0.3 & 0.2 & 0.5\\
+    0.5 & 0.3 & 0.2\\
+    0.2 & 0.5 & 0.3
+  \end{pmatrix}.
+\]
+每行都是 $r=(0.3,0.2,0.5)$ 的置换，每列也是同一向量的置换，故该信道对称。
+\end{example}
+
+\block{弱对称信道的容量}
+
+\begin{theorem}[由对称性给出容量]\label{thm:symmetric-capacity}
+对行向量为 $r$（转移矩阵的任意一行）的弱对称信道，
+\[
+  C=\log|\Y|-\Ent(r),
+\]
+且容量由 $\X$ 上的均匀分布达到。
+\end{theorem}
+
+\begin{proof}
+由于各行都是 $r$ 的置换，每个行熵都等于 $\Ent(r)$，故对任意输入分布
+\[
+  \MI(X;Y)=\Ent(Y)-\Ent(Y\mid X)
+          =\Ent(Y)-\sum_xp(x)\Ent(r)
+          =\Ent(Y)-\Ent(r)
+          \le\log|\Y|-\Ent(r),
+\]
+取等当且仅当 $Y$ 在 $\Y$ 上均匀。剩下要证均匀输入使 $Y$ 均匀。令
+$c=\sum_xp(y\mid x)$ 为公共列和。取 $p(x)=1/|\X|$，则
+\[
+  p(y)=\sum_{x}\frac{1}{|\X|}\,p(y\mid x)=\frac{c}{|\X|},
+\]
+它不依赖 $y$；既然是概率分布，就必须等于 $1/|\Y|$。于是界被达到，
+$C=\log|\Y|-\Ent(r)$。
+\end{proof}
+
+\begin{example}[例 \ref{ex:symmetric-3x3} 的容量]\label{ex:symmetric-3x3-capacity}
+取 $r=(0.3,0.2,0.5)$，
+\[
+  \Ent(r)=-0.3\log0.3-0.2\log0.2-0.5\log0.5\approx1.485,
+  \qquad
+  \log|\Y|=\log3\approx1.585,
+\]
+故
+\[
+  C=\log 3-\Ent(r)\approx\answerin[1.8cm]{0.0995}\ \text{比特},
+\]
+由均匀输入 $p(x)=(\tfrac13,\tfrac13,\tfrac13)$ 达到。
+\studentrecall{$C=\log3-\Ent(0.3,0.2,0.5)\approx1.585-1.485\approx0.10$ 比特。}
+这个信道几乎没用：它的各行接近均匀，所以输出几乎不依赖输入。
+\end{example}
+
+\block{谁对称，谁不对称}
+
+\noindent\begin{tabularx}{\linewidth}{@{}l l L@{}}
+\toprule
+{\color{indigo}信道} & {\color{indigo}对称？} & \multicolumn{1}{l}{\color{madder}用公式算容量}\\
+\midrule
+无噪二元信道 & 是 & $\log2-\Ent(1,0)=1$\\
+$\mathrm{BSC}(p)$ & 是 & $\log2-h(p)=1-h(p)$\\
+例 \ref{ex:symmetric-3x3} & 是 & $\log3-\Ent(r)\approx0.0995$\\
+$\mathrm{BEC}(\alpha)$ & 否 & 列和为 $1-\alpha,1-\alpha,2\alpha$ 不等；公式不适用\\
+\bottomrule
+\end{tabularx}
+
+BEC 的各行\emph{确实}互为置换，可见单靠行条件还不够：列和不相等时，均匀输入未必
+产生均匀输出；事实上真实答案 $1-\alpha$ 与 $\log3-h(\alpha)$ 并不相同。
+
+\begin{yourturn}
+指出证明中用到对称性的两处，各对应一个定义条件。
+\studentrecall{行互为置换使 $\Ent(Y\mid X)=\Ent(r)$ 为常数；列和相等使均匀输入产生均匀输出。}
+\ifshowanswers\else\workspace[3]\fi
+\answerprose{行互为置换使每个 $\Ent(Y\mid X=x)$ 都等于 $\Ent(r)$，于是无论 $p(x)$
+如何都有 $\Ent(Y\mid X)=\Ent(r)$。列和相等使均匀输入下 $p(y)$ 为常数，从而
+$\Ent(Y)=\log|\Y|$ 可以达到，不等式变成等式。}
+\end{yourturn}
+
+\begin{yourturn}
+设 $\X=\Y=\{1,2,3\}$，每行都是 $(\tfrac12,\tfrac14,\tfrac14)$ 的置换且列也互为
+置换，求该信道的容量。
+\studentrecall{$C=\log3-\Ent(\tfrac12,\tfrac14,\tfrac14)=\log3-1.5\approx0.085$ 比特。}
+\ifshowanswers\else\workspace[2]\fi
+\answerprose{$\Ent(\tfrac12,\tfrac14,\tfrac14)=\tfrac12\cdot1+\tfrac14\cdot2+\tfrac14\cdot2=1.5$
+比特，故 $C=\log3-1.5\approx1.585-1.5=0.085$ 比特。}
+\end{yourturn}
+
+\recall{BEC 违反了哪个条件？硬套公式会出什么问题？}

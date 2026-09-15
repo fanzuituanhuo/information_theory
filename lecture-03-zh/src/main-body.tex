@@ -1,0 +1,74 @@
+\begin{document}
+
+\loomcover
+  {信息论}
+  {第三讲 · 信道容量\\[2pt]{\small\color{selvage}Oxford B8.4 · 2024--25}}
+  {fanzuituanhuo}
+  {\today}
+
+\section*{一条主线与知识地图}
+\phantomsection
+\addcontentsline{toc}{section}{一条主线与知识地图}
+\warmth{0}
+
+\begin{strand}
+信道无非是一个条件分布 $p(y\mid x)$。这个分布我们无法改动，但可以选择各个输入被
+使用的频率。\keyword{容量}就是这种选择权能换来的最大互信息：
+$C=\max_{p(x)}\MI(X;Y)$。本讲所有例子都是同一个两步动作的实例——先拆开
+$\MI(X;Y)=\Ent(Y)-\Ent(Y\mid X)$，再在信道允许的范围内把输出的不确定性做到最大。
+\end{strand}
+
+\block{目前的知识地图}
+\noindent\begin{tabularx}{\linewidth}{@{}c l L@{}}
+\toprule
+{\color{indigo}站} & {\color{indigo}对象} & \multicolumn{1}{l}{\color{madder}要回答的问题}\\
+\midrule
+1 & $(\X,p(y\mid x),\Y)$ & 描述一个信道需要哪些数据？\\
+2 & $p(y^n\mid x^n)=\prod_ip(y_i\mid x_i)$ & “无记忆”排除了什么？\\
+3 & $C=\max_{p(x)}\MI(X;Y)$ & 使用信道一次最多能传多少信息？\\
+4 & $C=1$（无噪二元信道） & 一条完美的比特管道是什么样子？\\
+5 & $\Ent(X\mid Y)=0$ & 什么时候噪声完全不付代价？\\
+6 & $C=1-h(p)$（BSC） & 比特被翻转要付多少代价？\\
+7 & $C=1-\alpha$（BEC） & 比特被丢失要付多少代价？\\
+8 & $C=\log|\Y|-\Ent(r)$ & 对称性能白送我们什么？\\
+9 & $0\le C\le\log\min(|\X|,|\Y|)$ & $C$ 究竟可能取哪些值？\\
+\bottomrule
+\end{tabularx}
+
+\block{全文约定}
+字母表 $\X$ 与 $\Y$ 都有限。所有对数取 $2$ 为底，因此熵与容量的单位是
+比特每次信道使用。记二元熵函数 $h(p)=-p\log p-(1-p)\log(1-p)$，并用 $\Ent(r)$
+表示概率向量 $r$ 的熵。输入分布 $p(x)$ 由我们选择，转移概率 $p(y\mid x)$ 不由我们
+选择。
+
+\clearpage
+{\small\tableofcontents}
+
+\clearpage
+\section*{第三讲 · 信道容量}
+\phantomsection
+\addcontentsline{toc}{section}{第三讲 · 信道容量}
+\begin{strand}
+先固定“信道是什么”以及“无记忆”的含义；再把容量定义为对输入分布的最大化，并在四个
+标准例子里算出来：无噪二元信道、输出互不重叠的噪声信道、二元对称信道、二元删除
+信道。最后提炼出让这些计算变得容易的结构性理由——对称性，并记下 $C$ 的一般性质。
+\end{strand}
+
+\input{sections/01-channel-model}
+
+\clearpage
+\input{sections/02-first-examples}
+
+\clearpage
+\input{sections/03-binary-symmetric-channel}
+
+\clearpage
+\input{sections/04-binary-erasure-channel}
+
+\clearpage
+\input{sections/05-symmetric-channels}
+
+\clearpage
+\input{sections/06-properties-of-capacity}
+
+\end{document}

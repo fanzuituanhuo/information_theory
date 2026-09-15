@@ -1,0 +1,88 @@
+% ===========================================================================
+\section{信道即条件分布}\label{sec:channel-model}
+\warmth{0}\quad\whisper{信道就是一张条件概率表；容量是我们能把它用到多好。}
+
+\begin{strand}
+离散信道的全部信息都装在一个随机矩阵里。矩阵由物理给定，剩下自由的只有喂入输入
+时所用的分布。容量就是这份自由度的价值。
+\end{strand}
+
+\trigger{当一个符号被干扰的方式只依赖该符号本身时，就用这个模型。}
+
+\block{信道的数据}
+
+\begin{definition}[离散信道]\label{def:discrete-channel}
+一个\keyword{离散信道}由输入字母表 $\X$、输出字母表 $\Y$ 以及概率转移矩阵
+$p(y\mid x)$ 组成，其中 $p(y\mid x)$ 表示发送输入符号 $x$ 时观测到输出符号 $y$
+的概率。它是随机矩阵，即
+\[
+  p(y\mid x)\ge0
+  \quad\text{对一切 }x,y,
+  \qquad
+  \sum_{y\in\Y}p(y\mid x)=\answerin[1.2cm]{1}
+  \quad\text{对每个 }x\in\X.
+\]
+\studentrecall{转移矩阵的每一\emph{行}都是 $\Y$ 上的概率分布，行和为 $1$。}
+之所以称为\keyword{离散}，是因为两个字母表都有限。
+\end{definition}
+
+\begin{definition}[无记忆]\label{def:memoryless}
+若信道的输出只与\answerin[3.2cm]{当前时刻的输入}有关，而与更早的输入或输出无关，
+则称信道\keyword{无记忆}。等价地，对每个 $n$ 以及每个 $x^n\in\X^n$、
+$y^n\in\Y^n$，
+\[
+  p(y^n\mid x^n)=\prod_{i=1}^{n} \answerin[2.4cm]{p(y_i\mid x_i)}.
+\]
+\studentrecall{只有当前输入起作用，于是分组分布分解为单次使用的 $p(y_i\mid x_i)$ 之积。}
+既离散又无记忆的信道称为\keyword{离散无记忆信道}（DMC）。
+\end{definition}
+
+\begin{remark}
+乘积公式悄悄用到了两个假设：信道不记得过去的输入（无记忆），以及输入 $x_i$ 不允许
+依赖过去的输出 $y^{i-1}$（无反馈）。写成上式需要两者同时成立，本讲的设定下二者都
+成立。
+\end{remark}
+
+\block{容量}
+
+\begin{definition}[信息信道容量]\label{def:information-capacity}
+离散无记忆信道的（“信息”）\keyword{信道容量}为
+\[
+  C=\max_{p(x)}\MI(X;Y),
+\]
+其中最大值取遍所有可能的\answerin[4.2cm]{输入分布 $p(x)$}。
+\studentrecall{对输入分布 $p(x)$ 取最大；转移矩阵 $p(y\mid x)$ 是固定的。}
+联合分布始终是 $p(x,y)=p(x)\,p(y\mid x)$，所以选定 $p(x)$ 就同时决定了输出分布
+$p(y)=\sum_xp(x)p(y\mid x)$ 与 $\MI(X;Y)$ 的取值。
+\end{definition}
+
+\begin{remark}
+容量还有一个\keyword{操作性}定义：能以趋于 $0$ 的错误概率传输信息的最大速率
+（比特每次信道使用）。Shannon 第二定理（信道编码定理）说明信息信道容量与操作性
+信道容量相等，故“information”一词常被省去。本讲计算 $\max_{p(x)}\MI(X;Y)$ 这一侧，
+编码定理留给下一讲。
+\end{remark}
+
+\block{每个例子都在用的同一个动作}
+
+由于 $\MI(X;Y)=\Ent(Y)-\Ent(Y\mid X)$ 且
+\[
+  \Ent(Y\mid X)=\sum_{x}p(x)\,\Ent(Y\mid X=x),
+\]
+第二项只是转移矩阵各行熵（这些行熵是\emph{固定}的）的加权平均。因此最大化
+$\MI(X;Y)$ 就是在把平均行熵压小的同时把 $\Ent(Y)$ 做大。当所有行的熵\emph{相同}
+时，第二项根本不依赖 $p(x)$，只需最大化 $\Ent(Y)$——这正是第
+\ref{sec:bsc} 节与第 \ref{sec:symmetric} 节所用的捷径。
+
+\begin{yourturn}
+写出本讲反复使用的 $\MI(X;Y)$ 两项分解，并说明哪一项由信道固定、哪一项由输入分布
+调动。
+\studentrecall{$\MI=\Ent(Y)-\Ent(Y\mid X)$；$p(y\mid x)$ 的各行固定了条件熵，$p(x)$ 调动权重与 $\Ent(Y)$。}
+\ifshowanswers\else\workspace[2]\fi
+\answerprose{$\MI(X;Y)=\Ent(Y)-\Ent(Y\mid X)$，其中
+$\Ent(Y\mid X)=\sum_xp(x)\Ent(Y\mid X=x)$。信道固定了每个行熵
+$\Ent(Y\mid X=x)$；输入分布决定这些行熵的权重，并通过
+$p(y)=\sum_xp(x)p(y\mid x)$ 控制 $\Ent(Y)$。}
+\end{yourturn}
+
+\recall{$p(y^n\mid x^n)=\prod_ip(y_i\mid x_i)$ 里隐藏了哪两个假设？}

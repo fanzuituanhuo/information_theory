@@ -1,0 +1,93 @@
+% ===========================================================================
+\section{两个噪声不要钱的信道}\label{sec:first-examples}
+\warmth{0}\quad\whisper{只要噪声从不让两个输入看起来一样，它就是无害的。}
+
+\begin{strand}
+先看两个极端。信道无噪时，每次使用传一个无差错比特是显然的。信道有噪但不同输入
+产生的输出集合互不相交时，接收端仍能精确恢复输入——容量还是等于一条干净管道。
+真正消耗容量的不是随机性，而是\emph{可混淆性}。
+\end{strand}
+
+\trigger{动手算之前，先问输出是否曾让输入变得可疑。}
+
+\block{无噪二元信道}
+
+\begin{example}[无噪二元信道]\label{ex:noiseless-binary}
+设 $\X=\Y=\{0,1\}$，每个输入都被原样复现。
+\begin{center}
+\begin{tikzpicture}[x=2.4cm,y=1.1cm,>=latex,font=\small]
+  \node (x0) at (0,1) {$0$};
+  \node (x1) at (0,0) {$1$};
+  \node (y0) at (1,1) {$0$};
+  \node (y1) at (1,0) {$1$};
+  \draw[->,indigo] (x0) -- (y0);
+  \draw[->,indigo] (x1) -- (y1);
+\end{tikzpicture}
+\end{center}
+每次使用信道恰好传送一个无差错比特，所以容量应当为 $1$。定义也给出同样的结论：
+此时 $Y=X$，故 $\Ent(Y\mid X)=0$，于是
+\[
+  C=\max_{p(x)}\MI(X;Y)
+   =\max_{p(x)}\Ent(X)
+   =\answerin[1.2cm]{1}\ \text{比特},
+\]
+最大值在 $p(x)=\answerin[2.4cm]{(\tfrac12,\tfrac12)}$ 时取得。
+\studentrecall{$C=1$ 比特，由均匀输入 $(\tfrac12,\tfrac12)$ 达到。}
+\end{example}
+
+\block{输出互不重叠的噪声信道}
+
+\begin{example}[输出互不重叠]\label{ex:nonoverlapping}
+设 $\X=\{0,1\}$，$\Y=\{1,2,3,4\}$，且
+\[
+  p(1\mid0)=p(2\mid0)=\tfrac12,
+  \qquad
+  p(3\mid1)=\tfrac13,\quad p(4\mid1)=\tfrac23 .
+\]
+\begin{center}
+\begin{tikzpicture}[x=2.6cm,y=0.95cm,>=latex,font=\small]
+  \node (x0) at (0,2.6) {$0$};
+  \node (x1) at (0,0.4) {$1$};
+  \node (y1) at (1,3.3) {$1$};
+  \node (y2) at (1,2.1) {$2$};
+  \node (y3) at (1,0.9) {$3$};
+  \node (y4) at (1,-0.3) {$4$};
+  \draw[->,indigo] (x0) -- node[above,sloped,font=\scriptsize]{$1/2$} (y1);
+  \draw[->,indigo] (x0) -- node[below,sloped,font=\scriptsize]{$1/2$} (y2);
+  \draw[->,madder] (x1) -- node[above,sloped,font=\scriptsize]{$1/3$} (y3);
+  \draw[->,madder] (x1) -- node[below,sloped,font=\scriptsize]{$2/3$} (y4);
+\end{tikzpicture}
+\end{center}
+这个信道确实有噪：两个输入的输出都是随机的。但输出集合 $\{1,2\}$ 与 $\{3,4\}$
+\keyword{互不相交}，所以接收端从 $y$ 总能判断出送入的是哪个输入。于是
+\[
+  \Ent(X\mid Y)=\answerin[1.2cm]{0},
+  \qquad
+  \MI(X;Y)=\Ent(X)-\Ent(X\mid Y)=\Ent(X),
+\]
+\studentrecall{输出集合不相交意味着 $Y$ 决定 $X$，故 $\Ent(X\mid Y)=0$、$\MI=\Ent(X)$。}
+从而
+\[
+  C=\max_{p(x)}\Ent(X)=1\ \text{比特},
+\]
+同样由均匀输入达到。每行内部的随机性无关紧要；只有行与行之间的重叠才消耗容量。
+\end{example}
+
+\begin{remark}
+值得把一般原理点明：信道容量只通过“哪些输入可能被\emph{混淆}”依赖于转移矩阵。
+若不同行的支撑两两不交，则该信道与 $|\X|$ 个符号上的无噪信道一样好，$C=\log|\X|$。
+\end{remark}
+
+\begin{yourturn}
+\keyword{噪声打字机。}设 $\X=\Y=\{A,B,\ldots,Z\}$（26 个字母），每个字母以概率
+$1/2$ 被正确打印、以概率 $1/2$ 被打印成下一个字母。若只用字母表中每隔一个的字母作
+输入，则被使用输入的输出集合互不相交。这提示容量是多少？为什么不能更高？
+\studentrecall{有 $13$ 个互不混淆的可用输入，$C=\log13=\log26-1$ 比特。}
+\ifshowanswers\else\workspace[3]\fi
+\answerprose{取相隔两位的 $13$ 个字母可使输出集合互不相交，这 $13$ 个输入构成一个
+无噪信道，故 $C\ge\log13$。反之每行熵都是 $\Ent(Y\mid X=x)=1$ 比特，所以
+$\MI(X;Y)=\Ent(Y)-1\le\log26-1=\log13$。因此 $C=\log13$ 比特；在全部 $26$ 个输入
+上取均匀分布同样能达到。}
+\end{yourturn}
+
+\recall{真正毁掉容量的是行内的随机性，还是行与行之间的重叠？}

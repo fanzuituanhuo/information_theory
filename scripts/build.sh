@@ -34,14 +34,18 @@ case "${1:-all}" in
     build_lecture "lecture-01-zh"
     build_lecture "lecture-02"
     build_lecture "lecture-02-zh"
+    build_lecture "lecture-03"
+    build_lecture "lecture-03-zh"
     ;;
   en)
     build_lecture "lecture-01"
     build_lecture "lecture-02"
+    build_lecture "lecture-03"
     ;;
   zh)
     build_lecture "lecture-01-zh"
     build_lecture "lecture-02-zh"
+    build_lecture "lecture-03-zh"
     ;;
   lecture-01)
     build_lecture "lecture-01"
@@ -51,8 +55,12 @@ case "${1:-all}" in
     build_lecture "lecture-02"
     build_lecture "lecture-02-zh"
     ;;
+  lecture-03)
+    build_lecture "lecture-03"
+    build_lecture "lecture-03-zh"
+    ;;
   *)
-    echo "Usage: scripts/build.sh [all|en|zh|lecture-01|lecture-02]" >&2
+    echo "Usage: scripts/build.sh [all|en|zh|lecture-01|lecture-02|lecture-03]" >&2
     exit 2
     ;;
 esac
